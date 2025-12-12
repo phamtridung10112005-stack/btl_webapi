@@ -23,7 +23,7 @@
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "debug": "^4.3.4",
-    "dotenv": "^16.4.5",
+    "dotenv": "^16.6.1",
     "express": "^5.1.0",
     "express-validator": "^7.0.0",
     "helmet": "^8.0.0",
