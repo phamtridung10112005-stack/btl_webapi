@@ -16,12 +16,12 @@ createSachTacGia: async (dto) => {
   },
 deleteSachTacGia: async (masach, matacgia) => {
     logger.info(`Service: Deleting sachtacgia with masach ${masach} and matacgia ${matacgia}`);
-    const existing = await sachtacgiaRepository.getByMaSach(masach, matacgia);
+    const existing = await sachtacgiaRepository.getByMaSachAndMaTacGia(masach, matacgia);
     if (!existing) {
       logger.warn(`Service Warning: Cannot delete. SachTacGia with ${masach} and matacgia ${matacgia} not found`);
       throw new Error('SachTacGia not found');
     }
-    await sachtacgiaRepository.delete(masach);
+    await sachtacgiaRepository.delete(masach, matacgia);
     return { message: 'SachTacGia deleted successfully' };
   },
 };

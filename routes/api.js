@@ -15,7 +15,6 @@ router.post("/users", userController.create);
 router.put("/users/:id", userController.update);
 router.delete("/users/:id", userController.delete);
 
-
 //------------------tác giả--------------------------------
 router.get("/tacgias", tacgiaController.getAll);
 router.get("/tacgias/:matacgia", tacgiaController.getByMaTacGia);
@@ -43,9 +42,9 @@ router.post("/theloais", theloaiController.create);
 router.put("/theloais/:matheloai", theloaiController.update);
 router.delete("/theloais/:matheloai", theloaiController.delete);
 // ----------------------- SACHTACGIAS ------------------------------------
-router.get("/sachtacgias", sachtacgiaController.getAll);
+router.get("/sachtacgias/all", sachtacgiaController.getAll);
 router.post("/sachtacgias", sachtacgiaController.create);
-router.delete("/sachtacgias/masach=:masach&matacgia=:matacgia", sachtacgiaController.delete);
+router.delete("/sachtacgias", sachtacgiaController.delete);
 
 
 export default router;
