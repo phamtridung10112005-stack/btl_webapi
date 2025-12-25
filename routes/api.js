@@ -30,7 +30,8 @@ router.put("/nhaxuatbans/:manxb", nhaxuatbanController.update);
 router.delete("/nhaxuatbans/:manxb", nhaxuatbanController.delete);
 
 // ----------------------- SACHS -------------------------------------
-router.get("/sachs", sachController.getAll);
+// router.get("/sachs", sachController.getAll);
+router.get("/sachs", sachController.getSachPagingAndSorting);
 router.get("/sachs/:masach", sachController.getByMaSach);
 router.post("/sachs", sachController.create);
 router.put("/sachs/:masach", sachController.update);

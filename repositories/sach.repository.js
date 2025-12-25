@@ -24,6 +24,23 @@ getByMaSach: async (masach) => {
       throw err;
     }
   },
+getSachPagingAndSorting: async(page, size, sortBy, sortOrder) => {
+  logger.info(`Repository: Fetching sachs with paging and sorting - Page: ${page}, Size: ${size}, SortBy: ${sortBy}, SortOrder: ${sortOrder}`);
+  try {
+    const db = await pool;
+    const offset = (page - 1) * size;
+    const validFields = ['TenSach', 'GiaSach'];
+    if (!validFields.includes(sortBy)) {
+      sortBy = 'TenSach';
+    }
+    const sqlString = `SELECT * FROM Sach ORDER BY ${sortBy} ${sortOrder} LIMIT ? OFFSET ?`;
+    const [rows] = await db.query(sqlString, [size, offset]);
+    return rows;
+  } catch (err) {
+    logger.error("Repository Error: getSachPagingAndSorting failed", err);
+      throw err;
+  }
+},
 create: async ({ MaSach, TenSach, MaTheLoai, MaNguoiDich, MaNXB, GiaSach, NamXuatBan, SoTrang, MoTaNoiDung, LinkHinhAnh }) => {
     logger.info(`Repository: Creating sach ${MaSach}`);
     try {
