@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết sản phẩm</title>
+    <link rel="stylesheet" href="allproducts.css">
+    <link rel="stylesheet" href="../ChitietSP/chitiet_sp.css">
+    <link rel="icon" href="../Image/Logo_shop_icon.ico" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+<body>
+    <div class="header" id="top_web">
+        <div class="header_top">
+            <div class="header_top_left">
+                <div class="icon">
+                    <a href="#"><i class="fa-solid fa-envelope"></i></a>
+                </div>
+                <div class="icon">
+                    <a href="#"><i class="fa-solid fa-globe"></i></a>
+                </div>
+                <div class="icon">
+                    <a href="https://www.facebook.com/profile.php?id=100026429534329&viewas=100000686899395"><i class="fa-brands fa-facebook"></i></a>
+                </div>
+            </div>
+            <div class="header_top_mid">
+                <div class="icon"><i class="fa-solid fa-bullhorn"></i></div>
+                <div class="slide_text">
+                    <marquee behavior="scroll" direction="left">Chào mừng bạn đến với K_manga shop.</marquee>
+                </div>
+            </div>
+            <div class="header_top_right">
+                <a href="../Login/dangnhap.html" class="btn_dangnhap" id="btn_dangnhap"><i class="fa-solid fa-right-to-bracket"></i> Đăng nhập</a>
+                <a href="../Login/dangky.html" class="btn_dangky" id="btn_dangky"><i class="fa-solid fa-pen-to-square"></i> Đăng ký</a>
+                <a href="../Login/dangnhap.html" class="btn_dangxuat" id="btn_dangxuat" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                <a href="#"><i class="fa-solid fa-circle-question"></i> Trợ giúp</a>
+            </div>
+        </div>
+        <div class="header_bottom">
+            <div class="header_bottom_left">
+                <div class="logo">
+                    <a href="../Trangchu/index.html"><img src="../Login/Logo_manga_shop_8.png" alt="K_manga_shop"></a>
+                </div>
+            </div>
+            <div class="header_bottom_mid">
+                <div class="input_search">
+                    <div class="search">
+                        <input type="text" placeholder="Tìm kiếm...">
+                        <div class="lichsu_timkiem">
+                            <h3 class="header_lichsu_timkiem">Lịch sử tìm kiếm</h3>
+                            <ul class="lichsu_timkiem_list">
+                                <li class="lichsu_timkiem_item">
+                                    <a href="#">Re:zero</a>
+                                </li>
+                                <li class="lichsu_timkiem_item">
+                                    <a href="../ChitietSP/chitiet_sp_combo_darlinginthefranxx.html">Darling in the franxx</a>
+                                </li>
+                                <li class="lichsu_timkiem_item">
+                                    <a href="../ChitietSP/chitiet_sp_combo_yourname.html">Your Name</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+            </div>
+            <div class="header_bottom_right">
+                <div class="sp_uathich">
+                    <a href="../Wishlist/wishlist.html" class="icon"><i class="fa-regular fa-heart"></i></a>
+                </div>
+                <div class="giohang">
+                    <a href="../Giohang/giohang.html" class="icon"><i class="fa-solid fa-cart-shopping"></i></a>
+                </div>
+                <div class="thongbao hienthi_thongbao">
+                    <a class="icon"><i class="fa-regular fa-bell"></i></a>
+                    <div class="div_thongbao">
+                        <header class="header_thongbao"><h6>Thông báo mới</h6></header>
+                        <ul class="list_thongbao">
+                            <li class="item_thongbao">
+                                <a href="#" class="link_thongbao">
+                                    <img src="../Image/SxF_Ss3.png" alt="Tenki no Ko" class="img_thongbao">
+                                    <div class="chitiet_thongbao">
+                                        <span class="ten_chitiet_thongbao">SpyxFamily Season 3</span>
+                                        <span class="mota_chitiet_thongbao">Gia đình Forger chính thức trở lại với season 3</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="item_thongbao">
+                                <a href="#" class="link_thongbao">
+                                    <img src="../Image/LPH_KD_T1.png" alt="Lịch phát hành NXB Kim Đồng tháng 12" class="img_thongbao">
+                                    <div class="chitiet_thongbao">
+                                        <span class="ten_chitiet_thongbao">Lịch phát hành tháng 1 - NXB Kim Đồng</span>
+                                        <span class="mota_chitiet_thongbao">TSEASON'S GREETING AND BEST WISHES FOR THE NEW YEAR - ĐÓN NĂM MỚI BÊN COMIC NHÀ KIM</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="item_thongbao">
+                                <a href="#" class="link_thongbao">
+                                    <img src="../Image/LPH_IPM_T12.png" alt="Lịch phát hành NXB IPM tháng 12" class="img_thongbao">
+                                    <div class="chitiet_thongbao">
+                                        <span class="ten_chitiet_thongbao">Lịch phát hành tháng 12 - NXB IPM</span>
+                                        <span class="mota_chitiet_thongbao">Sau khi có thay đổi thì đây là lịch phát hành chính thức của IPM tháng 12.</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="item_thongbao">
+                                <a href="#" class="link_thongbao">
+                                    <img src="../Image/LPH_Tre_T12.png" alt="Lịch phát hành NXB Trẻ tháng 12" class="img_thongbao">
+                                    <div class="chitiet_thongbao">
+                                        <span class="ten_chitiet_thongbao">Lịch phát hành tháng 12 - NXB Trẻ</span>
+                                        <span class="mota_chitiet_thongbao">Lịch phát hành tháng cuối cùng năm 2024 đây nha cả nhà!</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="item_thongbao">
+                                <a href="#" class="link_thongbao">
+                                    <img src="../Image/Koro_sensei.png" alt="Assassination classroom" class="img_thongbao">
+                                    <div class="chitiet_thongbao">
+                                        <span class="ten_chitiet_thongbao">Kỷ niệm 10 năm ra mắt Anime Assassination classroom</span>
+                                        <span class="mota_chitiet_thongbao">Assassination Classroom đang kỷ niệm 10 năm ra mắt. Bộ anime đã chinh phục khán giả với cốt truyện hấp dẫn và dàn nhân vật thú vị. Để đánh dấu sự kiện này, Assassination Classroom đã công bố ba dự án mới.</span>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                        <footer class="footer_thongbao">
+                            <a href="#" class="footer_thongbao_btn">Xem tất cả</a>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="navbar_container">
+        <div class="navbar">
+            <ul class="navbar_list">
+                <li class="navbar_item"><i class="fa-solid fa-bars"></i> Danh mục sản phẩm
+                    <ul class="danhmuc_SP">
+                        <li class="danhmuc_SP_item"><a href="../AllProducts/allproducts.html">Tất cả sản phẩm</a></li>
+                        <li class="danhmuc_SP_item"><a href="#">Manga</a></li>
+                        <li class="danhmuc_SP_item"><a href="#">Light novel</a></li>
+                        <li class="danhmuc_SP_item"><a href="#">NXB Kim Đồng</a></li>
+                        <li class="danhmuc_SP_item"><a href="#">NXB IPM</a></li>
+                        <li class="danhmuc_SP_item"><a href="#">NXB Trẻ</a></li>
+                    </ul>
+                </li>
+                <li class="navbar_item"><a href="#">Tin tức</a></li>
+                <li class="navbar_item"><a href="#">Giới thiệu</a></li>
+            </ul>
+        </div>
+        <div class="source">
+            <span><a href="../Trangchu/index.html">Trang chủ</a> / </span>
+            <span><a href="#">Tất cả sản phẩm</a></span>
+            <div class="sort_box">
+                <select name="" id="sort_pro">
+                    <option value="defaut" selected>Thứ tự mặc định</option>
+                    <option value="phobien">Thứ tự theo mức độ phổ biến</option>
+                    <option value="new">Mới nhất</option>
+                    <option value="danhgia">Thứ tự theo mức điểm đánh giá</option>
+                    <option value="sort">Thứ tự theo giá từ thấp đến cao</option>
+                    <option value="sort_reservert">Thứ tự theo giá từ cao xuống thấp</option>
+                </select>
+            </div>
+        </div>
+    </section>
+    <div class="body_container">
+        <div class="allproducts_container">
+            <div class="allproduct_item">
+                <div class="allproduct_item_img">
+                    <a href="../ChitietSP/chitiet_sp_combo_kusuriya.html">
+                        <img src="../Image/Kusuriya_combo_10t.png" alt="">
+                    </a>
+                    <div class="discount">-10%</div>
+                </div>
+                <div class="allproduct_item_title"><a href="../ChitietSP/chitiet_sp_combo_kusuriya.html">Combo Dược sư tự sự (Manga) (Tập 1-10)</a></div>
+                <div class="allproduct_item_prices">
+                    <div class="allproduct_item_priceSale">423.000₫</div>
+                    <div class="allproduct_item_priceOriginal"><s>470.000₫</s></div>
+                </div>
+                <div class="allproduct_item_footer">
+                    <div class="allproduct_item_sold">
+                        <img src="../Image/fire.png" alt="">  Đã bán 999k+
+                    </div>
+                    <div class="wishlist" data-id="01">
+                        <i onclick="addToWishList({id: '01', url: '../ChitietSP/chitiet_sp_combo_kusuriya.html', image: '../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000, sold: 999, discount: 10})" class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="allproduct_item_cart">
+                        <i onclick="addToCart({id: '01', url:'../ChitietSP/chitiet_sp_combo_kusuriya.html', image:'../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000})" class="fa-solid fa-cart-plus"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="allproduct_item">
+                <div class="allproduct_item_img">
+                    <a href="../ChitietSP/chitiet_sp_combo_conan.html">
+                        <img src="../Image/Conan_combo_105t.jpg" alt="">
+                    </a>
+                    <div class="discount">-10%</div>
+                </div>
+                <div class="allproduct_item_title"><a href="../ChitietSP/chitiet_sp_combo_conan.html">Combo Thám tử lừng danh Conan (Tập 1 - 105)</a></div>
+                <div class="allproduct_item_prices">
+                    <div class="allproduct_item_priceSale">2.310.000₫</div>
+                    <div class="allproduct_item_priceOriginal"><s>2.625.000₫</s></div>
+                </div>
+                <div class="allproduct_item_footer">
+                    <div class="allproduct_item_sold">
+                        <img src="../Image/fire.png" alt="">  Đã bán 999k+
+                    </div>
+                    <div class="wishlist" data-id="02">
+                        <i onclick="addToWishList({id: '02', url: '../ChitietSP/chitiet_sp_combo_conan.html', image: '../Image/Conan_combo_105t.jpg', name: 'Combo Thám tử lừng danh Conan (Tập 1 - 105)', priceOriginal: 2625000, priceSale: 2310000, sold: 999, discount: 12})" class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="allproduct_item_cart">
+                        <i onclick="addToCart({id: '02', url:'../ChitietSP/chitiet_sp_combo_conan.html', image:'../Image/Conan_combo_105t.jpg', name: 'Combo Thám tử lừng danh Conan (Tập 1 - 105)', priceOriginal: 2625000, priceSale: 2310000})" class="fa-solid fa-cart-plus"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="allproduct_item">
+                <div class="allproduct_item_img">
+                    <a href="#">
+                        <img src="../Image/Arya_t6.png" alt="">
+                    </a>
+                    <div class="discount">-10%</div>
+                </div>
+                <div class="allproduct_item_title"><a href="../ChitietSP/chitiet_sp_combo_kusuriya.html">Arya bàn bên lại trêu ghẹo tôi bằng tiếng Nga</a></div>
+                <div class="allproduct_item_prices">
+                    <div class="allproduct_item_priceSale">85.500₫</div>
+                    <div class="allproduct_item_priceOriginal"><s>95.000₫</s></div>
+                </div>
+                <div class="allproduct_item_footer">
+                    <div class="allproduct_item_sold">
+                        <img src="../Image/fire.png" alt="">  Đã bán 999k+
+                    </div>
+                    <div class="wishlist" data-id="01">
+                        <i onclick="addToWishList({id: '01', url: '../ChitietSP/chitiet_sp_combo_kusuriya.html', image: '../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000, sold: 999, discount: 10})" class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="allproduct_item_cart">
+                        <i onclick="addToCart({id: '01', url:'../ChitietSP/chitiet_sp_combo_kusuriya.html', image:'../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000})" class="fa-solid fa-cart-plus"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="allproduct_item">
+                <div class="allproduct_item_img">
+                    <a href="#">
+                        <img src="../Image/frieren_tap1.png" alt="">
+                    </a>
+                    <div class="discount">-10%</div>
+                </div>
+                <div class="allproduct_item_title"><a href="#">Pháp sư tiễn táng - tập 1</a></div>
+                <div class="allproduct_item_prices">
+                    <div class="allproduct_item_priceSale">40.500₫</div>
+                    <div class="allproduct_item_priceOriginal"><s>45.000₫</s></div>
+                </div>
+                <div class="allproduct_item_footer">
+                    <div class="allproduct_item_sold">
+                        <img src="../Image/fire.png" alt="">  Đã bán 999k+
+                    </div>
+                    <div class="wishlist" data-id="01">
+                        <i onclick="addToWishList({id: '01', url: '../ChitietSP/chitiet_sp_combo_kusuriya.html', image: '../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000, sold: 999, discount: 10})" class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="allproduct_item_cart">
+                        <i onclick="addToCart({id: '01', url:'../ChitietSP/chitiet_sp_combo_kusuriya.html', image:'../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000})" class="fa-solid fa-cart-plus"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="allproduct_item">
+                <div class="allproduct_item_img">
+                    <a href="#">
+                        <img src="../Image/OPM_t27.png" alt="">
+                    </a>
+                    <div class="discount">-10%</div>
+                </div>
+                <div class="allproduct_item_title"><a href="#">One Punch Man - tập 27</a></div>
+                <div class="allproduct_item_prices">
+                    <div class="allproduct_item_priceSale">22.500₫</div>
+                    <div class="allproduct_item_priceOriginal"><s>25.000₫</s></div>
+                </div>
+                <div class="allproduct_item_footer">
+                    <div class="allproduct_item_sold">
+                        <img src="../Image/fire.png" alt="">  Đã bán 999k+
+                    </div>
+                    <div class="wishlist" data-id="01">
+                        <i onclick="addToWishList({id: '01', url: '../ChitietSP/chitiet_sp_combo_kusuriya.html', image: '../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000, sold: 999, discount: 10})" class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="allproduct_item_cart">
+                        <i onclick="addToCart({id: '01', url:'../ChitietSP/chitiet_sp_combo_kusuriya.html', image:'../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000})" class="fa-solid fa-cart-plus"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="allproduct_item">
+                <div class="allproduct_item_img">
+                    <a href="#">
+                        <img src="../Image/combo_TGDQ_23t.png" alt="">
+                    </a>
+                    <div class="discount">-10%</div>
+                </div>
+                <div class="allproduct_item_title"><a href="#">Combo thanh gươm diệt quỷ - 23 tập</a></div>
+                <div class="allproduct_item_prices">
+                    <div class="allproduct_item_priceSale">517.500₫</div>
+                    <div class="allproduct_item_priceOriginal"><s>575.000₫</s></div>
+                </div>
+                <div class="allproduct_item_footer">
+                    <div class="allproduct_item_sold">
+                        <img src="../Image/fire.png" alt="">  Đã bán 999k+
+                    </div>
+                    <div class="wishlist" data-id="01">
+                        <i onclick="addToWishList({id: '01', url: '../ChitietSP/chitiet_sp_combo_kusuriya.html', image: '../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000, sold: 999, discount: 10})" class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="allproduct_item_cart">
+                        <i onclick="addToCart({id: '01', url:'../ChitietSP/chitiet_sp_combo_kusuriya.html', image:'../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000})" class="fa-solid fa-cart-plus"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="allproduct_item">
+                <div class="allproduct_item_img">
+                    <a href="#">
+                        <img src="../Image/5cm_s_LN.png" alt="">
+                    </a>
+                    <div class="discount">-27%</div>
+                </div>
+                <div class="allproduct_item_title"><a href="#">5 Centimet trên Giây</a></div>
+                <div class="allproduct_item_prices">
+                    <div class="allproduct_item_priceSale">43.800₫</div>
+                    <div class="allproduct_item_priceOriginal"><s>60.000₫</s></div>
+                </div>
+                <div class="allproduct_item_footer">
+                    <div class="allproduct_item_sold">
+                        <img src="../Image/fire.png" alt="">  Đã bán 999k+
+                    </div>
+                    <div class="wishlist" data-id="01">
+                        <i onclick="addToWishList({id: '01', url: '../ChitietSP/chitiet_sp_combo_kusuriya.html', image: '../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000, sold: 999, discount: 10})" class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="allproduct_item_cart">
+                        <i onclick="addToCart({id: '01', url:'../ChitietSP/chitiet_sp_combo_kusuriya.html', image:'../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000})" class="fa-solid fa-cart-plus"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="allproduct_item">
+                <div class="allproduct_item_img">
+                    <a href="#">
+                        <img src="../Image/tieng_goi_tu_vi_sao_xa_LN.png" alt="">
+                    </a>
+                    <div class="discount">-27%</div>
+                </div>
+                <div class="allproduct_item_title"><a href="#">Tiếng gọi từ vì sao xa</a></div>
+                <div class="allproduct_item_prices">
+                    <div class="allproduct_item_priceSale">58.400₫</div>
+                    <div class="allproduct_item_priceOriginal"><s>80.000₫</s></div>
+                </div>
+                <div class="allproduct_item_footer">
+                    <div class="allproduct_item_sold">
+                        <img src="../Image/fire.png" alt="">  Đã bán 999k+
+                    </div>
+                    <div class="wishlist" data-id="01">
+                        <i onclick="addToWishList({id: '01', url: '../ChitietSP/chitiet_sp_combo_kusuriya.html', image: '../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000, sold: 999, discount: 10})" class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="allproduct_item_cart">
+                        <i onclick="addToCart({id: '01', url:'../ChitietSP/chitiet_sp_combo_kusuriya.html', image:'../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000})" class="fa-solid fa-cart-plus"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="allproduct_item">
+                <div class="allproduct_item_img">
+                    <a href="#">
+                        <img src="../Image/5cmsonemoreside.png" alt="">
+                    </a>
+                    <div class="discount">-27%</div>
+                </div>
+                <div class="allproduct_item_title"><a href="#">5 Centimet trên Giây - One more side</a></div>
+                <div class="allproduct_item_prices">
+                    <div class="allproduct_item_priceSale">87.600₫</div>
+                    <div class="allproduct_item_priceOriginal"><s>120.000₫</s></div>
+                </div>
+                <div class="allproduct_item_footer">
+                    <div class="allproduct_item_sold">
+                        <img src="../Image/fire.png" alt="">  Đã bán 999k+
+                    </div>
+                    <div class="wishlist" data-id="01">
+                        <i onclick="addToWishList({id: '01', url: '../ChitietSP/chitiet_sp_combo_kusuriya.html', image: '../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000, sold: 999, discount: 10})" class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="allproduct_item_cart">
+                        <i onclick="addToCart({id: '01', url:'../ChitietSP/chitiet_sp_combo_kusuriya.html', image:'../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000})" class="fa-solid fa-cart-plus"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="allproduct_item">
+                <div class="allproduct_item_img">
+                    <a href="#">
+                        <img src="../Image/overlord_13__manga.png" alt="">
+                    </a>
+                    <div class="discount">-10%</div>
+                </div>
+                <div class="allproduct_item_title"><a href="#">Overlord - tập 13</a></div>
+                <div class="allproduct_item_prices">
+                    <div class="allproduct_item_priceSale">41.280₫</div>
+                    <div class="allproduct_item_priceOriginal"><s>48.000₫</s></div>
+                </div>
+                <div class="allproduct_item_footer">
+                    <div class="allproduct_item_sold">
+                        <img src="../Image/fire.png" alt="">  Đã bán 999k+
+                    </div>
+                    <div class="wishlist" data-id="01">
+                        <i onclick="addToWishList({id: '01', url: '../ChitietSP/chitiet_sp_combo_kusuriya.html', image: '../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000, sold: 999, discount: 10})" class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="allproduct_item_cart">
+                        <i onclick="addToCart({id: '01', url:'../ChitietSP/chitiet_sp_combo_kusuriya.html', image:'../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000})" class="fa-solid fa-cart-plus"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="allproduct_item">
+                <div class="allproduct_item_img">
+                    <a href="#">
+                        <img src="../Image/SAO_27.png" alt="">
+                    </a>
+                    <div class="discount">-22%</div>
+                </div>
+                <div class="allproduct_item_title"><a href="#">Sword Art Online - 27</a></div>
+                <div class="allproduct_item_prices">
+                    <div class="allproduct_item_priceSale">97.500₫</div>
+                    <div class="allproduct_item_priceOriginal"><s>125.000₫</s></div>
+                </div>
+                <div class="allproduct_item_footer">
+                    <div class="allproduct_item_sold">
+                        <img src="../Image/fire.png" alt="">  Đã bán 999k+
+                    </div>
+                    <div class="wishlist" data-id="01">
+                        <i onclick="addToWishList({id: '01', url: '../ChitietSP/chitiet_sp_combo_kusuriya.html', image: '../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000, sold: 999, discount: 10})" class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="allproduct_item_cart">
+                        <i onclick="addToCart({id: '01', url:'../ChitietSP/chitiet_sp_combo_kusuriya.html', image:'../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000})" class="fa-solid fa-cart-plus"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="allproduct_item">
+                <div class="allproduct_item_img">
+                    <a href="#">
+                        <img src="../Image/lop_hoc_DCTL_8.png" alt="">
+                    </a>
+                    <div class="discount">-22%</div>
+                </div>
+                <div class="allproduct_item_title"><a href="#">Lớp học đề cao thực lực</a></div>
+                <div class="allproduct_item_prices">
+                    <div class="allproduct_item_priceSale">93.00₫</div>
+                    <div class="allproduct_item_priceOriginal"><s>120.000₫</s></div>
+                </div>
+                <div class="allproduct_item_footer">
+                    <div class="allproduct_item_sold">
+                        <img src="../Image/fire.png" alt="">  Đã bán 999k+
+                    </div>
+                    <div class="wishlist" data-id="01">
+                        <i onclick="addToWishList({id: '01', url: '../ChitietSP/chitiet_sp_combo_kusuriya.html', image: '../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000, sold: 999, discount: 10})" class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="allproduct_item_cart">
+                        <i onclick="addToCart({id: '01', url:'../ChitietSP/chitiet_sp_combo_kusuriya.html', image:'../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000})" class="fa-solid fa-cart-plus"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="allproduct_item">
+                <div class="allproduct_item_img">
+                    <a href="#">
+                        <img src="../Image/Combo_another.png" alt="">
+                    </a>
+                    <div class="discount">-29%</div>
+                </div>
+                <div class="allproduct_item_title"><a href="#">Another</a></div>
+                <div class="allproduct_item_prices">
+                    <div class="allproduct_item_priceSale">475.700₫</div>
+                    <div class="allproduct_item_priceOriginal"><s>670.000₫</s></div>
+                </div>
+                <div class="allproduct_item_footer">
+                    <div class="allproduct_item_sold">
+                        <img src="../Image/fire.png" alt="">  Đã bán 999k+
+                    </div>
+                    <div class="wishlist" data-id="01">
+                        <i onclick="addToWishList({id: '01', url: '../ChitietSP/chitiet_sp_combo_kusuriya.html', image: '../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000, sold: 999, discount: 10})" class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="allproduct_item_cart">
+                        <i onclick="addToCart({id: '01', url:'../ChitietSP/chitiet_sp_combo_kusuriya.html', image:'../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000})" class="fa-solid fa-cart-plus"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="allproduct_item">
+                <div class="allproduct_item_img">
+                    <a href="#">
+                        <img src="../Image/combo_overlord_LN.png" alt="">
+                    </a>
+                    <div class="discount">-34%</div>
+                </div>
+                <div class="allproduct_item_title"><a href="#">Combo Overlord (Light novel) 1 - 8</a></div>
+                <div class="allproduct_item_prices">
+                    <div class="allproduct_item_priceSale">798.600₫</div>
+                    <div class="allproduct_item_priceOriginal"><s>1.210.000₫</s></div>
+                </div>
+                <div class="allproduct_item_footer">
+                    <div class="allproduct_item_sold">
+                        <img src="../Image/fire.png" alt="">  Đã bán 999k+
+                    </div>
+                    <div class="wishlist" data-id="01">
+                        <i onclick="addToWishList({id: '01', url: '../ChitietSP/chitiet_sp_combo_kusuriya.html', image: '../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000, sold: 999, discount: 10})" class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="allproduct_item_cart">
+                        <i onclick="addToCart({id: '01', url:'../ChitietSP/chitiet_sp_combo_kusuriya.html', image:'../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000})" class="fa-solid fa-cart-plus"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="allproduct_item">
+                <div class="allproduct_item_img">
+                    <a href="../ChitietSP/chitiet_sp_combo_kusuriya.html">
+                        <img src="../Image/ano-hana_combo.png" alt="">
+                    </a>
+                    <div class="discount">-29%</div>
+                </div>
+                <div class="allproduct_item_title"><a href="../ChitietSP/chitiet_sp_combo_kusuriya.html">Combo Anohana (Light novel & Manga)</a></div>
+                <div class="allproduct_item_prices">
+                    <div class="allproduct_item_priceSale">209.450₫</div>
+                    <div class="allproduct_item_priceOriginal"><s>295.000₫</s></div>
+                </div>
+                <div class="allproduct_item_footer">
+                    <div class="allproduct_item_sold">
+                        <img src="../Image/fire.png" alt="">  Đã bán 999k+
+                    </div>
+                    <div class="wishlist" data-id="01">
+                        <i onclick="addToWishList({id: '01', url: '../ChitietSP/chitiet_sp_combo_kusuriya.html', image: '../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000, sold: 999, discount: 10})" class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="allproduct_item_cart">
+                        <i onclick="addToCart({id: '01', url:'../ChitietSP/chitiet_sp_combo_kusuriya.html', image:'../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000})" class="fa-solid fa-cart-plus"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="allproduct_item">
+                <div class="allproduct_item_img">
+                    <a href="../ChitietSP/chitiet_sp_combo_kusuriya.html">
+                        <img src="../Image/phao_hoa__light_novel_2t.png" alt="">
+                    </a>
+                    <div class="discount">-10%</div>
+                </div>
+                <div class="allproduct_item_title"><a href="../ChitietSP/chitiet_sp_combo_kusuriya.html">Pháo Hoa, Ngắm Từ Dưới Hay Bên Cạnh? (Boxset Light Novel 2 tập)</a></div>
+                <div class="allproduct_item_prices">
+                    <div class="allproduct_item_priceSale">117.000</div>
+                    <div class="allproduct_item_priceOriginal"><s>130.000</s></div>
+                </div>
+                <div class="allproduct_item_footer">
+                    <div class="allproduct_item_sold">
+                        <img src="../Image/fire.png" alt="">  Đã bán 999k+
+                    </div>
+                    <div class="wishlist" data-id="01">
+                        <i onclick="addToWishList({id: '01', url: '../ChitietSP/chitiet_sp_combo_kusuriya.html', image: '../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000, sold: 999, discount: 10})" class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="allproduct_item_cart">
+                        <i onclick="addToCart({id: '01', url:'../ChitietSP/chitiet_sp_combo_kusuriya.html', image:'../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000})" class="fa-solid fa-cart-plus"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="allproduct_item">
+                <div class="allproduct_item_img">
+                    <a href="../ChitietSP/chitiet_sp_combo_kusuriya.html">
+                        <img src="../Image/pp_dao_tao_nu_chinh_4.png" alt="">
+                    </a>
+                    <div class="discount">-57%</div>
+                </div>
+                <div class="allproduct_item_title"><a href="../ChitietSP/chitiet_sp_combo_kusuriya.html">Phương Pháp "Đào Tạo" Nữ Chính Nhạt Nhòa - 4</a></div>
+                <div class="allproduct_item_prices">
+                    <div class="allproduct_item_priceSale">47.300₫</div>
+                    <div class="allproduct_item_priceOriginal"><s>110.000₫</s></div>
+                </div>
+                <div class="allproduct_item_footer">
+                    <div class="allproduct_item_sold">
+                        <img src="../Image/fire.png" alt="">  Đã bán 999k+
+                    </div>
+                    <div class="wishlist" data-id="01">
+                        <i onclick="addToWishList({id: '01', url: '../ChitietSP/chitiet_sp_combo_kusuriya.html', image: '../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000, sold: 999, discount: 10})" class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="allproduct_item_cart">
+                        <i onclick="addToCart({id: '01', url:'../ChitietSP/chitiet_sp_combo_kusuriya.html', image:'../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000})" class="fa-solid fa-cart-plus"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="allproduct_item">
+                <div class="allproduct_item_img">
+                    <a href="../ChitietSP/chitiet_sp_combo_kusuriya.html">
+                        <img src="../Image/re_zero_LN_16.jpg" alt="">
+                    </a>
+                    <div class="discount">-39%</div>
+                </div>
+                <div class="allproduct_item_title"><a href="../ChitietSP/chitiet_sp_combo_kusuriya.html">Re: Zero - Bắt Đầu Lại Ở Thế Giới Khác - 16</a></div>
+                <div class="allproduct_item_prices">
+                    <div class="allproduct_item_priceSale">73.200₫</div>
+                    <div class="allproduct_item_priceOriginal"><s>120.000₫</s></div>
+                </div>
+                <div class="allproduct_item_footer">
+                    <div class="allproduct_item_sold">
+                        <img src="../Image/fire.png" alt="">  Đã bán 999k+
+                    </div>
+                    <div class="wishlist" data-id="01">
+                        <i onclick="addToWishList({id: '01', url: '../ChitietSP/chitiet_sp_combo_kusuriya.html', image: '../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000, sold: 999, discount: 10})" class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="allproduct_item_cart">
+                        <i onclick="addToCart({id: '01', url:'../ChitietSP/chitiet_sp_combo_kusuriya.html', image:'../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000})" class="fa-solid fa-cart-plus"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="allproduct_item">
+                <div class="allproduct_item_img">
+                    <a href="../ChitietSP/chitiet_sp_combo_kusuriya.html">
+                        <img src="../Image/86_t7.png" alt="">
+                    </a>
+                    <div class="discount">-29%</div>
+                </div>
+                <div class="allproduct_item_title"><a href="../ChitietSP/chitiet_sp_combo_kusuriya.html">86 - Eightysix - 7</a></div>
+                <div class="allproduct_item_prices">
+                    <div class="allproduct_item_priceSale">88.750₫</div>
+                    <div class="allproduct_item_priceOriginal"><s>125.000₫</s></div>
+                </div>
+                <div class="allproduct_item_footer">
+                    <div class="allproduct_item_sold">
+                        <img src="../Image/fire.png" alt="">  Đã bán 999k+
+                    </div>
+                    <div class="wishlist" data-id="01">
+                        <i onclick="addToWishList({id: '01', url: '../ChitietSP/chitiet_sp_combo_kusuriya.html', image: '../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000, sold: 999, discount: 10})" class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="allproduct_item_cart">
+                        <i onclick="addToCart({id: '01', url:'../ChitietSP/chitiet_sp_combo_kusuriya.html', image:'../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000})" class="fa-solid fa-cart-plus"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="allproduct_item">
+                <div class="allproduct_item_img">
+                    <a href="../ChitietSP/chitiet_sp_combo_kusuriya.html">
+                        <img src="../Image/mirai_den_tu_tl.png" alt="">
+                    </a>
+                    <div class="discount">-32%</div>
+                </div>
+                <div class="allproduct_item_title"><a href="../ChitietSP/chitiet_sp_combo_kusuriya.html">Mirai Đến Từ Tương Lai</a></div>
+                <div class="allproduct_item_prices">
+                    <div class="allproduct_item_priceSale">57.800₫</div>
+                    <div class="allproduct_item_priceOriginal"><s>85.000₫</s></div>
+                </div>
+                <div class="allproduct_item_footer">
+                    <div class="allproduct_item_sold">
+                        <img src="../Image/fire.png" alt="">  Đã bán 999k+
+                    </div>
+                    <div class="wishlist" data-id="01">
+                        <i onclick="addToWishList({id: '01', url: '../ChitietSP/chitiet_sp_combo_kusuriya.html', image: '../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000, sold: 999, discount: 10})" class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="allproduct_item_cart">
+                        <i onclick="addToCart({id: '01', url:'../ChitietSP/chitiet_sp_combo_kusuriya.html', image:'../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000})" class="fa-solid fa-cart-plus"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="allproduct_item">
+                <div class="allproduct_item_img">
+                    <a href="../ChitietSP/chitiet_sp_combo_kusuriya.html">
+                        <img src="../Image/re_zero_LN_15.png" alt="">
+                    </a>
+                    <div class="discount">-39%</div>
+                </div>
+                <div class="allproduct_item_title"><a href="../ChitietSP/chitiet_sp_combo_kusuriya.html">Re: Zero - Bắt Đầu Lại Ở Thế Giới Khác - 15</a></div>
+                <div class="allproduct_item_prices">
+                    <div class="allproduct_item_priceSale">73.200₫</div>
+                    <div class="allproduct_item_priceOriginal"><s>120.000₫</s></div>
+                </div>
+                <div class="allproduct_item_footer">
+                    <div class="allproduct_item_sold">
+                        <img src="../Image/fire.png" alt="">  Đã bán 999k+
+                    </div>
+                    <div class="wishlist" data-id="01">
+                        <i onclick="addToWishList({id: '01', url: '../ChitietSP/chitiet_sp_combo_kusuriya.html', image: '../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000, sold: 999, discount: 10})" class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="allproduct_item_cart">
+                        <i onclick="addToCart({id: '01', url:'../ChitietSP/chitiet_sp_combo_kusuriya.html', image:'../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000})" class="fa-solid fa-cart-plus"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="allproduct_item">
+                <div class="allproduct_item_img">
+                    <a href="../ChitietSP/chitiet_sp_combo_kusuriya.html">
+                        <img src="../Image/re-zero_combo_manga.png" alt="">
+                    </a>
+                    <div class="discount">-17%</div>
+                </div>
+                <div class="allproduct_item_title"><a href="../ChitietSP/chitiet_sp_combo_kusuriya.html">Combo Trọn Bộ Re:Zero - Bắt Đầu Lại Ở Thế Giới Khác - 1 - 5 (Manga)</a></div>
+                <div class="allproduct_item_prices">
+                    <div class="allproduct_item_priceSale">174.300₫</div>
+                    <div class="allproduct_item_priceOriginal"><s>210.000₫</s></div>
+                </div>
+                <div class="allproduct_item_footer">
+                    <div class="allproduct_item_sold">
+                        <img src="../Image/fire.png" alt="">  Đã bán 999k+
+                    </div>
+                    <div class="wishlist" data-id="01">
+                        <i onclick="addToWishList({id: '01', url: '../ChitietSP/chitiet_sp_combo_kusuriya.html', image: '../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000, sold: 999, discount: 10})" class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="allproduct_item_cart">
+                        <i onclick="addToCart({id: '01', url:'../ChitietSP/chitiet_sp_combo_kusuriya.html', image:'../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000})" class="fa-solid fa-cart-plus"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="allproduct_item">
+                <div class="allproduct_item_img">
+                    <a href="../ChitietSP/chitiet_sp_combo_kusuriya.html">
+                        <img src="../Image/tokyo_ghoul_t1.png" alt="">
+                    </a>
+                    <div class="discount">-10%</div>
+                </div>
+                <div class="allproduct_item_title"><a href="../ChitietSP/chitiet_sp_combo_kusuriya.html">東京喰種トーキョーグール リマスター版 1 - TOKYO GHOUL 1</a></div>
+                <div class="allproduct_item_prices">
+                    <div class="allproduct_item_priceSale">134.100₫</div>
+                    <div class="allproduct_item_priceOriginal"><s>149.000₫</s></div>
+                </div>
+                <div class="allproduct_item_footer">
+                    <div class="allproduct_item_sold">
+                        <img src="../Image/fire.png" alt="">  Đã bán 999k+
+                    </div>
+                    <div class="wishlist" data-id="01">
+                        <i onclick="addToWishList({id: '01', url: '../ChitietSP/chitiet_sp_combo_kusuriya.html', image: '../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000, sold: 999, discount: 10})" class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="allproduct_item_cart">
+                        <i onclick="addToCart({id: '01', url:'../ChitietSP/chitiet_sp_combo_kusuriya.html', image:'../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000})" class="fa-solid fa-cart-plus"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="allproduct_item">
+                <div class="allproduct_item_img">
+                    <a href="../ChitietSP/chitiet_sp_combo_kusuriya.html">
+                        <img src="../Image/SxF_t11.png" alt="">
+                    </a>
+                    <div class="discount">-10%</div>
+                </div>
+                <div class="allproduct_item_title"><a href="../ChitietSP/chitiet_sp_combo_kusuriya.html">Spy x Family - 11</a></div>
+                <div class="allproduct_item_prices">
+                    <div class="allproduct_item_priceSale">22.500₫</div>
+                    <div class="allproduct_item_priceOriginal"><s>25.000₫</s></div>
+                </div>
+                <div class="allproduct_item_footer">
+                    <div class="allproduct_item_sold">
+                        <img src="../Image/fire.png" alt="">  Đã bán 999k+
+                    </div>
+                    <div class="wishlist" data-id="01">
+                        <i onclick="addToWishList({id: '01', url: '../ChitietSP/chitiet_sp_combo_kusuriya.html', image: '../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000, sold: 999, discount: 10})" class="fa-solid fa-heart"></i>
+                    </div>
+                    <div class="allproduct_item_cart">
+                        <i onclick="addToCart({id: '01', url:'../ChitietSP/chitiet_sp_combo_kusuriya.html', image:'../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000})" class="fa-solid fa-cart-plus"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="control_next_pre_Page">
+            <button><</button>
+            <button>1</button>
+            <button>2</button>
+            <button>3</button>
+            <button>></button>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="footer_top">
+            <div class="f_top_left">
+                <h3>Đăng ký nhận tin</h3>
+                <form action="" accept-charset="UTF-8">
+                    <i class="fa-regular fa-envelope"></i>
+                    <div class="input_gmail">
+                        <input type="email" name="" id="" placeholder="Email">
+                    </div>
+                    <button type="submit"><i class="fa-regular fa-paper-plane"></i> ĐĂNG KÝ</button>
+                </form>
+            </div>
+            <div class="f_top_right">
+                <h3>KẾT NỐI MẠNG XÃ HỘI</h3>
+                <div class="icon_mxh">
+                    <div class="icon"><a href="#"><i class="fa-solid fa-envelope"></i></a></div>
+                    <div class="icon"><a href="#"><i class="fa-brands fa-facebook"></i></a></div>
+                    <div class="icon"><a href="#"><i class="fa-brands fa-instagram"></i></a></div>
+                    <div class="icon"><a href="#"><i class="fa-brands fa-tiktok"></i></a></div>
+                </div>
+            </div>
+        </div>
+        <hr width="90%" color="#fff" style="margin: 0 auto;">
+        <div class="footer_bot">
+            <div class="footer_bot_container">
+                <div class="thongtin_shop">
+                    <div class="name_shop">
+                        <a target="_blank" href="../Trangchu/index.html">K Manga</a>
+                    </div>
+                    <div class="information_shop">
+                        <p class="title_shop">
+                            K Manga - Truyện chất lượng uy tín
+                        </p>
+                        <ul style="list-style: none; padding: 0;">
+                            <li><i class="fa-solid fa-location-dot"></i> Nghĩa Trụ - Văn Giang - Hưng Yên</li>
+                            <li><i class="fa-solid fa-phone"></i><a href="#"> 0869XXXXXX</a></li>
+                            <li><i class="fa-solid fa-envelope"></i><a href="#"> K_Manga03105@gmail.com</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="chinhsach">
+                    <h3>Chính sách</h3>
+                    <ul style="list-style: disc;">
+                        <li><a href="#">Tìm kiếm</a></li>
+                        <li><a href="#">Giới thiệu</a></li>
+                        <li><a href="#">Chính sách bảo mật</a></li>
+                        <li><a href="#">Chính sách giao hàng & đổi trả</a></li>
+                        <li><a href="#">Điều khoản dịch vụ</a></li>
+                        <li><a href="#">Liên hệ</a></li>
+                    </ul>
+                </div>
+                <div class="hotline">
+                    <h3>Tổng đài hỗ trợ</h3>
+                    <ul>
+                        <li>Gọi mua hàng: <a href="#"> 0869XXXXXX</a></li>
+                        <li>Gọi bảo hành: <a href="#"> 0869XXXXXX</a></li>
+                        <li>Gọi hợp tác kinh doanh: <a href="#"> 0869XXXXXX</a></li>
+                    </ul>
+                    <div class="phuongthuc_thanhtoan">
+                        <h3>Phương thức thanh toán</h3>
+                        <img src="../Image/phuongthuc_thanhtoan.png" alt="">
+                    </div>
+                </div>
+                <div class="map">
+                    <h3>Địa chỉ</h3>
+                    <div class="g_map">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14904.26841057123!2d105.97393475787601!3d20.94982022887626!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135a59d734d3d99%3A0x18a54acd4d0b0c7a!2zTmdoxKlhIFRy4bulLCBWxINuIEdpYW5nLCBIxrBuZyBZw6puLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1735639791418!5m2!1svi!2s" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="banquyen">
+        <span>© Copyright 2024 By <a target="_blank" href="../Trangchu/index.html">K Manga - Kite 10123195.</a></span>
+    </div>
+    <div id="scroll_btn" class="back_to_head"><a href="#top_web"><i class="fa-solid fa-chevron-up"></i></a></div>
+    <div id="addToCart_message">Đã thêm vào giỏ hàng</div>
+    <!-- <script src="../PayingProducts/paying.js"></script> -->
+     <script src="allproducts.js"></script>
+    <script src="../Wishlist/wishlist.js"></script>
+    <script src="../Giohang/giohang.js"></script>
+    <script src="../ChitietSP/chitiet_sp.js"></script>
+</body>
+</html>

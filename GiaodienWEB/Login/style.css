@@ -1,0 +1,219 @@
+body{
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+.header{
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: space-between;
+    background-color: white;
+    align-items: center;
+}
+.header .left_div{
+    width: 400px;
+    height: 100%;
+    display: flex;
+    margin: 0 0 0 100px;
+}
+.header .left_div h1{
+    height: 100%;
+    margin: 0 0 0 30px;
+    line-height: 100px;
+    color: rgb(0, 174, 255);
+}
+.header .left_div img{
+    width: 140px;
+    height: 100%;
+    object-fit: contain;
+    mix-blend-mode: darken;
+}
+.header .right_div{
+    font-size: 16px;
+    margin: 20px 100px 20px 0;
+}
+.header .right_div a{
+    text-decoration: none;
+    color: rgba(0, 174, 255, 0.587);
+}
+.container{
+    width: 100%;
+    height: 700px;
+    background-color: rgba(0, 174, 255, 0.587);
+    display: flex;
+    justify-content: center;
+}
+.container .background_img{
+    width: 1400px;
+    height: 100%;
+    background: url(Rem.png) no-repeat;
+    background-size: cover;
+    background-position: contain;
+    display: flex;
+    justify-content: end;
+}
+.container .background_img .login_contaiter{
+    width: 500px;
+    height: 600px;
+    margin: 50px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.container .background_img .login_contaiter h1{
+    font-size: 54px;
+    color: rgba(0, 174, 255, 0.587);
+}
+.container .background_img .login_contaiter .input_div{
+    position: relative;
+    width: 350px;
+    height: 50px;
+    margin: 10px 0;
+    border: 1px solid rgba(0, 174, 255, 0.587);
+    border-radius: 50px;
+    background-color: white;
+}
+.container .background_img .login_contaiter .input_div#show_pass{
+    display: flex;
+    position: relative;
+}
+.container .background_img .login_contaiter .input_div#show_pass .div_eye{
+    cursor: pointer;
+    align-content: center;
+    margin: 15px 10px 15px 0;
+}
+.container .background_img .login_contaiter .input_div#show_pass .div_eye #show{
+    height: 15px;
+    width: 15px;
+    border: 1px solid rgba(0, 174, 255, 0.587);
+    border-radius: 70% 0;
+    transform: rotate(45deg);
+}
+.container .background_img .login_contaiter .input_div#show_pass .div_eye #show::before{
+    content: "";
+    position: absolute;
+    height: 8px;
+    width: 8px;
+    border: 1px solid rgba(0, 174, 255, 0.587);
+    border-radius: 50%;
+    top: 3px;
+    left: 3px;
+}
+.container .background_img .login_contaiter .input_div#show_pass .div_eye #hide{
+    height: 15px;
+    width: 15px;
+    border: 1px solid rgba(0, 174, 255, 0.587);
+    border-radius: 70% 0;
+    transform: rotate(45deg);
+}
+.container .background_img .login_contaiter .input_div#show_pass .div_eye #hide::after{
+    content: "";
+    position: absolute;
+    height: 8px;
+    width: 8px;
+    border: 1px solid rgba(0, 174, 255, 0.587);
+    border-radius: 50%;
+    top: 3px;
+    left: 3px;
+}
+.container .background_img .login_contaiter .input_div#show_pass .div_eye #hide::before{
+    content: "";
+    position: absolute;
+    width: 25px;
+    border: 1px solid rgba(0, 174, 255, 0.587);
+    border-radius: 0%;
+    top: 7px;
+    left: -6px;
+}
+.container .background_img .login_contaiter .input_div input{
+    outline: none;
+    border: none;
+    font-size: 16px;
+    color: rgba(0, 174, 255, 0.587);
+    padding: 15px 20px;
+    border-radius: 50px;
+    width: 80%;
+}
+.container .background_img .login_contaiter .input_div input::placeholder{
+    color: rgba(0, 174, 255, 0.587);
+}
+.container .background_img .login_contaiter .group{
+    display: flex;
+    justify-content: space-between;
+    width: 330px;
+    height: 50px;
+    align-items: center;
+}
+.container .background_img .login_contaiter .group a{
+    text-decoration: none;
+    color: rgb(0, 174, 255);
+}
+.container .background_img .login_contaiter .button_signin {
+    line-height: 50px;
+    text-align: center;
+    text-decoration: none;
+    background-color: rgb(0, 174, 255);
+    color: white;
+    width: 350px;
+    height: 50px;
+    border-radius: 50px;
+    font-size: 24px;
+    font-family: 'Times New Roman', Times, serif;
+}
+.footer{
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 350px;
+}
+.footer{
+    width: 100%;
+    font-size: 16px;
+    color: rgb(0, 174, 255);
+    display: flex;
+    flex-direction: column;
+    margin: 30px 0 0 0;
+    height: 380px;
+}
+.footer .thongtin{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+.footer .thongtin .tieude{
+    font-size: 16px;
+    font-weight: bold;
+}
+.footer .thongtin .noidung {
+    font-size: 14px;
+}
+.footer .thongtin .noidung a{
+    text-decoration: none;
+    color: rgb(0, 174, 255);
+}
+.footer .thongtin .chinhsach ul{
+    list-style: none;
+    padding: 0;
+}
+.footer .thongtin .gioithieu ul{
+    list-style: none;
+    padding: 0;
+}
+.footer .thongtin .lienhe ul{
+    list-style: none;
+    padding: 0;
+}
+.footer .thongtin ul li{
+    padding: 10px 5px;
+}
+.footer .banquyen{
+    display: flex;
+    flex-direction: column;
+    height: 30px;
+    width: 100%;
+    margin: 0;
+}

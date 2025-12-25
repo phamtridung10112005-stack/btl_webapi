@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign up</title>
+    <link rel="stylesheet" href="dangky_style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+<body>
+    <div class="header">
+        <div class="left_div">
+            <div class="logo">
+                <a href="../Trangchu/index.html"><img src="Logo_manga_shop_8.png" alt="XXX"></a>
+            </div>
+            <h1>Đăng ký</h1>
+        </div>
+        <div class="right_div">
+            <a href="#">Bạn có cần hỗ trợ?</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="background_img">
+            <div class="login_contaiter">
+                <h1>Đăng ký</h1>
+                <div class="input_div">
+                    <input type="text" name="" id="registerUser" placeholder="Tên đăng nhập" required>
+                </div>
+                <span id="note_user" style="color: red; display: none;">Tên đăng nhập đã tồn tại.</span>
+                <div class="input_div" id="show_pass">
+                    <input type="password" name="" id="pass" placeholder="Mật khẩu" required>
+                    <div class="div_eye" onclick="Show_Pass()"><div id="show"></div></div>
+                </div>
+                <div class="input_div">
+                    <input type="text" placeholder="Tên hiển thị" required id="registerName">
+                </div>
+                <div class="input_div">
+                    <input type="email" name="" id="registerEmail" placeholder="Email" required style="background-color: transparent;">
+                </div>
+                <span id="note_email" style="color: red; display: none;">Email đã tồn tại.</span>
+                <span id="note_tt" style="color: red; display: none;">Vui lòng điền đầy đủ thông tin.</span>
+                <a class="button_signin" onclick="CreateAccount()" href="#">Đăng ký</a>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="thongtin">
+            <div class="chinhsach">
+                <div class="tieude">Chính sách dành cho khách hàng</div>
+                <div class="noidung">
+                    <ul>
+                        <li><a href="#">Trung tâm trợ giúp</a></li>
+                        <li><a href="#">Hướng dẫn mua/ đặt hàng</a></li>
+                        <li><a href="#">Chính sách đổi trả</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="gioithieu">
+                <div class="tieude">Thanh toán</div>
+                <div class="noidung">
+                    <ul>
+                        <li>COD</li>
+                        <li>Pay</li>
+                        <li>VISA</li>
+                    </ul>
+                </div>
+                <div class="noidung">
+                    <div class="tieude">Vận chuyển</div>
+                    <ul>
+                        <li>SPX</li>
+                        <li>Viettel post</li>
+                        <li>GiaoHangNhanh</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="lienhe">
+                <div class="tieude">Liên hệ</div>
+                <div class="noidung">
+                    <ul>
+                        <li>
+                            <i class="fa-solid fa-envelope"></i>
+                            <a href="#">Email</a>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-globe"></i>
+                            <a href="#">Website</a>
+                        </li>
+                        <li>
+                            <i class="fa-brands fa-facebook"></i>
+                            <a href="https://www.facebook.com/profile.php?id=100026429534329&viewas=100000686899395">Facebook</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="banquyen">
+            <hr size="1px" style="margin: 0;">
+            <span style="text-align: center; height: 25px; margin: 10px 0; text-decoration:underline;">Bản quyền thuộc về Kite Dev_10123195</span>
+        </div>
+    </div>
+    <script src="dangky_script.js"></script>
+</body>
+</html>
