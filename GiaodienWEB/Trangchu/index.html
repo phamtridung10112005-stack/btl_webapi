@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="trangchu.css">
+    <link rel="icon" href="../Image/Logo_shop_icon.ico" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+<body>
+    <div class="header" id="top_web">
+        <div class="header_top">
+            <div class="header_top_left">
+                <div class="icon">
+                    <a href="#"><i class="fa-solid fa-envelope"></i></a>
+                </div>
+                <div class="icon">
+                    <a href="#"><i class="fa-solid fa-globe"></i></a>
+                </div>
+                <div class="icon">
+                    <a href="https://www.facebook.com/profile.php?id=100026429534329&viewas=100000686899395"><i class="fa-brands fa-facebook"></i></a>
+                </div>
+            </div>
+            <div class="header_top_mid">
+                <div class="icon"><i class="fa-solid fa-bullhorn"></i></div>
+                <div class="slide_text">
+                    <marquee behavior="scroll" direction="left">Chào mừng bạn đến với K_manga shop.</marquee>
+                </div>
+            </div>
+            <div class="header_top_right">
+                <a href="../Login/dangnhap.html" class="btn_dangnhap" id="btn_dangnhap"><i class="fa-solid fa-right-to-bracket"></i> Đăng nhập</a>
+                <a href="../Login/dangky.html" class="btn_dangky" id="btn_dangky"><i class="fa-solid fa-pen-to-square"></i> Đăng ký</a>
+                <a href="../Login/dangnhap.html" class="btn_dangxuat" id="btn_dangxuat" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                <a href="#"><i class="fa-solid fa-circle-question"></i> Trợ giúp</a>
+            </div>
+        </div>
+        <div class="header_bottom">
+            <div class="header_bottom_left">
+                <div class="logo">
+                    <a href="index.html"><img src="../Login/Logo_manga_shop_8.png" alt="K_manga_shop"></a>
+                </div>
+            </div>
+            <div class="header_bottom_mid">
+                <div class="input_search">
+                    <div class="search">
+                        <input type="text" placeholder="Tìm kiếm...">
+                        <div class="lichsu_timkiem">
+                            <h3 class="header_lichsu_timkiem">Lịch sử tìm kiếm</h3>
+                            <ul class="lichsu_timkiem_list">
+                                <li class="lichsu_timkiem_item">
+                                    <a href="#">Re:zero</a>
+                                </li>
+                                <li class="lichsu_timkiem_item">
+                                    <a href="../ChitietSP/chitiet_sp_combo_darlinginthefranxx.html">Darling in the franxx</a>
+                                </li>
+                                <li class="lichsu_timkiem_item">
+                                    <a href="../ChitietSP/chitiet_sp_combo_yourname.html">Your Name</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+            </div>
+            <div class="header_bottom_right">
+                <div class="sp_uathich">
+                    <a href="../Wishlist/wishlist.html" class="icon"><i class="fa-regular fa-heart"></i></a>
+                </div>
+                <div class="giohang">
+                    <a href="../Giohang/giohang.html" class="icon"><i class="fa-solid fa-cart-shopping"></i></a>
+                </div>
+                <div class="thongbao hienthi_thongbao">
+                    <a class="icon"><i class="fa-regular fa-bell"></i></a>
+                    <div class="div_thongbao">
+                        <header class="header_thongbao"><h6>Thông báo mới</h6></header>
+                        <ul class="list_thongbao">
+                            <li class="item_thongbao">
+                                <a href="#" class="link_thongbao">
+                                    <img src="../Image/SxF_Ss3.png" alt="Tenki no Ko" class="img_thongbao">
+                                    <div class="chitiet_thongbao">
+                                        <span class="ten_chitiet_thongbao">SpyxFamily Season 3</span>
+                                        <span class="mota_chitiet_thongbao">Gia đình Forger chính thức trở lại với season 3</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="item_thongbao">
+                                <a href="#" class="link_thongbao">
+                                    <img src="../Image/LPH_KD_T1.png" alt="Lịch phát hành NXB Kim Đồng tháng 12" class="img_thongbao">
+                                    <div class="chitiet_thongbao">
+                                        <span class="ten_chitiet_thongbao">Lịch phát hành tháng 1 - NXB Kim Đồng</span>
+                                        <span class="mota_chitiet_thongbao">TSEASON'S GREETING AND BEST WISHES FOR THE NEW YEAR - ĐÓN NĂM MỚI BÊN COMIC NHÀ KIM</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="item_thongbao">
+                                <a href="#" class="link_thongbao">
+                                    <img src="../Image/LPH_IPM_T12.png" alt="Lịch phát hành NXB IPM tháng 12" class="img_thongbao">
+                                    <div class="chitiet_thongbao">
+                                        <span class="ten_chitiet_thongbao">Lịch phát hành tháng 12 - NXB IPM</span>
+                                        <span class="mota_chitiet_thongbao">Sau khi có thay đổi thì đây là lịch phát hành chính thức của IPM tháng 12.</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="item_thongbao">
+                                <a href="#" class="link_thongbao">
+                                    <img src="../Image/LPH_Tre_T12.png" alt="Lịch phát hành NXB Trẻ tháng 12" class="img_thongbao">
+                                    <div class="chitiet_thongbao">
+                                        <span class="ten_chitiet_thongbao">Lịch phát hành tháng 12 - NXB Trẻ</span>
+                                        <span class="mota_chitiet_thongbao">Lịch phát hành tháng cuối cùng năm 2024 đây nha cả nhà!</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="item_thongbao">
+                                <a href="#" class="link_thongbao">
+                                    <img src="../Image/Koro_sensei.png" alt="Assassination classroom" class="img_thongbao">
+                                    <div class="chitiet_thongbao">
+                                        <span class="ten_chitiet_thongbao">Kỷ niệm 10 năm ra mắt Anime Assassination classroom</span>
+                                        <span class="mota_chitiet_thongbao">Assassination Classroom đang kỷ niệm 10 năm ra mắt. Bộ anime đã chinh phục khán giả với cốt truyện hấp dẫn và dàn nhân vật thú vị. Để đánh dấu sự kiện này, Assassination Classroom đã công bố ba dự án mới.</span>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                        <footer class="footer_thongbao">
+                            <a href="#" class="footer_thongbao_btn">Xem tất cả</a>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main_slider">
+        <div class="navbar_container">
+            <ul class="navbar">
+                <li class="navbar_item"><i class="fa-solid fa-bars"></i> Danh mục sản phẩm
+                    <ul class="danhmuc_SP">
+                        <li class="danhmuc_SP_item"><a href="../AllProducts/allproducts.html">Tất cả sản phẩm</a></li>
+                        <li class="danhmuc_SP_item"><a href="#">Manga</a></li>
+                        <li class="danhmuc_SP_item"><a href="#">Light novel</a></li>
+                        <li class="danhmuc_SP_item"><a href="#">NXB Kim Đồng</a></li>
+                        <li class="danhmuc_SP_item"><a href="#">NXB IPM</a></li>
+                        <li class="danhmuc_SP_item"><a href="#">NXB Trẻ</a></li>
+                    </ul>
+                </li>
+                <li class="navbar_item"><a href="#">Tin tức</a></li>
+                <li class="navbar_item"><a href="#">Giới thiệu</a></li>
+            </ul>
+        </div>
+        <button class="pre_btn"><</button>
+        <div class="slider_list">
+            <a href="#"><img src="../Image/rem.JPG" alt="XXX" class="slider_item"></a>
+            <a href="../ChitietSP/chitiet_sp_combo_darlinginthefranxx.html"><img src="../Image/Zero_two.png" alt="XXX" class="slider_item"></a>
+            <a href="#"><img src="../Image/Your_name.jpg" alt="XXX" class="slider_item"></a>
+            <a href="#"><img src="../Image/Suzume_no_tojimari.jpg" alt="XXX" class="slider_item"></a>
+            <a href="#"><img src="../Image/IMG_2006.PNG" alt="XXX" class="slider_item"></a>
+        </div>
+        <button class="next_btn">></button>
+    </div>
+    <div class="flash_sale_container">
+        <div class="flash_sale">
+            <div class="flash_sale_header">
+                <div class="flash_sale_header_left">
+                    <h2 style="margin: 0;"><span><img src="../Image/HOT.webp" alt=""> FLASH SALE</span></h2>
+                </div>
+                <div class="flash_sale_header_mid">
+                    <marquee behavior="scroll" direction="left">
+                        <a href="../ChitietSP/chitiet_sp_combo_kusuriya.html">+ Combo Dược sư tự sự (Manga) (Tập 1-10)</a>
+                        <a href="../ChitietSP/chitiet_sp_combo_conan.html">+ Combo Thám tử lừng danh Conan (Tập 1 - 105)</a>
+                        <a href="../ChitietSP/chitiet_sp_combo_yourname.html">+ Combo Your Name (Manga & Light Novel & Art book)</a>
+                        <a href="#">+ Boxset Lớp học ám sát (21 tập)</a>
+                        <a href="#">+ Boxset Dáng hình thanh âm</a>
+                        <a href="#">+ Boxset tháng tư là lời nói dối của em</a>
+                        <a href="#">+ Dược sư tự sự (LN) tập 5</a>
+                        <a href="#">+ Combo Doraemon truyện ngắn - 45 tập</a>
+                    </marquee>
+                </div>
+                <div class="flash_sale_header_right">
+                    <ul class="clock">
+                        <li><span class="days"></span><span>Ngày</span></li>
+                        <li><span class="hours"></span><span>Giờ</span></li>
+                        <li><span class="minutes"></span><span>Phút</span></li>
+                        <li><span class="seconds"></span><span>Giây</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="flash_sale_body">
+                <div class="flash_sale_slider_container">
+                    <div class="flash_sale_list">
+                        <div class="flash_sale_list_track">
+                            <div class="flash_sale_item">
+                                <div class="flash_sale_item_img"><a href="../ChitietSP/chitiet_sp_combo_kusuriya.html"><img src="../Image/Kusuriya_combo_10t.png" alt=""></a></div>
+                                <div class="flash_sale_item_text"><a href="../ChitietSP/chitiet_sp_combo_kusuriya.html">Combo Dược sư tự sự (Manga) (Tập 1-10)</a></div>
+                                <div class="flash_sale_item_price">
+                                    <div class="price_sale">423.000₫</div>
+                                    <div class="price">470.000₫</div>
+                                </div>
+                                <div class="flash_sale_item_footer">
+                                    <div class="flash_sale_item_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                                    <div class="wishlist" data-id="01">
+                                        <i onclick="addToWishList({id: '01', url: '../ChitietSP/chitiet_sp_combo_kusuriya.html', image: '../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000, sold: 999, discount: 10})" class="fa-solid fa-heart"></i>
+                                    </div>
+                                    <div class="cart">
+                                        <i onclick="addToCart({id: '01', url:'../ChitietSP/chitiet_sp_combo_kusuriya.html', image:'../Image/Kusuriya_combo_10t.png', name: 'Combo Dược sư tự sự (Manga) (Tập 1-10)', priceOriginal: 470000, priceSale: 423000})" class="fa-solid fa-cart-plus"></i>
+                                    </div>
+                                </div>
+                                <div class="discount">-10%</div>
+                            </div>
+                            <div class="flash_sale_item">
+                                <div class="flash_sale_item_img"><a href="../ChitietSP/chitiet_sp_combo_conan.html"><img src="../Image/Conan_combo_105t.jpg" alt=""></a></div>
+                                <div class="flash_sale_item_text"><a href="../ChitietSP/chitiet_sp_combo_conan.html">Combo Thám tử lừng danh Conan (Tập 1 - 105)</a></div>
+                                <div class="flash_sale_item_price">
+                                    <div class="price_sale">2.310.000₫</div>
+                                    <div class="price">2.625.000₫</div>
+                                </div>
+                                <div class="flash_sale_item_footer">
+                                    <div class="flash_sale_item_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                                    <div class="wishlist" data-id="02">
+                                        <i onclick="addToWishList({id: '02', url: '../ChitietSP/chitiet_sp_combo_conan.html', image: '../Image/Conan_combo_105t.jpg', name: 'Combo Thám tử lừng danh Conan (Tập 1 - 105)', priceOriginal: 2625000, priceSale: 2310000, sold: 999, discount: 12})" class="fa-solid fa-heart"></i>
+                                    </div>
+                                    <div class="cart">
+                                        <i onclick="addToCart({id: '02', url:'../ChitietSP/chitiet_sp_combo_conan.html', image:'../Image/Conan_combo_105t.jpg', name: 'Combo Thám tử lừng danh Conan (Tập 1 - 105)', priceOriginal: 2625000, priceSale: 2310000})" class="fa-solid fa-cart-plus"></i>
+                                    </div>
+                                </div>
+                                <div class="discount">-12%</div>
+                            </div>
+                            <div class="flash_sale_item">
+                                <div class="flash_sale_item_img"><a href="../ChitietSP/chitiet_sp_combo_yourname.html"><img src="../Image/Your_name_combo.jpg" alt=""></a></div>
+                                <div class="flash_sale_item_text"><a href="../ChitietSP/chitiet_sp_combo_yourname.html">Combo Your Name (Manga & Light Novel & Art book)</a></div>
+                                <div class="flash_sale_item_price">
+                                    <div class="price_sale">316.200₫</div>
+                                    <div class="price">465.000₫</div>
+                                </div>
+                                <div class="flash_sale_item_footer">
+                                    <div class="flash_sale_item_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                                    <div class="wishlist" data-id="03">
+                                        <i onclick="addToWishList({id: '03', url: '../ChitietSP/chitiet_sp_combo_yourname.html', image: '../Image/Your_name_combo.jpg', name: 'Combo Your Name (Manga & Light Novel & Art book)', priceOriginal: 465000, priceSale: 316200, sold: 999, discount: 32})" class="fa-solid fa-heart"></i>
+                                    </div>
+                                    <div class="cart">
+                                        <i onclick="addToCart({id: '03', url:'../ChitietSP/chitiet_sp_combo_yourname.html', image:'../Image/Your_name_combo.jpg', name: 'Combo Your Name (Manga & Light Novel & Art book)', priceOriginal: 465000, priceSale: 316200})" class="fa-solid fa-cart-plus"></i>
+                                    </div>
+                                </div>
+                                <div class="discount">-32%</div>
+                            </div>
+                            <div class="flash_sale_item">
+                                <div class="flash_sale_item_img"><a href="#"><img src="../Image/Assasination_classroom_combo_21t.jpg" alt=""></a></div>
+                                <div class="flash_sale_item_text"><a href="#">Boxset Lớp học ám sát (21 tập)</a></div>
+                                <div class="flash_sale_item_price">
+                                    <div class="price_sale">810.000₫</div>
+                                    <div class="price">900.000₫</div>
+                                </div>
+                                <div class="flash_sale_item_footer">
+                                    <div class="flash_sale_item_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                                    <div class="wishlist">
+                                        <i class="fa-solid fa-heart"></i>
+                                    </div>
+                                    <div class="cart">
+                                        <i class="fa-solid fa-cart-plus"></i>
+                                    </div>
+                                </div>
+                                <div class="discount">-10%</div>
+                            </div>
+                            <div class="flash_sale_item">
+                                <div class="flash_sale_item_img"><a href="#"><img src="../Image/boxset-dang-hinh-thanh-am-tron-bo-7-tap.jpg" alt=""></a></div>
+                                <div class="flash_sale_item_text"><a href="#">Boxset Dáng hình thanh âm</a></div>
+                                <div class="flash_sale_item_price">
+                                    <div class="price_sale">270.000₫</div>
+                                    <div class="price">300.000₫</div>
+                                </div>
+                                <div class="flash_sale_item_footer">
+                                    <div class="flash_sale_item_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                                    <div class="wishlist">
+                                        <i class="fa-solid fa-heart"></i>
+                                    </div>
+                                    <div class="cart">
+                                        <i class="fa-solid fa-cart-plus"></i>
+                                    </div>
+                                </div>
+                                <div class="discount">-10%</div>
+                            </div>
+                            <div class="flash_sale_item">
+                                <div class="flash_sale_item_img"><a href="#"><img src="../Image/boxset_shigatsu_wa_kimi_no_uso.jfif" alt=""></a></div>
+                                <div class="flash_sale_item_text"><a href="#">Boxset tháng tư là lời nói dối của em</a></div>
+                                <div class="flash_sale_item_price">
+                                    <div class="price_sale">450.000₫</div>
+                                    <div class="price">500.000₫</div>
+                                </div>
+                                <div class="flash_sale_item_footer">
+                                    <div class="flash_sale_item_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                                    <div class="wishlist">
+                                        <i class="fa-solid fa-heart"></i>
+                                    </div>
+                                    <div class="cart">
+                                        <i class="fa-solid fa-cart-plus"></i>
+                                    </div>
+                                </div>
+                                <div class="discount">-10%</div>
+                            </div>
+                            <div class="flash_sale_item">
+                                <div class="flash_sale_item_img"><a href="#"><img src="../Image/Kusuriya_LN_t5.jpg" alt=""></a></div>
+                                <div class="flash_sale_item_text"><a href="#">Dược sư tự sự (LN) tập 5</a></div>
+                                <div class="flash_sale_item_price">
+                                    <div class="price_sale">112.500₫</div>
+                                    <div class="price">125.000₫</div>
+                                </div>
+                                <div class="flash_sale_item_footer">
+                                    <div class="flash_sale_item_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                                    <div class="wishlist">
+                                        <i class="fa-solid fa-heart"></i>
+                                    </div>
+                                    <div class="cart">
+                                        <i class="fa-solid fa-cart-plus"></i>
+                                    </div>
+                                </div>
+                                <div class="discount">-10%</div>
+                            </div>
+                            <div class="flash_sale_item">
+                                <div class="flash_sale_item_img"><a href="#"><img src="../Image/combo_doraemon_45t.jpg" alt=""></a></div>
+                                <div class="flash_sale_item_text"><a href="#">Combo Doraemon truyện ngắn - 45 tập</a></div>
+                                <div class="flash_sale_item_price">
+                                    <div class="price_sale">871.200₫</div>
+                                    <div class="price">990.000₫</div>
+                                </div>
+                                <div class="flash_sale_item_footer">
+                                    <div class="flash_sale_item_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                                    <div class="wishlist">
+                                        <i class="fa-solid fa-heart"></i>
+                                    </div>
+                                    <div class="cart">
+                                        <i class="fa-solid fa-cart-plus"></i>
+                                    </div>
+                                </div>
+                                <div class="discount">-12%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="pre-btn"><</button>
+                <button class="next-btn">></button>
+            </div>
+            <div class="flash_sale_footer">
+                <a href="#">Xem tất cả »</a>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <section class="module">
+            <div class="title_module"  style="background: url(../Image/baner_hot.png) no-repeat center / contain"><a href="#"></a></div>
+            <div class="list_sp">
+                <div class="item_sp">
+                    <div class="img_item_sp"><a href="#"><img src="../Image/Kusuriya_combo_10t.png" alt=""></a></div>
+                    <div class="title_item_sp"><a href="#">Combo Dược sư tự sự (Manga) (Tập 1-10)</a></div>
+                    <div class="gia_sp">
+                        <div class="price_sale">423.000₫</div>
+                        <div class="price">470.000₫</div>
+                    </div>
+                    <div class="item_sp_footer">
+                        <div class="item_sp_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                        <div class="wishlist">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="cart">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </div>
+                    </div>
+                    <div class="discount">-10%</div>
+                </div>
+                <div class="item_sp">
+                    <div class="img_item_sp"><a href="#"><img src="../Image/AOT_t1.png" alt="" class="img_item"></a></div>
+                    <div class="title_item_sp"><a href="#">Attack on titan - tập 1</a></div>
+                    <div class="gia_sp">
+                        <div class="price_sale">43.200₫</div>
+                        <div class="price">48.000₫</div>
+                    </div>
+                    <div class="item_sp_footer">
+                        <div class="item_sp_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                        <div class="wishlist">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="cart">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </div>
+                    </div>
+                    <div class="discount">-10%</div>
+                </div>
+                <div class="item_sp">
+                    <div class="img_item_sp"><a href="#"><img src="../Image/Kusuriya_t12.jpg" alt="" class="img_item"></a></div>
+                    <div class="title_item_sp"><a href="#">Dược sư tự sự (Manga) - tập 12</a></div>
+                    <div class="gia_sp">
+                        <div class="price_sale">42.300₫</div>
+                        <div class="price">47.000₫</div>
+                    </div>
+                    <div class="item_sp_footer">
+                        <div class="item_sp_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                        <div class="wishlist">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="cart">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </div>
+                    </div>
+                    <div class="discount">-10%</div>
+                </div>
+                <div class="item_sp">
+                    <div class="img_item_sp"><a href="#"><img src="../Image/LycorisRecoil_t1_new.png" alt="" class="img_item"></a></div>
+                    <div class="title_item_sp"><a href="#">Lycoris Recoil (Manga) - tập 1</a></div>
+                    <div class="gia_sp">
+                        <div class="price_sale">48.400₫</div>
+                        <div class="price">55.000₫</div>
+                    </div>
+                    <div class="item_sp_footer">
+                        <div class="item_sp_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                        <div class="wishlist">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="cart">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </div>
+                    </div>
+                    <div class="discount">-12%</div>
+                </div>
+                <div class="item_sp">
+                    <div class="img_item_sp"><a href="#"><img src="../Image/conan_t104.png" alt="" class="img_item"></a></div>
+                    <div class="title_item_sp"><a href="#">Thám tử lừng danh Conan tập 104</a></div>
+                    <div class="gia_sp">
+                        <div class="price_sale">22.500₫</div>
+                        <div class="price">25.000₫</div>
+                    </div>
+                    <div class="item_sp_footer">
+                        <div class="item_sp_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                        <div class="wishlist">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="cart">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </div>
+                    </div>
+                    <div class="discount">-10%</div>
+                </div>
+                <div class="item_sp">
+                    <div class="img_item_sp"><a href="#"><img src="../Image/onepiece_104.png" alt="" class="img_item"></a></div>
+                    <div class="title_item_sp"><a href="#">One Piece tập 104</a></div>
+                    <div class="gia_sp">
+                        <div class="price_sale">19.800₫</div>
+                        <div class="price">22.000₫</div>
+                    </div>
+                    <div class="item_sp_footer">
+                        <div class="item_sp_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                        <div class="wishlist">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="cart">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </div>
+                    </div>
+                    <div class="discount">-10%</div>
+                </div>
+            </div>
+        </section>
+        <section class="module">
+            <div class="title_module" style="background: url(../Image/baner_new.png) no-repeat center / contain"><a href="#"></a></div>
+            <div class="list_sp">
+                <div class="item_sp">
+                    <div class="img_item_sp"><a href="#"><img src="../Image/onepiece_105.png" alt=""></a></div>
+                    <div class="title_item_sp"><a href="#">One Piece tập 105</a></div>
+                    <div class="gia_sp">
+                        <div class="price_sale">19.800₫</div>
+                        <div class="price">22.000₫</div>
+                    </div>
+                    <div class="item_sp_footer">
+                        <div class="item_sp_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                        <div class="wishlist">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="cart">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </div>
+                    </div>
+                    <div class="discount">-10%</div>
+                </div>
+                <div class="item_sp">
+                    <div class="img_item_sp"><a href="#"><img src="../Image/conan_t105.png" alt="" class="img_item"></a></div>
+                    <div class="title_item_sp"><a href="#">Thám tử lừng danh Conan tập 105</a></div>
+                    <div class="gia_sp">
+                        <div class="price_sale">22.500₫</div>
+                        <div class="price">25.000₫</div>
+                    </div>
+                    <div class="item_sp_footer">
+                        <div class="item_sp_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                        <div class="wishlist">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="cart">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </div>
+                    </div>
+                    <div class="discount">-10%</div>
+                </div>
+                <div class="item_sp">
+                    <div class="img_item_sp"><a href="#"><img src="../Image/lycoris_recoil_t2.png" alt="" class="img_item"></a></div>
+                    <div class="title_item_sp"><a href="#">Lycoris Recoil tập 2</a></div>
+                    <div class="gia_sp">
+                        <div class="price_sale">48.400₫</div>
+                        <div class="price">55.000₫</div>
+                    </div>
+                    <div class="item_sp_footer">
+                        <div class="item_sp_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                        <div class="wishlist">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="cart">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </div>
+                    </div>
+                    <div class="discount">-12%</div>
+                </div>
+                <div class="item_sp">
+                    <div class="img_item_sp"><a href="#"><img src="../Image/eightysix_LN_12.png" alt="" class="img_item"></a></div>
+                    <div class="title_item_sp"><a href="#">Eighty Six tập 12</a></div>
+                    <div class="gia_sp">
+                        <div class="price_sale">113.100₫</div>
+                        <div class="price">145.000₫</div>
+                    </div>
+                    <div class="item_sp_footer">
+                        <div class="item_sp_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                        <div class="wishlist">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="cart">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </div>
+                    </div>
+                    <div class="discount">-22%</div>
+                </div>
+                <div class="item_sp">
+                    <div class="img_item_sp"><a href="#"><img src="../Image/dragonballsuper_t22.png" alt="" class="img_item"></a></div>
+                    <div class="title_item_sp"><a href="#">Dragon ball Super tập 22</a></div>
+                    <div class="gia_sp">
+                        <div class="price_sale">22.500₫</div>
+                        <div class="price">25.000₫</div>
+                    </div>
+                    <div class="item_sp_footer">
+                        <div class="item_sp_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                        <div class="wishlist">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="cart">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </div>
+                    </div>
+                    <div class="discount">-10%</div>
+                </div>
+                <div class="item_sp">
+                    <div class="img_item_sp"><a href="#"><img src="../Image/AOT_t21.png" alt="" class="img_item"></a></div>
+                    <div class="title_item_sp"><a href="#">Attack on titan tập 21</a></div>
+                    <div class="gia_sp">
+                        <div class="price_sale">43.200₫</div>
+                        <div class="price">48.000₫</div>
+                    </div>
+                    <div class="item_sp_footer">
+                        <div class="item_sp_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                        <div class="wishlist">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="cart">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </div>
+                    </div>
+                    <div class="discount">-10%</div>
+                </div>
+            </div>
+        </section>
+        <section class="module">
+            <div class="title_module" style="background: url(../Image/baner_manga.png) no-repeat center / contain;"><a href="#"></a></div>
+            <div class="list_sp">
+                <div class="item_sp">
+                    <div class="img_item_sp"><a href="#"><img src="../Image/weathering_with_you_manga.png" alt=""></a></div>
+                    <div class="title_item_sp"><a href="#">Boxset Manga Đứa con của thời tiết</a></div>
+                    <div class="gia_sp">
+                        <div class="price_sale">60.000₫</div>
+                        <div class="price">120.000₫</div>
+                    </div>
+                    <div class="item_sp_footer">
+                        <div class="item_sp_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                        <div class="wishlist">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="cart">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </div>
+                    </div>
+                    <div class="discount">-50%</div>
+                </div>
+                <div class="item_sp">
+                    <div class="img_item_sp"><a href="#"><img src="../Image/frieren_tap12_MG.png" alt="" class="img_item"></a></div>
+                    <div class="title_item_sp"><a href="#">Frieren - Pháp sư tiễn táng - Tập 12 (Tặng kèm lót ly)</a></div>
+                    <div class="gia_sp">
+                        <div class="price_sale">40.500₫</div>
+                        <div class="price">45.000₫</div>
+                    </div>
+                    <div class="item_sp_footer">
+                        <div class="item_sp_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                        <div class="wishlist">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="cart">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </div>
+                    </div>
+                    <div class="discount">-10%</div>
+                </div>
+                <div class="item_sp">
+                    <div class="img_item_sp"><a href="#"><img src="../Image/Shadow_manga_t8.png" alt="" class="img_item"></a></div>
+                    <div class="title_item_sp"><a href="#">Chúa tể bóng tôi tập 8</a></div>
+                    <div class="gia_sp">
+                        <div class="price_sale">36.000₫</div>
+                        <div class="price">40.000₫</div>
+                    </div>
+                    <div class="item_sp_footer">
+                        <div class="item_sp_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                        <div class="wishlist">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="cart">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </div>
+                    </div>
+                    <div class="discount">-10%</div>
+                </div>
+                <div class="item_sp">
+                    <div class="img_item_sp"><a href="#"><img src="../Image/myhero_t39.png" alt="" class="img_item"></a></div>
+                    <div class="title_item_sp"><a href="#">Học viện siêu anh hùng</a></div>
+                    <div class="gia_sp">
+                        <div class="price_sale">22.500₫</div>
+                        <div class="price">25.000₫</div>
+                    </div>
+                    <div class="item_sp_footer">
+                        <div class="item_sp_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                        <div class="wishlist">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="cart">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </div>
+                    </div>
+                    <div class="discount">-10%</div>
+                </div>
+                <div class="item_sp">
+                    <div class="img_item_sp"><a href="#"><img src="../Image/overlord_14__manga.png" alt="" class="img_item"></a></div>
+                    <div class="title_item_sp"><a href="#">Overlord (Manga) tập 14</a></div>
+                    <div class="gia_sp">
+                        <div class="price_sale">41.280₫</div>
+                        <div class="price">48.000₫</div>
+                    </div>
+                    <div class="item_sp_footer">
+                        <div class="item_sp_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                        <div class="wishlist">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="cart">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </div>
+                    </div>
+                    <div class="discount">-14%</div>
+                </div>
+                <div class="item_sp">
+                    <div class="img_item_sp"><a href="#"><img src="../Image/combo_TGDQ_23t.png" alt="" class="img_item"></a></div>
+                    <div class="title_item_sp"><a href="#">Combo thanh gươm diệt quỷ - 23 tập</a></div>
+                    <div class="gia_sp">
+                        <div class="price_sale">517.500₫</div>
+                        <div class="price">575.000₫</div>
+                    </div>
+                    <div class="item_sp_footer">
+                        <div class="item_sp_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                        <div class="wishlist">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="cart">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </div>
+                    </div>
+                    <div class="discount">-10%</div>
+                </div>
+            </div>
+        </section>
+        <section class="module">
+            <div class="title_module" style="background: url(../Image/baner_LN.png) no-repeat center / contain;"><a href="#"></a></div>
+            <div class="list_sp">
+                <div class="item_sp">
+                    <div class="img_item_sp"><a href="#"><img src="../Image/Kusuriya_LN_t1.jpg" alt=""></a></div>
+                    <div class="title_item_sp"><a href="#">Dược sư tự sự (Light novel) - tập 1</a></div>
+                    <div class="gia_sp">
+                        <div class="price_sale">99.000₫</div>
+                        <div class="price">110.000₫</div>
+                    </div>
+                    <div class="item_sp_footer">
+                        <div class="item_sp_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                        <div class="wishlist">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="cart">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </div>
+                    </div>
+                    <div class="discount">-10%</div>
+                </div>
+                <div class="item_sp">
+                    <div class="img_item_sp"><a href="#"><img src="../Image/Shadow_LN_t4.png" alt="" class="img_item"></a></div>
+                    <div class="title_item_sp"><a href="#">Chúa tể bóng tối (Light novel) - tập 4</a></div>
+                    <div class="gia_sp">
+                        <div class="price_sale">115.800₫</div>
+                        <div class="price">128.000₫</div>
+                    </div>
+                    <div class="item_sp_footer">
+                        <div class="item_sp_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                        <div class="wishlist">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="cart">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </div>
+                    </div>
+                    <div class="discount">-10%</div>
+                </div>
+                <div class="item_sp">
+                    <div class="img_item_sp"><a href="#"><img src="../Image/overlord_8_LN.jpg" alt="" class="img_item"></a></div>
+                    <div class="title_item_sp"><a href="#">Overlord (Light novel) - tập 8</a></div>
+                    <div class="gia_sp">
+                        <div class="price_sale">124.250₫</div>
+                        <div class="price">175.000₫</div>
+                    </div>
+                    <div class="item_sp_footer">
+                        <div class="item_sp_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                        <div class="wishlist">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="cart">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </div>
+                    </div>
+                    <div class="discount">-29%</div>
+                </div>
+                <div class="item_sp">
+                    <div class="img_item_sp"><a href="#"><img src="../Image/khu-vuon-ngon-tu_LN.png" alt="" class="img_item"></a></div>
+                    <div class="title_item_sp"><a href="#">Khu vườn ngôn từ</a></div>
+                    <div class="gia_sp">
+                        <div class="price_sale">87.600₫</div>
+                        <div class="price">120.000₫</div>
+                    </div>
+                    <div class="item_sp_footer">
+                        <div class="item_sp_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                        <div class="wishlist">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="cart">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </div>
+                    </div>
+                    <div class="discount">-27%</div>
+                </div>
+                <div class="item_sp">
+                    <div class="img_item_sp"><a href="#"><img src="../Image/suzume_LN.jpg" alt="" class="img_item"></a></div>
+                    <div class="title_item_sp"><a href="#">Suzume No Tojimari</a></div>
+                    <div class="gia_sp">
+                        <div class="price_sale">105.850₫</div>
+                        <div class="price">145.000₫</div>
+                    </div>
+                    <div class="item_sp_footer">
+                        <div class="item_sp_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                        <div class="wishlist">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="cart">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </div>
+                    </div>
+                    <div class="discount">-27%</div>
+                </div>
+                <div class="item_sp">
+                    <div class="img_item_sp"><a href="#"><img src="../Image/dua-con-thoi-tiet_LN.png" alt="" class="img_item"></a></div>
+                    <div class="title_item_sp"><a href="#">Đứa con của thời tiết</a></div>
+                    <div class="gia_sp">
+                        <div class="price_sale">62.050₫</div>
+                        <div class="price">85.000₫</div>
+                    </div>
+                    <div class="item_sp_footer">
+                        <div class="item_sp_sold"><img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> Đã bán 999k+ </div>
+                        <div class="wishlist">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="cart">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </div>
+                    </div>
+                    <div class="discount">-27%</div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="footer">
+        <div class="footer_top">
+            <div class="f_top_left">
+                <h3>Đăng ký nhận tin</h3>
+                <form action="" accept-charset="UTF-8">
+                    <i class="fa-regular fa-envelope"></i>
+                    <div class="input_gmail">
+                        <input type="email" name="" id="" placeholder="Email">
+                    </div>
+                    <button type="submit"><i class="fa-regular fa-paper-plane"></i> ĐĂNG KÝ</button>
+                </form>
+            </div>
+            <div class="f_top_right">
+                <h3>KẾT NỐI MẠNG XÃ HỘI</h3>
+                <div class="icon_mxh">
+                    <div class="icon"><a href="#"><i class="fa-solid fa-envelope"></i></a></div>
+                    <div class="icon"><a href="#"><i class="fa-brands fa-facebook"></i></a></div>
+                    <div class="icon"><a href="#"><i class="fa-brands fa-instagram"></i></a></div>
+                    <div class="icon"><a href="#"><i class="fa-brands fa-tiktok"></i></a></div>
+                </div>
+            </div>
+        </div>
+        <hr width="90%" color="#fff" style="margin: 0 auto;">
+        <div class="footer_bot">
+            <div class="footer_bot_container">
+                <div class="thongtin_shop">
+                    <div class="name_shop">
+                        <a target="_blank" href="index.html">K Manga</a>
+                    </div>
+                    <div class="information_shop">
+                        <p class="title_shop">
+                            K Manga - Truyện chất lượng uy tín
+                        </p>
+                        <ul style="list-style: none; padding: 0;">
+                            <li><i class="fa-solid fa-location-dot"></i> Nghĩa Trụ - Văn Giang - Hưng Yên</li>
+                            <li><i class="fa-solid fa-phone"></i><a href="#"> 0869XXXXXX</a></li>
+                            <li><i class="fa-solid fa-envelope"></i><a href="#"> K_Manga03105@gmail.com</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="chinhsach">
+                    <h3>Chính sách</h3>
+                    <ul>
+                        <li><a href="#">Tìm kiếm</a></li>
+                        <li><a href="#">Giới thiệu</a></li>
+                        <li><a href="#">Chính sách bảo mật</a></li>
+                        <li><a href="#">Chính sách giao hàng & đổi trả</a></li>
+                        <li><a href="#">Điều khoản dịch vụ</a></li>
+                        <li><a href="#">Liên hệ</a></li>
+                    </ul>
+                </div>
+                <div class="hotline">
+                    <h3>Tổng đài hỗ trợ</h3>
+                    <ul>
+                        <li>Gọi mua hàng: <a href="#"> 0869XXXXXX</a></li>
+                        <li>Gọi bảo hành: <a href="#"> 0869XXXXXX</a></li>
+                        <li>Gọi hợp tác kinh doanh: <a href="#"> 0869XXXXXX</a></li>
+                    </ul>
+                    <div class="phuongthuc_thanhtoan">
+                        <h3>Phương thức thanh toán</h3>
+                        <img src="../Image/phuongthuc_thanhtoan.png" alt="">
+                    </div>
+                </div>
+                <div class="map">
+                    <h3>Địa chỉ</h3>
+                    <div class="g_map">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14904.26841057123!2d105.97393475787601!3d20.94982022887626!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135a59d734d3d99%3A0x18a54acd4d0b0c7a!2zTmdoxKlhIFRy4bulLCBWxINuIEdpYW5nLCBIxrBuZyBZw6puLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1735639791418!5m2!1svi!2s" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="banquyen">
+        <span>© Copyright 2024 By <a target="_blank" href="index.html">K Manga - Kite 10123195.</a></span>
+    </div>
+    <div id="scroll_btn" class="back_to_head"><a href="#top_web"><i class="fa-solid fa-chevron-up"></i></a></div>
+    <div id="addToCart_message">Đã thêm vào giỏ hàng</div>
+    <script src="../Wishlist/wishlist.js"></script>
+    <script src="../Giohang/giohang.js"></script>
+    <script src="trangchu.js"></script>
+</body>
+</html>

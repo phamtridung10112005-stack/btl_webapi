@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết sản phẩm</title>
+    <link rel="stylesheet" href="../ChitietSP/chitiet_sp.css">
+    <link rel="stylesheet" href="paying.css">
+    <link rel="icon" href="../Image/Logo_shop_icon.ico" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+<body>
+    <div class="header" id="top_web">
+        <div class="header_top">
+            <div class="header_top_left">
+                <div class="icon">
+                    <a href="#"><i class="fa-solid fa-envelope"></i></a>
+                </div>
+                <div class="icon">
+                    <a href="#"><i class="fa-solid fa-globe"></i></a>
+                </div>
+                <div class="icon">
+                    <a href="https://www.facebook.com/profile.php?id=100026429534329&viewas=100000686899395"><i class="fa-brands fa-facebook"></i></a>
+                </div>
+            </div>
+            <div class="header_top_mid">
+                <div class="icon"><i class="fa-solid fa-bullhorn"></i></div>
+                <div class="slide_text">
+                    <marquee behavior="scroll" direction="left">Chào mừng bạn đến với K_manga shop.</marquee>
+                </div>
+            </div>
+            <div class="header_top_right">
+                <a href="../Login/dangnhap.html" class="btn_dangnhap" id="btn_dangnhap"><i class="fa-solid fa-right-to-bracket"></i> Đăng nhập</a>
+                <a href="../Login/dangky.html" class="btn_dangky" id="btn_dangky"><i class="fa-solid fa-pen-to-square"></i> Đăng ký</a>
+                <a href="../Login/dangnhap.html" class="btn_dangxuat" id="btn_dangxuat" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                <a href="#"><i class="fa-solid fa-circle-question"></i> Trợ giúp</a>
+            </div>
+        </div>
+        <div class="header_bottom">
+            <div class="header_bottom_left">
+                <div class="logo">
+                    <a href="../Trangchu/index.html"><img src="../Login/Logo_manga_shop_8.png" alt="K_manga_shop"></a>
+                </div>
+            </div>
+            <div class="header_bottom_mid">
+                <div class="input_search">
+                    <div class="search">
+                        <input type="text" placeholder="Tìm kiếm...">
+                        <div class="lichsu_timkiem">
+                            <h3 class="header_lichsu_timkiem">Lịch sử tìm kiếm</h3>
+                            <ul class="lichsu_timkiem_list">
+                                <li class="lichsu_timkiem_item">
+                                    <a href="#">Re:zero</a>
+                                </li>
+                                <li class="lichsu_timkiem_item">
+                                    <a href="../ChitietSP/chitiet_sp_combo_darlinginthefranxx.html">Darling in the franxx</a>
+                                </li>
+                                <li class="lichsu_timkiem_item">
+                                    <a href="../ChitietSP/chitiet_sp_combo_yourname.html">Your Name</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+            </div>
+            <div class="header_bottom_right">
+                <div class="sp_uathich">
+                    <a href="../Wishlist/wishlist.html" class="icon"><i class="fa-regular fa-heart"></i></a>
+                </div>
+                <div class="giohang">
+                    <a href="../Giohang/giohang.html" class="icon"><i class="fa-solid fa-cart-shopping"></i></a>
+                </div>
+                <div class="thongbao hienthi_thongbao">
+                    <a class="icon"><i class="fa-regular fa-bell"></i></a>
+                    <div class="div_thongbao">
+                        <header class="header_thongbao"><h6>Thông báo mới</h6></header>
+                        <ul class="list_thongbao">
+                            <li class="item_thongbao">
+                                <a href="#" class="link_thongbao">
+                                    <img src="../Image/SxF_Ss3.png" alt="Tenki no Ko" class="img_thongbao">
+                                    <div class="chitiet_thongbao">
+                                        <span class="ten_chitiet_thongbao">SpyxFamily Season 3</span>
+                                        <span class="mota_chitiet_thongbao">Gia đình Forger chính thức trở lại với season 3</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="item_thongbao">
+                                <a href="#" class="link_thongbao">
+                                    <img src="../Image/LPH_KD_T1.png" alt="Lịch phát hành NXB Kim Đồng tháng 12" class="img_thongbao">
+                                    <div class="chitiet_thongbao">
+                                        <span class="ten_chitiet_thongbao">Lịch phát hành tháng 1 - NXB Kim Đồng</span>
+                                        <span class="mota_chitiet_thongbao">TSEASON'S GREETING AND BEST WISHES FOR THE NEW YEAR - ĐÓN NĂM MỚI BÊN COMIC NHÀ KIM</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="item_thongbao">
+                                <a href="#" class="link_thongbao">
+                                    <img src="../Image/LPH_IPM_T12.png" alt="Lịch phát hành NXB IPM tháng 12" class="img_thongbao">
+                                    <div class="chitiet_thongbao">
+                                        <span class="ten_chitiet_thongbao">Lịch phát hành tháng 12 - NXB IPM</span>
+                                        <span class="mota_chitiet_thongbao">Sau khi có thay đổi thì đây là lịch phát hành chính thức của IPM tháng 12.</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="item_thongbao">
+                                <a href="#" class="link_thongbao">
+                                    <img src="../Image/LPH_Tre_T12.png" alt="Lịch phát hành NXB Trẻ tháng 12" class="img_thongbao">
+                                    <div class="chitiet_thongbao">
+                                        <span class="ten_chitiet_thongbao">Lịch phát hành tháng 12 - NXB Trẻ</span>
+                                        <span class="mota_chitiet_thongbao">Lịch phát hành tháng cuối cùng năm 2024 đây nha cả nhà!</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="item_thongbao">
+                                <a href="#" class="link_thongbao">
+                                    <img src="../Image/Koro_sensei.png" alt="Assassination classroom" class="img_thongbao">
+                                    <div class="chitiet_thongbao">
+                                        <span class="ten_chitiet_thongbao">Kỷ niệm 10 năm ra mắt Anime Assassination classroom</span>
+                                        <span class="mota_chitiet_thongbao">Assassination Classroom đang kỷ niệm 10 năm ra mắt. Bộ anime đã chinh phục khán giả với cốt truyện hấp dẫn và dàn nhân vật thú vị. Để đánh dấu sự kiện này, Assassination Classroom đã công bố ba dự án mới.</span>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                        <footer class="footer_thongbao">
+                            <a href="#" class="footer_thongbao_btn">Xem tất cả</a>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="navbar_container">
+        <div class="navbar">
+            <ul class="navbar_list">
+                <li class="navbar_item"><i class="fa-solid fa-bars"></i> Danh mục sản phẩm
+                    <ul class="danhmuc_SP">
+                        <li class="danhmuc_SP_item"><a href="../AllProducts/allproducts.html">Tất cả sản phẩm</a></li>
+                        <li class="danhmuc_SP_item"><a href="#">Manga</a></li>
+                        <li class="danhmuc_SP_item"><a href="#">Light novel</a></li>
+                        <li class="danhmuc_SP_item"><a href="#">NXB Kim Đồng</a></li>
+                        <li class="danhmuc_SP_item"><a href="#">NXB IPM</a></li>
+                        <li class="danhmuc_SP_item"><a href="#">NXB Trẻ</a></li>
+                    </ul>
+                </li>
+                <li class="navbar_item"><a href="#">Tin tức</a></li>
+                <li class="navbar_item"><a href="#">Giới thiệu</a></li>
+            </ul>
+        </div>
+    </section>
+    <div class="body_container">
+        <div class="body_wrapper">
+            <div class="form_container">
+                <div class="form_header">
+                    <a href="../Trangchu/index.html"><h1 class="logoText">K Manga</h1></a>
+                    <div class="title_form"><h2>Thông tin thanh toán</h2></div>
+                    <div class="inforuser">
+                        <div class="inforuser_img">
+                            <img src="../Image/avatar_user_Remove-bg.png" alt="">
+                        </div>
+                        <div class="inforuser_content">
+                            <div class="inforuser_name"></div>
+                            <div class="inforuser_mail"></div>
+                            <!-- <div class="inforuser_name">Kiet Nguyen</div>
+                            <div class="inforuser_mail">abc123@gmail.com</div> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="form_body">
+                    <form action="#">
+                        <div class="row">
+                            <div class="col">
+                                <label for="text_name">Họ và tên</label>
+                                <br>
+                                <input id="text_name" type="text">
+                            </div>
+                            <div class="erro_inputPay_name">Vui lòng điền tên.</div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label for="sdt">Số điện thoại</label>
+                                <br>
+                                <input type="tel" name="" id="sdt">
+                            </div>
+                            <div class="erro_inputPay_sdt">Vui lòng điền số điện thoại.</div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label for="gmail">Gmail</label>
+                                <br>
+                                <input type="email" name="" id="gmail">
+                            </div>
+                            <div class="erro_inputPay_gmail">Vui lòng điền email.</div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label for="diachi">Địa chỉ</label>
+                                <br>
+                                <textarea name="" id="diachi"></textarea>
+                            </div>
+                            <div class="erro_inputPay_diachi">Vui lòng điền dịa chỉ.</div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label for="note">Ghi chú</label>
+                                <br>
+                                <textarea name="" id="note"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label for="typePay">Phương thức thanh toán</label>
+                                <br>
+                                <select name="" id="typePay">
+                                    <option value="" disabled selected>Chọn phương thức thanh toán</option>
+                                    <option value="COD - Tiền mặt">Thanh toán khi nhận hàng (COD)</option>
+                                    <option value="Pay - Chuyển khoản">Ví MoMo</option>
+                                </select>
+                            </div>
+                            <div class="erro_inputPay_typePay">Vui lòng chọn kiểu thanh toán.</div>
+                        </div>
+                        <div class="btn_pay_container">
+                            <button onclick="Paying()" class="btn_pay">Đặt hàng</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="slidebar_container">
+                <div class="slidebar_content">
+                    <div class="listProductsPay">
+                        <!-- <div class="item_ProductPay">
+                            <div class="item_ProductPay_img">
+                                <img src="../Image/Kusuriya_combo_10t.png" alt="">
+                                <div class="soluongProPay">1</div>
+                            </div>
+                            <div class="item_ProductPay_text">
+                                Combo Dược sư tự sự (Manga) (Tập 1-10)
+                            </div>
+                            <div class="item_ProductPay_price">423.000₫</div>
+                        </div> -->
+                    </div>
+                    <div class="totalPricePay_container">
+                        <div class="totalPricePay_text">Tổng tiền</div>
+                        <div class="totalPricePay_money"></div>
+
+                        <!-- <div class="totalPricePay_money">423.000₫</div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="footer_top">
+            <div class="f_top_left">
+                <h3>Đăng ký nhận tin</h3>
+                <form action="" accept-charset="UTF-8">
+                    <i class="fa-regular fa-envelope"></i>
+                    <div class="input_gmail">
+                        <input type="email" name="" id="" placeholder="Email">
+                    </div>
+                    <button type="submit"><i class="fa-regular fa-paper-plane"></i> ĐĂNG KÝ</button>
+                </form>
+            </div>
+            <div class="f_top_right">
+                <h3>KẾT NỐI MẠNG XÃ HỘI</h3>
+                <div class="icon_mxh">
+                    <div class="icon"><a href="#"><i class="fa-solid fa-envelope"></i></a></div>
+                    <div class="icon"><a href="#"><i class="fa-brands fa-facebook"></i></a></div>
+                    <div class="icon"><a href="#"><i class="fa-brands fa-instagram"></i></a></div>
+                    <div class="icon"><a href="#"><i class="fa-brands fa-tiktok"></i></a></div>
+                </div>
+            </div>
+        </div>
+        <hr width="90%" color="#fff" style="margin: 0 auto;">
+        <div class="footer_bot">
+            <div class="footer_bot_container">
+                <div class="thongtin_shop">
+                    <div class="name_shop">
+                        <a target="_blank" href="../Trangchu/index.html">K Manga</a>
+                    </div>
+                    <div class="information_shop">
+                        <p class="title_shop">
+                            K Manga - Truyện chất lượng uy tín
+                        </p>
+                        <ul style="list-style: none; padding: 0;">
+                            <li><i class="fa-solid fa-location-dot"></i> Nghĩa Trụ - Văn Giang - Hưng Yên</li>
+                            <li><i class="fa-solid fa-phone"></i><a href="#"> 0869XXXXXX</a></li>
+                            <li><i class="fa-solid fa-envelope"></i><a href="#"> K_Manga03105@gmail.com</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="chinhsach">
+                    <h3>Chính sách</h3>
+                    <ul style="list-style: disc;">
+                        <li><a href="#">Tìm kiếm</a></li>
+                        <li><a href="#">Giới thiệu</a></li>
+                        <li><a href="#">Chính sách bảo mật</a></li>
+                        <li><a href="#">Chính sách giao hàng & đổi trả</a></li>
+                        <li><a href="#">Điều khoản dịch vụ</a></li>
+                        <li><a href="#">Liên hệ</a></li>
+                    </ul>
+                </div>
+                <div class="hotline">
+                    <h3>Tổng đài hỗ trợ</h3>
+                    <ul>
+                        <li>Gọi mua hàng: <a href="#"> 0869XXXXXX</a></li>
+                        <li>Gọi bảo hành: <a href="#"> 0869XXXXXX</a></li>
+                        <li>Gọi hợp tác kinh doanh: <a href="#"> 0869XXXXXX</a></li>
+                    </ul>
+                    <div class="phuongthuc_thanhtoan">
+                        <h3>Phương thức thanh toán</h3>
+                        <img src="../Image/phuongthuc_thanhtoan.png" alt="">
+                    </div>
+                </div>
+                <div class="map">
+                    <h3>Địa chỉ</h3>
+                    <div class="g_map">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14904.26841057123!2d105.97393475787601!3d20.94982022887626!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135a59d734d3d99%3A0x18a54acd4d0b0c7a!2zTmdoxKlhIFRy4bulLCBWxINuIEdpYW5nLCBIxrBuZyBZw6puLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1735639791418!5m2!1svi!2s" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="banquyen">
+        <span>© Copyright 2024 By <a target="_blank" href="../Trangchu/index.html">K Manga - Kite 10123195.</a></span>
+    </div>
+    <div id="scroll_btn" class="back_to_head"><a href="#top_web"><i class="fa-solid fa-chevron-up"></i></a></div>
+    <div id="message">Đã copy link sản phẩm</div>
+    <script src="paying.js"></script>
+    <script src="../Wishlist/wishlist.js"></script>
+    <script src="../Giohang/giohang.js"></script>
+    <script src="../ChitietSP/chitiet_sp.js"></script>
+</body>
+</html>

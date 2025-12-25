@@ -13,7 +13,8 @@ export const sachRepository = {
       throw err;
     }
   },
-getByMaSach: async (masach) => {
+
+  getByMaSach: async (masach) => {
     logger.info(`Repository: Fetching sach with masach ${masach}`);
     try {
       const db = await pool;
@@ -24,34 +25,67 @@ getByMaSach: async (masach) => {
       throw err;
     }
   },
-create: async ({ MaSach, TenSach, MaTheLoai, MaNguoiDich, MaNXB, GiaSach, NamXuatBan, SoTrang, MoTaNoiDung, LinkHinhAnh }) => {
-    logger.info(`Repository: Creating sach ${MaSach}`);
+
+  getSachPagingAndSorting: async(page, size, sortBy, sortOrder) => {
+    logger.info(`Repository: Fetching sachs with paging - Page: ${page}, Size: ${size}, SortBy: ${sortBy}`);
     try {
       const db = await pool;
-      await db.query(
-        'INSERT INTO Sach (MaSach, TenSach, MaTheLoai, MaNguoiDich, MaNXB, GiaSach, NamXuatBan, SoTrang, MoTaNoiDung, LinkHinhAnh) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [MaSach, TenSach, MaTheLoai, MaNguoiDich, MaNXB, GiaSach, NamXuatBan, SoTrang, MoTaNoiDung, LinkHinhAnh]
+      const offset = (page - 1) * size;
+      // Cập nhật thêm các trường có thể sort được
+      const validFields = ['TenSach', 'GiaSach', 'SoLuongDaBan', 'NamXuatBan'];
+      if (!validFields.includes(sortBy)) {
+        sortBy = 'TenSach';
+      }
+      
+      // Sử dụng tham số an toàn cho LIMIT và OFFSET
+      const sqlString = `SELECT * FROM Sach ORDER BY ${sortBy} ${sortOrder} LIMIT ? OFFSET ?`;
+      const [rows] = await db.query(sqlString, [size, offset]);
+      return rows;
+    } catch (err) {
+      logger.error("Repository Error: getSachPagingAndSorting failed", err);
+      throw err;
+    }
+  },
+
+  create: async ({ TenSach, MaTheLoai, TenNguoiDich, MaNXB, GiaSach, NamXuatBan, SoTrang, MoTaNoiDung, LinkHinhAnh, YeuThich, SoLuongDaBan, MaGiamGia }) => {
+    // Lưu ý: Đã bỏ MaSach trong INSERT vì cột này Auto Increment
+    logger.info(`Repository: Creating new sach`);
+    try {
+      const db = await pool;
+      const [result] = await db.query(
+        'INSERT INTO Sach (TenSach, MaTheLoai, TenNguoiDich, MaNXB, GiaSach, NamXuatBan, SoTrang, MoTaNoiDung, LinkHinhAnh, YeuThich, SoLuongDaBan, MaGiamGia) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [TenSach, MaTheLoai, TenNguoiDich, MaNXB, GiaSach, NamXuatBan, SoTrang, MoTaNoiDung, LinkHinhAnh, YeuThich, SoLuongDaBan, MaGiamGia]
       );
-      return { MaSach, TenSach, MaTheLoai, MaNguoiDich, MaNXB, GiaSach, NamXuatBan, SoTrang, MoTaNoiDung, LinkHinhAnh };
+      
+      // Trả về object đầy đủ kèm ID mới tạo
+      return { 
+        MaSach: result.insertId, 
+        TenSach, MaTheLoai, TenNguoiDich, MaNXB, GiaSach, NamXuatBan, SoTrang, MoTaNoiDung, LinkHinhAnh, YeuThich, SoLuongDaBan, MaGiamGia 
+      };
     } catch (err) {
       logger.error("Repository Error: create failed", err);
       throw err;
     }
   },
-  update: async (MaSach, { TenSach, MaTheLoai, MaNguoiDich, MaNXB, GiaSach, NamXuatBan, SoTrang, MoTaNoiDung, LinkHinhAnh }) => {
+
+  update: async (MaSach, data) => {
     logger.info(`Repository: Updating sach ${MaSach}`);
     try {
       const db = await pool;
+      const { TenSach, MaTheLoai, TenNguoiDich, MaNXB, GiaSach, NamXuatBan, SoTrang, MoTaNoiDung, LinkHinhAnh, YeuThich, SoLuongDaBan, MaGiamGia } = data;
+
       await db.query(
-        'UPDATE Sach SET TenSach = ?, MaTheLoai = ?, MaNguoiDich = ? MaNXB = ?, NamXuatBan = ?, SoTrang = ?, MoTaNoiDung = ?, LinkHinhAnh = ? WHERE MaSach = ?',
-        [TenSach, MaTheLoai, MaNguoiDich, MaNXB, GiaSach, NamXuatBan, SoTrang, MoTaNoiDung, LinkHinhAnh, MaSach]
+        'UPDATE Sach SET TenSach=?, MaTheLoai=?, TenNguoiDich=?, MaNXB=?, GiaSach=?, NamXuatBan=?, SoTrang=?, MoTaNoiDung=?, LinkHinhAnh=?, YeuThich=?, SoLuongDaBan=?, MaGiamGia=? WHERE MaSach=?',
+        [TenSach, MaTheLoai, TenNguoiDich, MaNXB, GiaSach, NamXuatBan, SoTrang, MoTaNoiDung, LinkHinhAnh, YeuThich, SoLuongDaBan, MaGiamGia, MaSach]
       );
-      return { MaSach, TenSach, MaTheLoai, MaNguoiDich, MaNXB, GiaSach, NamXuatBan, SoTrang, MoTaNoiDung, LinkHinhAnh };
+      
+      return { MaSach, ...data };
     } catch (err) {
       logger.error(`Repository Error: update failed for MaSach ${MaSach}`, err);
       throw err;
     }
   },
+
   delete: async (MaSach) => {
     logger.info(`Repository: Deleting sach ${MaSach}`);
     try {

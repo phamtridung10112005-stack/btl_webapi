@@ -1,17 +1,23 @@
-// File: create-sach.validator.js
 import { z } from "zod";
+
 export const createSachSchema = z.object({
-  MaSach: z.int({ required_error: 'MaSach is required' }),
-  TenSach: z.string().min(1, 'TenSach is required'),
-  MaTheLoai: z.int({ required_error: 'MaTheLoai is required' }),
-  MaNguoiDich: z.int({ required_error: 'MaNguoiDich is required' }),
-  MaNXB: z.int({ required_error: 'MaNXB is required' }),
-  GiaSach: z.float32({ required_error: 'GiaSach is required' }),
-  NamXuatBan: z.string().refine((d) => !isNaN(Date.parse(d)), 'NamXuatBan is required' ),
-  SoTrang: z.int({ required_error: 'SoTrang is required' }),
-  MoTaNoiDung: z.string({ required_error: 'MoTaNoiDung is required' }),
-  LinkHinhAnh: z.string({ required_error: 'LinkHinhAnh is required' }),
+  // Bỏ MaSach vì tự tăng
+  TenSach: z.string().min(1, 'TenSach is required'),
+  MaTheLoai: z.coerce.number({ required_error: 'MaTheLoai is required' }),
+  TenNguoiDich: z.string().optional(), // Có thể null hoặc string
+  MaNXB: z.coerce.number({ required_error: 'MaNXB is required' }),
+  GiaSach: z.coerce.number({ required_error: 'GiaSach is required' }),
+  NamXuatBan: z.coerce.date({ required_error: 'NamXuatBan is required' }),
+  SoTrang: z.coerce.number({ required_error: 'SoTrang is required' }),
+  MoTaNoiDung: z.string().optional(),
+  LinkHinhAnh: z.string().optional(),
+  
+  // Các trường mới
+  YeuThich: z.coerce.number().min(0).max(1).optional().default(0), // 0 hoặc 1
+  SoLuongDaBan: z.coerce.number().optional().default(0),
+  MaGiamGia: z.string().optional().nullable(),
 });
+
 export function validateCreateSach(data) {
-  return createSachSchema.parse(data);
+  return createSachSchema.parse(data);
 }

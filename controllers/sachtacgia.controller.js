@@ -29,8 +29,9 @@ create: async (req, res) => {
     }
   },
   delete: async (req, res) => {
-    const masach = req.params.masach;
-    const matacgia = req.params.matacgia;
+    
+    const masach = parseInt(req.query.masach);
+    const matacgia = parseInt(req.query.matacgia);
     logger.info(`Controller: DELETE /sachtacgias/masach=${masach}&matacgia=${matacgia}`);
     try {
       const result = await sachtacgiaService.deleteSachTacGia(masach, matacgia);

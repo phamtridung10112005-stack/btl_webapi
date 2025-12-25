@@ -1,0 +1,219 @@
+.body_container{
+    margin: 50px 0 30px;
+    width: 100%;
+    min-height: 284px;
+}
+.body_wrapper{
+    display: flex;
+    width: 80%;
+    margin: 50px auto 30px;
+}
+.form_container{
+    flex: 1 0 auto;
+}
+.form_header{
+    padding-bottom: 1em;
+}
+.form_header>a{
+    display: block;
+    color: #22a7ff;
+    margin-bottom: 15px;
+}
+.form_header>a:hover{
+    transition: all 0.3s ease;
+    color: #ff2732;
+}
+.logoText{
+    margin: 0;
+}
+.inforuser{
+    display: flex;
+}
+.inforuser_img{
+    width: 50px;
+    height: 50px;
+    background-color: #eee;
+    border-radius: 5px;
+    box-shadow: 0 1px 7px 0 rgba(89, 89, 89, 0.45);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.inforuser_img>img{
+    width: 60%;
+    height: 60%;
+    object-fit: contain;
+}
+.title_form{
+    color: #22a7ff;
+    margin-bottom: 25px;
+}
+.title_form>h2{
+    margin: 0;
+}
+.inforuser_content{
+    flex: 1 1 0;
+    margin-left: 20px;
+    color: #22a7ff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+}
+.inforuser_content div{
+    flex: 1 1 0;
+}
+.col{
+    position: relative;
+}
+.col label{
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    color: #22a7ff;
+    background-color: #fff;
+    padding: 0 5px;
+    font-weight: bolder;
+}
+.col input{
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: 1px solid #22a7ff;
+    border-radius: 5px;
+    color: #22a7ff;
+    font-size: 16px;
+}
+.col input:focus-visible{
+    outline: 2px solid #22a7ff;
+}
+.col textarea{
+    width: calc(100% - 20px);
+    max-width: 812.16px;
+    max-height: 300px;
+    min-height: 40px;
+    min-width: 400px;
+    padding: 10px;
+    border: 1px solid #22a7ff;
+    border-radius: 5px;
+    color: #22a7ff;
+    font-size: 16px;
+}
+.col textarea:focus-visible{
+    outline: 2px solid #22a7ff;
+}
+.col select{
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #22a7ff;
+    border-radius: 5px;
+    color: #22a7ff;
+    font-size: 16px;
+}
+.col select option{
+    color: #22a7ff;
+    background-color: #fff;
+}
+select option:hover{
+    color: #fff;
+    background-color: #22a7ff;
+}
+.col select:focus-visible{
+    outline: 2px solid #22a7ff;
+}
+.btn_pay_container{
+    width: 100%;
+    text-align: end;
+    margin-top: 30px;
+}
+.btn_pay{
+    width: 20%;
+    outline: none;
+    border: none;
+    padding: 10px 20px;
+    background-color: #65c2ff;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+}
+.btn_pay:hover{
+    transition: all 0.3s ease;
+    background-color: #22a7ff;
+}
+.slidebar_container{
+    width: calc(40% - 40px);
+    padding: 50px 0 0 40px;
+}
+.slidebar_content{
+    width: 100%;
+}
+.listProductsPay{
+    width: 100%;
+    padding-bottom: 50px;
+    border-bottom: 3px solid #22a7ff;
+}
+.item_ProductPay{
+    width: 100%;
+    display: flex;
+    border-bottom: 1px solid #e1e1e1;
+    padding-bottom: 10px;
+}
+.item_ProductPay_img{
+    position: relative;
+    width: 4.6em;
+    height: 4.6em;
+    background-color: #eee;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.item_ProductPay_img img{
+    width: 90%;
+    height: 90%;
+    object-fit: contain;
+}
+.soluongProPay{
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: -10px;
+    right: -10px;
+    background-color: #65c2ff;
+    color: #fff;
+    font-size: 12px;
+    text-align: center;
+    line-height: 20px;
+    border-radius: 50%;
+    font-weight: bold;
+}
+.item_ProductPay_text{
+    flex: 3 1 0;
+    margin-left: 20px;
+    color: #22a7ff;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+.item_ProductPay_price{
+    flex: 1 1 0;
+    color: #22a7ff;
+    font-weight: bold;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+.totalPricePay_container{
+    display: flex;
+    margin-top: 30px;
+    justify-content: space-between;
+    color: #22a7ff;
+}
+.totalPricePay_money{
+    font-size: 18px;
+    font-weight: bold;
+}
+.erro_inputPay_name, .erro_inputPay_sdt, .erro_inputPay_gmail, .erro_inputPay_diachi, .erro_inputPay_typePay{
+    color: #ff2732;
+    display: none;
+}
