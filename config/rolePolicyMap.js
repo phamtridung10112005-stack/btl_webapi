@@ -1,0 +1,15 @@
+import { POLICIES  } from "../utils/constants/policies.js";
+
+export const ROLE_POLICY_MAP = {
+  ADMIN: [
+    POLICIES.USER_VIEW_ALL,
+    POLICIES.USER_VIEW_SELF,
+    POLICIES.USER_CREATE,
+    POLICIES.USER_EDIT,
+    POLICIES.USER_DELETE,
+  ],
+  USER: [
+    POLICIES.USER_VIEW_SELF,
+    POLICIES.USER_EDIT,
+  ],
+};

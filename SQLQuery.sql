@@ -1,15 +1,33 @@
-USE NodeAPI;
-
-CREATE TABLE Users (
-    id INT PRIMARY KEY,
-    name NVARCHAR(100),
-    email VARCHAR(100),
-    phone VARCHAR(20)
+use bu8rhot9lusrkxnboccd;
+create table Sach (
+	MaSach int auto_increment primary key,
+    TenSach nvarchar(100),
+    MaTheLoai int,
+    MaNguoiDich int,
+    MaNXB int,
+    GiaSach decimal(10,2),
+    NamXuatBan datetime,
+    SoTrang int,
+    MoTaNoiDung text,
+    LinkHinhAnh varchar(255),
+    
+    FOREIGN KEY (MaTheLoai) REFERENCES TheLoai(MaTheLoai),
+    FOREIGN KEY (MaNXB) REFERENCES NhaXuatBan(MaNXB)
 );
 
-INSERT INTO Users (id, name, email, phone) VALUES
-(1, N'Haleemah Redfern', 'Email1@mail.com', '01111111'),
-(2, N'Aya Bostock', 'Email2@mail.com', '02222222'),
-(3, N'Sohail Perez', 'Email3@mail.com', ''),
-(4, N'Merryn Peck', 'Email4@mail.com', '04444444'),
-(5, N'Cairon Reynolds', 'Email5@mail.com', '');
+CREATE TABLE SachTacGia (
+    MaSach INT,
+    MaTacGia INT,
+    PRIMARY KEY (MaSach, MaTacGia),
+    FOREIGN KEY (MaSach) REFERENCES Sach(MaSach) ON DELETE CASCADE,
+    FOREIGN KEY (MaTacGia) REFERENCES TacGia(MaTacGia) ON DELETE CASCADE
+);
+
+CREATE TABLE Users (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  username NVARCHAR(100),
+  email VARCHAR(100),
+  password VARCHAR(255),
+  phone VARCHAR(20),
+  role VARCHAR(50)
+);

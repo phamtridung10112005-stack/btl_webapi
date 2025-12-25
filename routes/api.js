@@ -6,14 +6,26 @@ import { sachController } from "../controllers/sach.controller.js";
 import { theloaiController } from "../controllers/theloai.controller.js";
 import { sachtacgiaController } from "../controllers/sachtacgia.controller.js";
 
+import { validate } from "../middlewares/validate.middleware.js";
+import { registerSchema, loginSchema } from "../validators/authens/auth.validator.js";
+import { registerController, loginController } from "../controllers/auth.controller.js";
+import { authenticate } from "../middlewares/auth.middleware.js";
+import { POLICIES } from "../utils/constants/policies.js";
+import { authorizePolicy } from "../middlewares/policy.middleware.js"
+
 const router = Router();
 
+// ----------------------- AUTH -------------------------------------
+router.post("/auth/register", validate(registerSchema), registerController);
+router.post("/auth/login", validate(loginSchema), loginController);
+
 // ----------------------- USERS -------------------------------------
-router.get("/users", userController.getAll);
-router.get("/users/:id", userController.getById);
-router.post("/users", userController.create);
-router.put("/users/:id", userController.update);
-router.delete("/users/:id", userController.delete);
+router.get("/users", authenticate, authorizePolicy(POLICIES.USER_VIEW_ALL), userController.getAll);
+// router.get("/users/:email", authenticate, authorizePolicy(POLICIES.USER_VIEW_SELF), userController.getByEmail);
+router.get("/users/:id", authenticate, authorizePolicy(POLICIES.USER_VIEW_SELF), userController.getById);
+// router.post("/users", userController.create);
+router.put("/users/:id", authenticate, authorizePolicy(POLICIES.USER_EDIT), userController.update);
+router.delete("/users/:id", authenticate, authorizePolicy(POLICIES.USER_DELETE), userController.delete);
 
 //------------------tác giả--------------------------------
 router.get("/tacgias", tacgiaController.getAll);

@@ -20,6 +20,15 @@ export const userService = {
 
     return new UserDTO(user);
   },
+  getUserByEmail: async (email) => {
+    logger.info(`Service: Getting user by email ${email}`);
+    const user = await userRepository.getByEmail(email);
+    if (!user) {
+      logger.warn(`Service Warning: User with email ${email} not found`);
+      throw new Error("User not found");
+    }
+    return new UserDTO(user);
+  },
 
   createUser: async (dto) => {
     logger.info(`Service: Creating new user ${dto.email}`);

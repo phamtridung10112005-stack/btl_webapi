@@ -25,31 +25,42 @@ export const userRepository = {
       throw err;
     }
   },
+  getByEmail: async (email) => {
+    logger.info(`Repository: Fetching user with email ${email}`);
+    try {
+      const db = await pool;
+      const [rows] = await db.query("SELECT * FROM Users WHERE email = ?", [email]);
+      return rows[0];
+    } catch (err) {
+      logger.error(`Repository Error: getByEmail failed for email ${email}`, err);
+      throw err;
+    }
+  },
 
-  create: async ({ id, name, email, phone }) => {
-    logger.info(`Repository: Creating user ${email}`);
+  create: async (user) => {
+    logger.info(`Repository: Creating user ${user.email}`);
     try {
       const db = await pool;
       await db.query(
-        "INSERT INTO Users (id, name, email, phone) VALUES (?, ?, ?, ?)",
-        [id, name, email, phone]
+        "INSERT INTO Users (username, email, password, phone, role) VALUES (?, ?, ?, ?, ?)",
+        [user.username, user.email, user.password, user.phone, user.role]
       );
-      return { id, name, email, phone };
+      return { ...user };
     } catch (err) {
       logger.error("Repository Error: create failed", err);
       throw err;
     }
   },
 
-  update: async (id, { name, email, phone }) => {
+  update: async (id, { username, email, phone }) => {
     logger.info(`Repository: Updating user ${id}`);
     try {
       const db = await pool;
       await db.query(
-        "UPDATE Users SET name = ?, email = ?, phone = ? WHERE id = ?",
-        [name, email, phone, id]
+        "UPDATE Users SET username = ?, email = ?, phone = ? WHERE id = ?",
+        [username, email, phone, id]
       );
-      return { id, name, email, phone };
+      return { id, username, email, phone };
     } catch (err) {
       logger.error(`Repository Error: update failed for ID ${id}`, err);
       throw err;

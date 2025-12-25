@@ -31,6 +31,17 @@ export const userController = {
       res.status(404).json({ message: err.message });
     }
   },
+  getByEmail: async (req, res) => {
+    const email = req.params.email;
+    logger.info(`Controller: GET /users/email/${email}`);
+    try {
+      const user = await userService.getUserByEmail(email);
+      res.json(user);
+    } catch (err) {
+      logger.error(`Controller Error: getByEmail failed (${email})`, err);
+      res.status(404).json({ message: err.message });
+    }
+  },
 
   create: async (req, res) => {
     try {

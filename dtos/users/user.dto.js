@@ -1,7 +1,7 @@
 export class UserDTO {
-  constructor({ id, name, email, phone }) {
+  constructor({ id, username, email, phone }) {
     this.id = id;
-    this.name = name;
+    this.username = username;
     this.email = email;
     this.phone = phone || null;
   }
