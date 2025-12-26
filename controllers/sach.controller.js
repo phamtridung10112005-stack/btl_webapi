@@ -1,4 +1,3 @@
-// File: sach.controller.js
 import { CreateSachDTO } from '../dtos/sach/create-sach.dto.js';
 import { UpdateSachDTO } from '../dtos/sach/update-sach.dto.js';
 import { sachService } from '../services/sach.service.js';
@@ -17,14 +16,15 @@ export const sachController = {
       res.status(500).json({ message: err.message });
     }
   },
-getByMaSach: async (req, res) => {
+
+  getByMaSach: async (req, res) => {
     const masach = req.params.masach;
     logger.info(`Controller: GET /sachs/${masach}`);
     try {
       const sach = await sachService.getSachByMaSach(masach);
       res.json(sach);
     } catch (err) {
-      logger.error(`Controller Error: getByMaSach failed (${masach})`, err);
+      logger.error(`Controller Error: getByMaSach failed`, err);
       res.status(404).json({ message: err.message });
     }
   },
@@ -35,16 +35,15 @@ getByMaSach: async (req, res) => {
     const sortBy = req.query.sortBy || 'TenSach';
     const sortOrder = req.query.sortOrder === 'desc' ? 'DESC' : 'ASC';
     try {
-      logger.info(`Controller: GET /sachs with paging and sorting - Page: ${page}, Size: ${size}, SortBy: ${sortBy}, SortOrder: ${sortOrder}`);
       const sachs = await sachService.getSachPagingAndSorting(page, size, sortBy, sortOrder);
       res.json(sachs);
     } catch (err) {
-      logger.error("Controller Error: getSachPagingAndSorting failed", err);
+      logger.error("Controller Error: Paging failed", err);
       res.status(500).json({ message: err.message });
     }
   },
 
-create: async (req, res) => {
+  create: async (req, res) => {
     try {
       logger.info('Controller: POST /sachs');
       const validData = validateCreateSach(req.body);
@@ -56,7 +55,8 @@ create: async (req, res) => {
       res.status(400).json({ message: err.message });
     }
   },
-update: async (req, res) => {
+
+  update: async (req, res) => {
     const masach = req.params.masach;
     logger.info(`Controller: PUT /sachs/${masach}`);
     try {
@@ -65,10 +65,11 @@ update: async (req, res) => {
       const sach = await sachService.updateSach(masach, dto);
       res.json(sach);
     } catch (err) {
-      logger.error(`Controller Error: update failed (${masach})`, err);
+      logger.error(`Controller Error: update failed`, err);
       res.status(400).json({ message: err.message });
     }
   },
+
   delete: async (req, res) => {
     const masach = req.params.masach;
     logger.info(`Controller: DELETE /sachs/${masach}`);
@@ -76,7 +77,7 @@ update: async (req, res) => {
       const result = await sachService.deleteSach(masach);
       res.json(result);
     } catch (err) {
-      logger.error(`Controller Error: delete failed (${masach})`, err);
+      logger.error(`Controller Error: delete failed`, err);
       res.status(404).json({ message: err.message });
     }
   },

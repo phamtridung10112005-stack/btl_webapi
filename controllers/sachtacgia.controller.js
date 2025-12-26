@@ -29,6 +29,7 @@ create: async (req, res) => {
     }
   },
   delete: async (req, res) => {
+    
     const masach = parseInt(req.query.masach);
     const matacgia = parseInt(req.query.matacgia);
     logger.info(`Controller: DELETE /sachtacgias/masach=${masach}&matacgia=${matacgia}`);

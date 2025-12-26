@@ -1,13 +1,45 @@
 // 1. Đường dẫn API của bạn
-const API_URL = 'http://localhost:3000/api/sachs'; 
+const sachsAPI_URL_BASE = 'http://localhost:3000/api/sachs'; 
+const giamgiaIDAPI_URL = 'http://localhost:3000/api/giamgias/';
+
+async function getDiscountPercent(maGiamGia) {
+    // Nếu không có mã giảm giá (null hoặc 0), trả về 0 luôn
+    if (!maGiamGia) return 0;
+
+    try {
+        const response = await fetch(giamgiaIDAPI_URL + maGiamGia);
+        if (response.ok) {
+            const data = await response.json();
+            
+            // --- LƯU Ý QUAN TRỌNG ---
+            // Hãy kiểm tra Console xem API trả về key tên là 'PhanTram', 'GiaTri' hay 'discount'
+            // Ví dụ: return data.PhanTram;
+            return data.PhanTramGiam || 0; 
+        }
+    } catch (error) {
+        console.warn(`Không lấy được mã giảm giá ID ${maGiamGia}`, error);
+    }
+
+    // Nếu có lỗi hoặc không tìm thấy, mặc định giảm 0%
+    return 0;
+}
 
 // 2. Hàm lấy dữ liệu và hiển thị
 async function loadProducts() {
     try {
-        const response = await fetch(API_URL);
-        const data = await response.json(); // Giả sử API trả về mảng danh sách sản phẩm
-        console.log(data); // Kiểm tra dữ liệu nhận được
-        renderProducts(data); // Gọi hàm hiển thị
+        const url = `${sachsAPI_URL_BASE}?page=1&limit=5&sortBy=TenSach&order=desc`
+        const response = await fetch(url);
+        const responseData = await response.json();
+        console.log(responseData);
+        const books = responseData.data // Giả sử API trả về mảng danh sách sản phẩm
+        // console.log(books); // Kiểm tra dữ liệu nhận được
+
+        const sachDaGiamGia = await Promise.all(books.map(async (book) => {
+            const phanTramGiam = await getDiscountPercent(book.MaGiamGia);
+            return { ...book, GiamGia: phanTramGiam };
+        }));
+        // console.log(sachDaGiamGia); // Kiểm tra dữ liệu sau khi thêm giảm giá
+        renderProducts(sachDaGiamGia); // Gọi hàm hiển thị
     } catch (error) {
         console.error("Lỗi khi tải sản phẩm:", error);
     }
@@ -24,8 +56,9 @@ function renderProducts(productList) {
         // Format tiền tệ sang dạng Việt Nam (VD: 423000 -> 423.000₫)
         const formatPrice = (price) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
         
+        const GiamGia = product.GiamGia || 0; // Giảm giá (nếu có)
         // Tính lại giá Sale (nếu API chưa tính sẵn)
-        const priceSale = product.priceOriginal * (1 - product.discount / 100);
+        const GiaSale = product.GiaSach * (1 - product.GiamGia / 100);
 
         // Tạo đường dẫn chi tiết (Dùng chung 1 trang chitiet và truyền ID)
         // Thay vì dẫn đến 'chitiet_sp_combo_kusuriya.html', hãy dẫn đến trang chung kèm ID
@@ -43,7 +76,7 @@ function renderProducts(productList) {
                     <a href="${detailLink}">
                         <img src="${imagePath}" alt="${product.TenSach}">
                     </a>
-                    <div class="discount">-${product.discount}%</div>
+                    <div class="discount">-${product.GiamGia}%</div>
                 </div>
                 
                 <div class="allproduct_item_title">
@@ -51,13 +84,13 @@ function renderProducts(productList) {
                 </div>
                 
                 <div class="allproduct_item_prices">
-                    <div class="allproduct_item_priceSale">${formatPrice(priceSale)}</div>
-                    <div class="allproduct_item_priceOriginal"><s>${formatPrice(product.priceOriginal)}</s></div>
+                    <div class="allproduct_item_priceSale">${formatPrice(GiaSale)}</div>
+                    <div class="allproduct_item_priceOriginal"><s>${formatPrice(product.GiaSach)}</s></div>
                 </div>
                 
                 <div class="allproduct_item_footer">
                     <div class="allproduct_item_sold">
-                        <img src="../Image/fire.png" alt=""> Đã bán ${product.sold}+
+                        <img src="../Image/fire.png" alt=""> Đã bán ${product.SoLuongDaBan}+
                     </div>
                     
                     <div class="wishlist" data-id="${product.MaSach}">

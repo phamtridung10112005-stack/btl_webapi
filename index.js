@@ -5,6 +5,9 @@ import helmet from "helmet";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 
+import swaggerUi from "swagger-ui-express"; // <--- THÊM DÒNG NÀY
+import swaggerJsdoc from "swagger-jsdoc";   // <--- THÊM DÒNG NÀY
+
 import { requestLogger } from "./middlewares/logger.middleware.js";
 import apiRoutes from "./routes/api.js";
 import webRoutes from "./routes/web.js";
