@@ -155,7 +155,8 @@
 .control_next_pre_Page{
     width: 90%;
     margin: 30px auto 0;
-    text-align: center;
+    justify-content: center;
+    align-items: center;
 }
 .control_next_pre_Page button{
     border: 1px solid #22a7ff;

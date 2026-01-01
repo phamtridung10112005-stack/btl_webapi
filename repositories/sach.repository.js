@@ -27,21 +27,29 @@ export const sachRepository = {
   },
 
   getSachPagingAndSorting: async(page, size, sortBy, sortOrder) => {
-    logger.info(`Repository: Fetching sachs with paging - Page: ${page}, Size: ${size}, SortBy: ${sortBy}`);
+    logger.info(`Repository: Fetching sachs with paging - Page: ${page}, Size: ${size}, SortBy: ${sortBy}, Order: ${sortOrder}`);
     try {
       const db = await pool;
       const offset = (page - 1) * size;
       // Cập nhật thêm các trường có thể sort được
-      const validFields = ['TenSach', 'GiaSach', 'SoLuongDaBan', 'NamXuatBan'];
+      const validFields = ['MaSach', 'TenSach', 'GiaSach', 'SoLuongDaBan', 'NamXuatBan'];
       if (!validFields.includes(sortBy)) {
-        sortBy = 'TenSach';
+        sortBy = 'MaSach';
       }
       
       const [slSachs] = await db.query('SELECT COUNT(*) as total FROM Sach');
       const tongSoSachs = slSachs[0].total;
       const totalPages = Math.ceil(tongSoSachs / size);
+
       // Sử dụng tham số an toàn cho LIMIT và OFFSET
-      const sqlString = `SELECT * FROM Sach ORDER BY ${sortBy} ${sortOrder} LIMIT ? OFFSET ?`;
+      const sqlString = `SELECT 
+                          s.*,
+                          gg.PhanTramGiam
+                        FROM Sach s
+                        LEFT JOIN GiamGia gg ON s.MaGiamGia = gg.MaGiamGia
+                        ORDER BY s.${sortBy} ${sortOrder}
+                        LIMIT ? OFFSET ?;
+                        `;
       const [rows] = await db.query(sqlString, [size, offset]);
       return {rows,
               pagination: {

@@ -1,45 +1,148 @@
 // 1. Đường dẫn API của bạn
-const sachsAPI_URL_BASE = 'http://localhost:3000/api/sachs'; 
-const giamgiaIDAPI_URL = 'http://localhost:3000/api/giamgias/';
+const sachsAPI_URL_BASE = 'http://localhost:3000/api/sachs';
+let currentState = {
+    currentPage: 1,
+    limit: 24,
+    sortBy: 'defaut',
+    orderBy: 'asc'
+};
 
-async function getDiscountPercent(maGiamGia) {
-    // Nếu không có mã giảm giá (null hoặc 0), trả về 0 luôn
-    if (!maGiamGia) return 0;
+document.addEventListener('DOMContentLoaded', function() {
+    // 1. Lấy phần tử select
+    const sortSelect = document.getElementById('sort_pro');
 
-    try {
-        const response = await fetch(giamgiaIDAPI_URL + maGiamGia);
-        if (response.ok) {
-            const data = await response.json();
-            
-            // --- LƯU Ý QUAN TRỌNG ---
-            // Hãy kiểm tra Console xem API trả về key tên là 'PhanTram', 'GiaTri' hay 'discount'
-            // Ví dụ: return data.PhanTram;
-            return data.PhanTramGiam || 0; 
-        }
-    } catch (error) {
-        console.warn(`Không lấy được mã giảm giá ID ${maGiamGia}`, error);
+    function handleSort(sortString) {
+        const parts = sortString.split('-'); 
+        
+        currentState.sortBy = parts[0];
+        currentState.orderBy = parts[1];
+
+        // reset trang về 1 mỗi khi sắp xếp
+        currentState.currentPage = 1;
+
+        console.log(`Đang sắp xếp theo cột: ${currentState.sortBy}, Chiều: ${currentState.orderBy}`);
+        
+        // Gọi hàm load API với 2 tham số riêng biệt
+        loadProducts(currentState.sortBy, currentState.orderBy);
+    }
+    
+    if (sortSelect) {
+        console.log(`sortSelect value on load: ${sortSelect.value}`);
+        handleSort(sortSelect.value); // Tải sản phẩm với sắp xếp mặc định khi trang load
     }
 
-    // Nếu có lỗi hoặc không tìm thấy, mặc định giảm 0%
-    return 0;
+    // Lắng nghe sự kiện thay đổi (change)
+    sortSelect.addEventListener('change', function(event) {
+        const selectedSortValue = event.target.value;
+        
+        // console.log("Người dùng chọn sắp xếp theo:", selectedSortValue); // Kiểm tra log
+
+        handleSort(selectedSortValue);
+    });
+});
+
+// Hàm vẽ phân trang
+function renderPagination(totalPages) {
+    const container = document.getElementById('control-next-pre-Page');
+    
+    // Nếu chỉ có 1 trang hoặc không có trang nào thì ẩn đi
+    if (totalPages <= 1) {
+        container.style.display = 'none';
+        return;
+    } else {
+        container.style.display = 'flex'; 
+    }
+
+    container.innerHTML = '';
+
+    // --- LOGIC TÍNH TOÁN 5 NÚT ---
+    let maxVisibleButtons = 5;
+    
+    // Mặc định: Lấy trang hiện tại làm tâm, trừ 2 và cộng 2
+    let startPage = currentState.currentPage - 2;
+    let endPage = currentState.currentPage + 2;
+
+    // Xử lý đầu mút (Nếu trang hiện tại là 1 hoặc 2)
+    if (startPage < 1) {
+        startPage = 1;
+        endPage = maxVisibleButtons;
+    }
+
+    // Xử lý cuối mút (Nếu trang hiện tại gần cuối)
+    if (endPage > totalPages) {
+        endPage = totalPages;
+        startPage = totalPages - (maxVisibleButtons - 1);
+    }
+
+    // Đảm bảo startPage không bao giờ < 1 (trường hợp tổng trang < 5)
+    if (startPage < 1) {
+        startPage = 1;
+    }
+    // -----------------------------
+
+    // 1. Tạo nút PREVIOUS (<)
+    const prevBtn = document.createElement('button');
+    prevBtn.innerText = '<';
+    if (currentState.currentPage === 1) {
+        prevBtn.disabled = true; 
+        prevBtn.style.opacity = '0.5';
+    } else {
+        prevBtn.onclick = () => {
+            currentState.currentPage--;
+            loadProducts(currentState.sortBy, currentState.orderBy);
+        };
+    }
+    container.appendChild(prevBtn);
+
+    // 2. Tạo các nút SỐ TRANG (Chạy từ startPage đến endPage)
+    for (let i = startPage; i <= endPage; i++) {
+        const pageBtn = document.createElement('button');
+        pageBtn.innerText = i;
+        
+        if (i === currentState.currentPage) {
+            pageBtn.classList.add('active'); 
+            // Style cứng nếu chưa có CSS class
+            pageBtn.style.backgroundColor = '#22a7ff'; 
+            pageBtn.style.color = '#fff';
+        }
+
+        pageBtn.onclick = () => {
+            if (currentState.currentPage !== i) { // Chỉ load nếu bấm trang khác trang hiện tại
+                currentState.currentPage = i;
+                loadProducts(currentState.sortBy, currentState.orderBy);
+            }
+        };
+        container.appendChild(pageBtn);
+    }
+
+    // 3. Tạo nút NEXT (>)
+    const nextBtn = document.createElement('button');
+    nextBtn.innerText = '>';
+    if (currentState.currentPage === totalPages) {
+        nextBtn.disabled = true;
+        nextBtn.style.opacity = '0.5';
+    } else {
+        nextBtn.onclick = () => {
+            currentState.currentPage++;
+            loadProducts(currentState.sortBy, currentState.orderBy);
+        };
+    }
+    container.appendChild(nextBtn);
 }
 
 // 2. Hàm lấy dữ liệu và hiển thị
-async function loadProducts() {
+async function loadProducts(sortBy, orderBy) {
     try {
-        const url = `${sachsAPI_URL_BASE}?page=1&limit=5&sortBy=TenSach&order=desc`
+        const url = `${sachsAPI_URL_BASE}?page=${currentState.currentPage}&limit=${currentState.limit}&sortBy=${sortBy}&order=${orderBy}`
+        console.log(url);
         const response = await fetch(url);
         const responseData = await response.json();
         console.log(responseData);
         const books = responseData.data // Giả sử API trả về mảng danh sách sản phẩm
-        // console.log(books); // Kiểm tra dữ liệu nhận được
+        renderProducts(books); // Gọi hàm hiển thị
 
-        const sachDaGiamGia = await Promise.all(books.map(async (book) => {
-            const phanTramGiam = await getDiscountPercent(book.MaGiamGia);
-            return { ...book, GiamGia: phanTramGiam };
-        }));
-        // console.log(sachDaGiamGia); // Kiểm tra dữ liệu sau khi thêm giảm giá
-        renderProducts(sachDaGiamGia); // Gọi hàm hiển thị
+        const totalPages = responseData.pagination ? responseData.pagination.tongSoTrang : 0;
+        renderPagination(totalPages); // Vẽ phân trang
     } catch (error) {
         console.error("Lỗi khi tải sản phẩm:", error);
     }
@@ -56,27 +159,22 @@ function renderProducts(productList) {
         // Format tiền tệ sang dạng Việt Nam (VD: 423000 -> 423.000₫)
         const formatPrice = (price) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
         
-        const GiamGia = product.GiamGia || 0; // Giảm giá (nếu có)
-        // Tính lại giá Sale (nếu API chưa tính sẵn)
-        const GiaSale = product.GiaSach * (1 - product.GiamGia / 100);
+        const GiamGia = product.PhanTramGiam || 0;
+        const GiaSale = product.GiaSach * (1 - GiamGia / 100);
 
         // Tạo đường dẫn chi tiết (Dùng chung 1 trang chitiet và truyền ID)
         // Thay vì dẫn đến 'chitiet_sp_combo_kusuriya.html', hãy dẫn đến trang chung kèm ID
         const detailLink = `../ChitietSP/chitiet_sp.html?id=${product.MaSach}`;
-        
-        // Đường dẫn ảnh (Nếu API chỉ trả về tên file, cần nối thêm thư mục)
-        // Ví dụ API trả về "anh1.png" -> src = "../Image/anh1.png"
-        const imagePath = `../Image/${product.image}`; 
+        const imagePath = `../Image/${product.LinkHinhAnh}`; 
 
         // --- TẠO HTML ---
-        // Lưu ý: Dấu huyền (`) bao quanh toàn bộ khối HTML
         htmlContent += `
             <div class="allproduct_item">
                 <div class="allproduct_item_img">
                     <a href="${detailLink}">
                         <img src="${imagePath}" alt="${product.TenSach}">
                     </a>
-                    <div class="discount">-${product.GiamGia}%</div>
+                    <div class="discount">-${GiamGia}%</div>
                 </div>
                 
                 <div class="allproduct_item_title">
@@ -109,5 +207,5 @@ function renderProducts(productList) {
     container.innerHTML = htmlContent;
 }
 
-// 4. Chạy hàm khi trang tải xong
-document.addEventListener('DOMContentLoaded', loadProducts);
+// // 4. Chạy hàm khi trang tải xong
+// document.addEventListener('DOMContentLoaded', loadProducts);

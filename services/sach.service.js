@@ -23,7 +23,7 @@ export const sachService = {
     logger.info(`Service: Paging sachs - Page: ${page}`);
     const sachs = await sachRepository.getSachPagingAndSorting(page, size, sortBy, sortOrder);
     return {
-      data: sachs.rows.map((u) => new SachDTO(u)),
+      data: sachs.rows,
       pagination: sachs.pagination
     };
   },
