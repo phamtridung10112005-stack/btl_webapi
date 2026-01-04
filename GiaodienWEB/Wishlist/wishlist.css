@@ -3,6 +3,24 @@
     width: 100%;
     min-height: 334px;
 }
+.source{
+    position: relative;
+    margin: 0 20%!important;
+}
+.sort_box{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+.sort_box select{
+    color: #22a7ff;
+    font-size: 14px;
+    border: 1px solid #22a7ff;
+    outline: none;
+    border-radius: 3px;
+    padding: 3px 15px 3px 5px;
+    cursor: pointer;
+}
 #addToCart_message{
     position: absolute;
     top: -70px;

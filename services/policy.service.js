@@ -3,6 +3,9 @@ import { POLICIES } from "../utils/constants/policies.js";
 
 export async function checkPolicy({ user, policy, resourceUserId = null }) {
     const userPolicies = ROLE_POLICY_MAP[user.role] || [];
+    if (user.role === 'ADMIN') {
+        return true;
+    }
     console.log(resourceUserId, user.id);
     console.log(policy);
     console.log("User Policies:", userPolicies);
@@ -10,7 +13,7 @@ export async function checkPolicy({ user, policy, resourceUserId = null }) {
     if (!userPolicies.includes(policy)) {
         return false;
     }
-    if (policy === POLICIES.USER_VIEW_SELF || policy === POLICIES.USER_EDIT) {
+    if (policy === POLICIES.USER_VIEW_SELF || policy === POLICIES.USER_EDIT || policy === POLICIES.USER_BOOKS_WISHLIST_VIEW_SELF || policy === POLICIES.USER_BOOKS_WISHLIST_ADD || policy === POLICIES.USER_BOOKS_WISHLIST_REMOVE) {
         return user.id === Number(resourceUserId);
     }
     return true;

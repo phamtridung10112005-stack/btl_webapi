@@ -2,7 +2,7 @@ import { checkPolicy } from "../services/policy.service.js";
 
 export function authorizePolicy(policy) {
     return async (req, res, next) => {
-        const resourceUserId = req.params.id;
+        const resourceUserId = req.params?.user_id || req.body?.user_id || req.query?.user_id;
         console.log("Resource User ID:", resourceUserId);
         const allowed = await checkPolicy({
             user: req.user,

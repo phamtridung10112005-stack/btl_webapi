@@ -151,6 +151,8 @@
     border: 1px solid #22a7ff;
     outline: none;
     border-radius: 3px;
+    padding: 3px 15px 3px 5px;
+    cursor: pointer;
 }
 .control_next_pre_Page{
     width: 90%;

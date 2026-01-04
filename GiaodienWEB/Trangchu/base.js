@@ -1,35 +1,263 @@
-//////Xu li load trang
-document.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', (ev) => {
-        const href = link.getAttribute('href');
-        if (href === '#' || href === ''){
-            ev.preventDefault(); //////chan hanh vi mac dinh
-            // console.log('Ko load trang');
+const BASE_API_URL = 'http://localhost:3000/api/';
+const SACHYEUTHICH_BY_USERID_API_URL = `${BASE_API_URL}sachyeuthichs/user/`;
+const CREATE_SACHYEUTHICH_API_URL = `${BASE_API_URL}sachyeuthichs`;
+const DELETE_SACHYEUTHICH_API_URL = `${BASE_API_URL}sachyeuthichs`;
+
+let userBooksWishList = new Set();
+
+////////////////Login/Logout
+// --- 1. Hàm tiện ích: Giải mã Token JWT ---
+// Giúp đọc thông tin bên trong token để biết thời gian hết hạn (exp)
+function parseJwt(token) {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload);
+    } catch (e) {
+        return null;
+    }
+}
+// --- 2. Hàm Logout (Được gọi khi bấm nút Đăng xuất) ---
+function logout() {
+    // Xóa sạch dữ liệu đăng nhập
+    localStorage.removeItem('isLogIn');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('loggedInUser');
+    localStorage.clear();
+
+    // Tải lại trang để giao diện cập nhật về trạng thái khách
+    window.location.reload();
+}
+
+// --- 3. Xử lý chính khi trang Web tải xong ---
+document.addEventListener('DOMContentLoaded', async () => {
+    
+    await initWishListSystem();
+    checkUserLoginStatus();
+
+    // Xử lý link # (Giữ nguyên code cũ của bạn)
+    document.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', (ev) => {
+            const href = link.getAttribute('href');
+            if (href === '#' || href === '') {
+                ev.preventDefault();
+            }
+        });
+    });
+
+    // Xử lý sự kiện thêm/xóa sách yêu thích (Wishlist)
+    document.addEventListener('click', (ev) => {
+        // console.log(ev.target);
+        if (ev.target.tagName === 'I' && ev.target.closest('.wishlist')) {
+            const item = ev.target.closest('[data-id]');
+            // console.log(item);
+            if (item && item.dataset.id) {
+                addToWishList(item);
+            }
         }
     });
 });
-////////////////////////////////////////////
-////////////////Login/Logout
-function logout() {
-    localStorage.removeItem('isLogIn');
-    document.getElementById('btn_dangnhap').style.display = 'block';
-    document.getElementById('btn_dangky').style.display = 'block';
-    document.getElementById('btn_dangxuat').style.display = 'none';
+function checkUserLoginStatus() {
+    // Xử lý Ẩn/Hiện nút Đăng nhập - Đăng ký - Đăng xuất
+    const btnLogin = document.getElementById('btn_dangnhap');
+    const btnRegister = document.getElementById('btn_dangky');
+    const btnLogout = document.getElementById('btn_dangxuat');
+
+    const token = localStorage.getItem('accessToken');
+    let isValidSession = false;
+
+    // Kiểm tra Token
+    if (token) {
+        const decoded = parseJwt(token);
+        const currentTime = Date.now() / 1000; // Thời gian hiện tại tính bằng giây
+
+        if (decoded && decoded.exp > currentTime) {
+            // Token còn hạn -> Phiên đăng nhập hợp lệ
+            isValidSession = true;
+        } else {
+            // Token hết hạn -> Tự động xóa rác
+            console.log("Phiên đăng nhập hết hạn");
+            logout();
+            return;
+        }
+    }
+
+    // console.log('isValidSession:', isValidSession);
+    // Cập nhật giao diện dựa trên kết quả kiểm tra
+    if (isValidSession) {
+        // --- TRẠNG THÁI: ĐÃ ĐĂNG NHẬP ---
+        if(btnLogin) btnLogin.style.display = 'none';
+        if(btnRegister) btnRegister.style.display = 'none';
+        if(btnLogout) btnLogout.style.display = 'block'; // Hoặc 'inline-block' tùy CSS của bạn
+    } else {
+        // --- TRẠNG THÁI: KHÁCH (CHƯA ĐĂNG NHẬP) ---
+        if(btnLogin) btnLogin.style.display = 'block';
+        if(btnRegister) btnRegister.style.display = 'block';
+        if(btnLogout) btnLogout.style.display = 'none';
+    }
 }
-document.addEventListener('DOMContentLoaded', () => {
-    const isLogIn = localStorage.getItem('isLogIn');
-    if (isLogIn == 'true') {
-        document.getElementById('btn_dangnhap').style.display = 'none';
-        document.getElementById('btn_dangky').style.display = 'none';
-        document.getElementById('btn_dangxuat').style.display = 'block';
+function getLoggedInUserId() {
+    const token = localStorage.getItem('accessToken');
+    if (!token) return null;
+    const decoded = parseJwt(token);
+    return decoded ? decoded.id : null;
+}
+/////////////////////Wish list system//////////////////////////////
+async function initWishListSystem() {
+    const token = localStorage.getItem('accessToken');
+    const user_id = getLoggedInUserId();
+    // console.log('User ID for Wishlist:', user_id);
+    if (!token || !user_id) {
+        updateWishListBadge(0);
+        console.log('No valid token or user ID for Wishlist');
+        return;
     }
-    else {
-        document.getElementById('btn_dangnhap').style.display = 'block';
-        document.getElementById('btn_dangky').style.display = 'block';
-        document.getElementById('btn_dangxuat').style.display = 'none';
+    // console.log(`${SACHYEUTHICH_BY_USERID_API_URL}${user_id}`);
+    try {
+        const response = await fetch(SACHYEUTHICH_BY_USERID_API_URL + user_id, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if (response.ok) {
+            const booksLikedList = await response.json();
+            // console.log('Wishlist tải về:', booksLikedList);
+            userBooksWishList = new Set(booksLikedList);
+            updateWishListBadge(userBooksWishList.size);
+            highlightHeartIcons();
+        } else {
+            console.error('Lỗi tải Wishlist', response.statusText);
+            updateWishListBadge(0);
+        }
+    } catch (error) {
+        console.error('Lỗi kết nối tới server:', error);
+        updateWishListBadge(0);
     }
-});
-/////////////////////////////////////////////
+}
+function updateWishListBadge(count) {
+    let styleWishlistIcon = document.querySelector('style[data-wishlist-icon]');
+    if (count === 0) {
+        if (styleWishlistIcon) {
+            styleWishlistIcon.remove();
+        }
+        return;
+    }
+    if (!styleWishlistIcon) {
+        styleWishlistIcon = document.createElement('style');
+        styleWishlistIcon.setAttribute('data-wishlist-icon', 'true');
+        document.head.appendChild(styleWishlistIcon)
+    }
+    styleWishlistIcon.textContent = `
+        .sp_uathich::before {
+            content: '${count}';
+            font-size: 18px;
+            text-align: center;
+            font-weight: bold;
+            position: absolute;
+            top: -10px;
+            right: -5px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #ff2732;
+            color: #fff;
+        }
+    `;
+}
+window.highlightHeartIcons = function() {
+    const heartButtons = document.querySelectorAll('.wishlist');
+    heartButtons.forEach(btnWL => {
+        const container = btnWL.closest('[data-id]') || btnWL;
+        const bookId = parseInt(container.dataset.id);
+        const icon = btnWL.querySelector('i');
+        if (icon) {
+            if (userBooksWishList.has(bookId)) {
+                btnWL.classList.add('active');
+            } else {
+                btnWL.classList.remove('active');
+            }
+        }
+    });
+}
+async function addToWishList(item) {
+    const token = localStorage.getItem('accessToken');
+    const user_id = getLoggedInUserId();
+    if (!token || !user_id) {
+        if (confirm("Bạn cần đăng nhập để sử dụng chức năng này. Đăng nhập ngay?")) {
+            window.location.href = '../Login/dangnhap.html';
+        }
+        return;
+    }
+    const bookId = parseInt(item.dataset.id);
+    if (!bookId) {
+        console.log('Không tìm thấy mã sách để thêm vào Wishlist');
+        return;
+    }
+    const isLiked = userBooksWishList.has(bookId);
+    toggleHeartIcon(bookId, !isLiked);
+    try {
+        let response;
+        if (isLiked) {
+            // Gỡ bỏ khỏi Wishlist
+            const url = new URL(DELETE_SACHYEUTHICH_API_URL);
+            url.searchParams.append('user_id', user_id);
+            url.searchParams.append('masach', bookId);
+            response = await fetch(url.toString(), {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+        } else {
+            // Thêm vào Wishlist
+            response = await fetch(CREATE_SACHYEUTHICH_API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ User_ID: user_id, MaSach: bookId })
+            });
+        }
+        if (response.ok) {
+            if (isLiked) {
+                userBooksWishList.delete(bookId);
+            } else {
+                userBooksWishList.add(bookId);
+            }
+            updateWishListBadge(userBooksWishList.size);
+        } else {
+            console.error('Lỗi cập nhật Wishlist:', response.statusText);
+            toggleHeartIcon(bookId, isLiked); // Revert UI change
+            alert('Cập nhật Wishlist thất bại. Vui lòng thử lại.');
+        }
+    } catch (error) {
+        console.error('Lỗi kết nối tới server:', error);
+        toggleHeartIcon(bookId, isLiked);
+    }
+}
+function toggleHeartIcon(bookId, isActive) {
+    const heartButtons = document.querySelectorAll('.wishlist');
+    heartButtons.forEach(btnWL => {
+        const container = btnWL.closest('[data-id]') || btnWL;
+        const id = parseInt(container.dataset.id);
+        const icon = btnWL.querySelector('i');
+        if (icon && id === bookId) {
+            if (isActive) {
+                btnWL.classList.add('active');
+            } else {
+                btnWL.classList.remove('active');
+            }
+        }
+    });
+}
+
 //////button back head
 const posision_scrollTop_btn = 750;
 const scroll_btn = document.getElementById('scroll_btn');
@@ -41,49 +269,12 @@ window.addEventListener('scroll', () => {
         scroll_btn.style.display = 'none';
     }
 });
-/////////////////////////////////
-document.addEventListener('DOMContentLoaded', () => {
-    const isCart = JSON.parse(localStorage.getItem('cart')) || [];
-    if (isCart === null || isCart.length === 0) {
-        // console.log(0);
-        // cartIcon.classList.remove('active');
-        let styleCartIcon = document.querySelector('style[data-cart-icon]');
-        styleCartIcon.remove();
-    }
-    else {
-        // console.log(isCart.length);
-        // cartIcon.classList.add('active');
-        let styleCartIcon = document.querySelector('style[data-cart-icon]');
-        if (!styleCartIcon) {
-            styleCartIcon = document.createElement('style');
-            styleCartIcon.setAttribute('data-cart-icon', 'true');
-            document.head.appendChild(styleCartIcon)
-        }
-        styleCartIcon.textContent = `
-            .giohang::before {
-                content: '`+ isCart.length + `';
-                font-size: 18px;
-                text-align: center;
-                font-weight: bold;
-                position: absolute;
-                top: -10px;
-                right: -5px;
-                width: 20px;
-                height: 20px;
-                border-radius: 50%;
-                background-color: #ff2732;
-                color: #fff;
-            }
-        `;
-    }
-});
 //////Them vao gio hang message
 let timeAutoHide = 5;
 let canClick = true;
-console.log('zzz');
 function AutoHide(item){
-    console.log('auto hide');
-    console.log(window.scrollY);
+    // console.log('auto hide');
+    // console.log(window.scrollY);
     if (timeAutoHide === 0){
         canClick = true;
         timeAutoHide = 5;
@@ -94,17 +285,17 @@ function AutoHide(item){
         timeAutoHide--;
         item.style.opacity = timeAutoHide * 0.2;
         setTimeout(() => AutoHide(item), 1000);
-        console.log(timeAutoHide);
+        // console.log(timeAutoHide);
     }
 }
 const listbtn_addToCart = document.querySelectorAll('.fa-cart-plus');
-if (listbtn_addToCart) {
-    console.log('true');
-}
+// if (listbtn_addToCart) {
+//     console.log('true');
+// }
 const addToCart_message = document.getElementById('addToCart_message');
-if (addToCart_message) {
-    console.log('true');
-}
+// if (addToCart_message) {
+//     console.log('true');
+// }
 listbtn_addToCart.forEach((btn_addToCart) => {
     btn_addToCart.addEventListener('click', () => {
         console.log(canClick);

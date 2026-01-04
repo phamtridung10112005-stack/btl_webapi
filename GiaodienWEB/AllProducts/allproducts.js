@@ -20,23 +20,19 @@ document.addEventListener('DOMContentLoaded', function() {
         // reset trang về 1 mỗi khi sắp xếp
         currentState.currentPage = 1;
 
-        console.log(`Đang sắp xếp theo cột: ${currentState.sortBy}, Chiều: ${currentState.orderBy}`);
+        // console.log(`Đang sắp xếp theo cột: ${currentState.sortBy}, Chiều: ${currentState.orderBy}`);
         
         // Gọi hàm load API với 2 tham số riêng biệt
         loadProducts(currentState.sortBy, currentState.orderBy);
     }
     
     if (sortSelect) {
-        console.log(`sortSelect value on load: ${sortSelect.value}`);
         handleSort(sortSelect.value); // Tải sản phẩm với sắp xếp mặc định khi trang load
     }
 
     // Lắng nghe sự kiện thay đổi (change)
     sortSelect.addEventListener('change', function(event) {
         const selectedSortValue = event.target.value;
-        
-        // console.log("Người dùng chọn sắp xếp theo:", selectedSortValue); // Kiểm tra log
-
         handleSort(selectedSortValue);
     });
 });
@@ -169,7 +165,7 @@ function renderProducts(productList) {
 
         // --- TẠO HTML ---
         htmlContent += `
-            <div class="allproduct_item">
+            <div class="allproduct_item" data-id="${product.MaSach}">
                 <div class="allproduct_item_img">
                     <a href="${detailLink}">
                         <img src="${imagePath}" alt="${product.TenSach}">
@@ -191,8 +187,8 @@ function renderProducts(productList) {
                         <img src="../Image/fire.png" alt=""> Đã bán ${product.SoLuongDaBan}+
                     </div>
                     
-                    <div class="wishlist" data-id="${product.MaSach}">
-                        <i onclick="addToWishList('${product.MaSach}')" class="fa-solid fa-heart"></i>
+                    <div class="wishlist">
+                        <i class="fa-solid fa-heart"></i>
                     </div>
                     
                     <div class="allproduct_item_cart">
@@ -202,10 +198,9 @@ function renderProducts(productList) {
             </div>
         `;
     });
-
     // Gán HTML vào container
     container.innerHTML = htmlContent;
+    if (window.highlightHeartIcons) {
+        highlightHeartIcons();
+    }
 }
-
-// // 4. Chạy hàm khi trang tải xong
-// document.addEventListener('DOMContentLoaded', loadProducts);
