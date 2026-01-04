@@ -1,81 +1,62 @@
-function formatCurrency(number){
-    return number.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
-}
-document.addEventListener('DOMContentLoaded', () => {
-    const isCart = JSON.parse(localStorage.getItem('cart')) || [];
-    if (isCart === null || isCart.length === 0) {
-        // console.log(0);
-        // cartIcon.classList.remove('active');
-        let styleCartIcon = document.querySelector('style[data-cart-icon]');
-        styleCartIcon.remove();
-    }
-    else {
-        // console.log(isCart.length);
-        // cartIcon.classList.add('active');
-        let styleCartIcon = document.querySelector('style[data-cart-icon]');
-        if (!styleCartIcon) {
-            styleCartIcon = document.createElement('style');
-            styleCartIcon.setAttribute('data-cart-icon', 'true');
-            document.head.appendChild(styleCartIcon)
-        }
-        styleCartIcon.textContent = `
-            .giohang::before {
-                content: '`+ isCart.length + `';
-                font-size: 18px;
-                text-align: center;
-                font-weight: bold;
-                position: absolute;
-                top: -10px;
-                right: -5px;
-                width: 20px;
-                height: 20px;
-                border-radius: 50%;
-                background-color: #ff2732;
-                color: #fff;
-            }
+import { initProductLoader } from "../Trangchu/product-loader.js";
+
+const ttSachYeuThichs_API_URL_BASE = "http://localhost:3000/api/sachyeuthichs/details";
+
+const user_id = getLoggedInUserId();
+
+function loadWishList(productWishList) {
+    const  container = document.getElementById('product-container');
+    let htmlContent = '';
+    const formatPrice = (price) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
+
+    productWishList.forEach(product => {
+        const GiamGia = product.PhanTramGiam || 0;
+        const GiaSale = product.GiaSach * (1 - GiamGia / 100);
+        const detailLink = `../ChitietSP/chitiet_sp.html?id=${product.MaSach}`;
+        const imagePath = `../Image/${product.LinkHinhAnh}`;
+
+        htmlContent += `
+            <div class="wishlist_item" data-id="${product.MaSach}">
+                <div class="wishlist_item_img">
+                    <a href="${detailLink}">
+                        <img src="${imagePath}" alt="${product.TenSach}">
+                    </a>
+                    <div class="discount">-${GiamGia}%</div>
+                </div>
+                <div class="wishlist_item_title">
+                    <a href="${detailLink}">${product.TenSach}</a>
+                </div>
+                <div class="wishlist_item_prices">
+                    <div class="wishlist_item_priceSale">${formatPrice(GiaSale)}</div>
+                    <div class="wishlist_item_priceOriginal"><s>${formatPrice(product.GiaSach)}</s></div>
+                </div>
+                <div class="wishlist_item_footer">
+                    <div class="wishlist_item_sold">
+                        <img src="../Image/fire.png" alt="">  Đã bán ${product.SoLuongDaBan}+
+                    </div>
+                    <div class="wishlist_item_cart">
+                        <i class="fa-solid fa-cart-plus"></i>
+                    </div>
+                </div>
+            </div>
         `;
-    }
-});
-//////////////////////////////////////////////////////////////////////////
-/////////////////////add to wish list//////////////////////////////////
-let listWishList = JSON.parse(localStorage.getItem('wishlist')) || [];
-console.log('wishlist');
-console.log(listWishList);
-function addToWishList(item){
-    const listWL = document.querySelectorAll('.wishlist');
-    console.log()
-    if (listWishList == null){
-        listWishList = [item];
-    }
-    else{
-        let exist = false;
-        for (temp of listWishList){
-            if (temp.id === item.id){
-                listWL.forEach((itemWL) => {
-                    if (itemWL.dataset.id === item.id) {
-                        itemWL.classList.remove('active');
-                    }
-                })
-                const indexWLremove = listWishList.findIndex((itemWLremove) => itemWLremove.id === item.id);
-                listWishList.splice(indexWLremove, 1);
-                console.log(0);
-                exist = true;
-                break;
-            }
-        }
-        if (!exist){
-            listWishList.push(item);
-            console.log('+1 tym');
-        }
-    }
-    localStorage.setItem('wishlist', JSON.stringify(listWishList));
-    location.reload();
-    console.log(listWishList);
+    });
+    container.innerHTML = htmlContent;
 }
-///////////////////////////////////////////////////////
-/////////////////////load wish list//////////////////////////////////
-function loadWishList(){
-    var str = '';
+
+document.addEventListener('DOMContentLoaded', () => {
+    initProductLoader({
+        apiUrl: ttSachYeuThichs_API_URL_BASE + `?user_id=${user_id}&`,
+        containerId: 'product-container',
+        paginationId: 'control-next-pre-Page',
+        sortSelectId: 'sort_pro',
+        limit: 24,
+        renderFunction: loadWishList // Truyền hàm render tùy chỉnh
+    });
+});
+/////////////////////////////////////////////////////////////////////
+/*
+var str = '';
     for (item of listWishList){
         str += `
             <div class="wishlist_item">
@@ -102,19 +83,4 @@ function loadWishList(){
         `;
     }
     document.querySelector('.wishlist_container').innerHTML = str;
-}
-/////////////////////////////////////////////////////////////////////
-
-document.addEventListener('DOMContentLoaded', () => {
-    const listWL = document.querySelectorAll('.wishlist');
-    // console.log(listWL.length);
-    listWL.forEach((itemWL) => {
-        for (let itemlistWishList of listWishList) {
-            if (itemWL.dataset.id === itemlistWishList.id) {
-                itemWL.classList.add('active');
-            }
-        }
-    });
-});
-
-loadWishList();
+*/

@@ -36,6 +36,48 @@ getByUser_ID: async (user_id) => {
       throw err;
     }
   },
+  getTTSachByUser_ID: async (user_id, page, size, sortBy, sortOrder) => {
+    logger.info(`Repository: Fetching sachyeuthich with user_id ${user_id}`);
+    try {
+      const db = await pool;
+      const validFields = ['MaSach', 'TenSach', 'GiaSach', 'SoLuongDaBan', 'NamXuatBan'];
+      if (!validFields.includes(sortBy)) {
+        sortBy = 'NgayTao';
+      }
+      const offset = (page - 1) * size;
+      const [tongSoSachYeuThich] = await db.query('SELECT COUNT(*) as total FROM SachYeuThich WHERE User_ID = ?', [user_id]);
+      const slSachYeuThichs = tongSoSachYeuThich[0].total;
+      const totalPages = Math.ceil(slSachYeuThichs / size);
+
+      const sqlString = `
+            SELECT 
+                s.MaSach, 
+                s.TenSach, 
+                s.GiaSach,
+                s.LinkHinhAnh,
+                s.SoLuongDaBan,
+                COALESCE(g.PhanTramGiam, 0) AS PhanTramGiam,
+                yt.NgayTao
+            FROM SachYeuThich yt
+            JOIN Sach s ON yt.MaSach = s.MaSach
+            LEFT JOIN GiamGia g ON s.MaGiamGia = g.MaGiamGia
+            WHERE yt.User_ID = ?
+            ORDER BY yt.${sortBy} ${sortOrder}
+            LIMIT ? OFFSET ?;
+            `;
+      const [rows] = await db.query(sqlString, [user_id, size, offset]);
+      return {rows,
+              pagination: {
+                trangHienTai: page,
+                tongSoTrang: totalPages,
+                kichThuocTrang: size,
+                tongSoSach: slSachYeuThichs
+              }};
+    } catch (err) {
+      logger.error(`Repository Error: getTTSachByUser_ID failed for user_id ${user_id}`, err);
+      throw err;
+    }
+  },
 getByMaSach: async (masach) => {
     logger.info(`Repository: Fetching sachyeuthich with masach ${masach}`);
     try {

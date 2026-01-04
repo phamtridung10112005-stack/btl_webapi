@@ -39,6 +39,24 @@ getByMaSach: async (req, res) => {
       res.status(404).json({ message: err.message });
     }
 },
+getTTSachYeuThichByUser_ID: async (req, res) => {
+  const user_id = parseInt(req.query.user_id);
+  const page = parseInt(req.query.page) || 1;
+  const size = parseInt(req.query.size) || 24;
+  let sortBy = req.query.sortBy || 'NgayTao';
+  if (sortBy === 'defaut' || sortBy === null) sortBy = 'NgayTao';
+  let sortOrder = req.query.order || 'defaut';
+  if (sortOrder === 'defaut' || sortOrder === null) sortOrder = 'DESC';
+  console.log(`Paging params - Page: ${page}, Size: ${size}, SortBy: ${sortBy}, Order: ${sortOrder}`);
+  logger.info(`Controller: GET /sachyeuthichs/details/${user_id}`);
+  try {
+    const result = await sachyeuthichService.getTTSachYeuThichByUser_ID(user_id, page, size, sortBy, sortOrder);
+    res.json(result);
+  } catch (err) {
+    logger.error(`Controller Error: getTTSachYeuThichByUser_ID failed (${user_id})`, err);
+    res.status(500).json({ message: err.message });
+  }
+},
 getByUser_ID_AND_MaSach: async (req, res) => {
     const user_id = req.query.user_id;
     const masach = req.query.masach;

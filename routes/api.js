@@ -89,6 +89,7 @@ router.delete("/giamgias/:magiamgia", giamgiaController.delete);
 //----------------------- SACHYEUTHICHS ------------------------------------
 router.get("/sachyeuthichs", authenticate, authorizePolicy(POLICIES.USER_BOOKS_WISHLIST_VIEW_ALL), sachyeuthichController.getAll);
 router.get("/sachyeuthichs/user/:user_id", authenticate, authorizePolicy(POLICIES.USER_BOOKS_WISHLIST_VIEW_SELF), sachyeuthichController.getByUser_ID);
+router.get("/sachyeuthichs/details", authenticate, authorizePolicy(POLICIES.USER_BOOKS_WISHLIST_VIEW_SELF), sachyeuthichController.getTTSachYeuThichByUser_ID);
 router.get("/sachyeuthichs/sach/:masach", sachyeuthichController.getByMaSach);
 router.get("/sachyeuthichs/timkiem", sachyeuthichController.getByUser_ID_AND_MaSach);
 router.post("/sachyeuthichs", authenticate, normalizeUserId, authorizePolicy(POLICIES.USER_BOOKS_WISHLIST_ADD), sachyeuthichController.create);

@@ -18,6 +18,14 @@ getSachYeuThichByUser_ID: async (user_id) => {
     }
     return sachyeuthichs.map(r => r.MaSach);
   },
+getTTSachYeuThichByUser_ID: async (user_id, page, size, sortBy, sortOrder) => {
+    logger.info(`Service: Getting sachyeuthich details by user_id ${user_id}`);
+    const result = await sachyeuthichRepository.getTTSachByUser_ID(user_id, page, size, sortBy, sortOrder);
+    return {
+      data: result.rows,
+      pagination: result.pagination
+    };
+  },
 getSachYeuThichByMaSach: async (masach) => {
     logger.info(`Service: Getting sachyeuthich by masach ${masach}`);
     const sachyeuthichs = await sachyeuthichRepository.getByMaSach(masach);

@@ -34,7 +34,8 @@ export const sachController = {
     const size = parseInt(req.query.size) || 24;
     let sortBy = req.query.sortBy || 'MaSach';
     if (sortBy === 'defaut' || sortBy === null) sortBy = 'MaSach';
-    const sortOrder = req.query.order === 'desc' ? 'DESC' : 'ASC';
+    let sortOrder = req.query.order || 'defaut';
+    if (sortOrder === 'defaut' || sortOrder === null) sortOrder = 'asc';
     console.log(`Paging params - Page: ${page}, Size: ${size}, SortBy: ${sortBy}, Order: ${sortOrder}`);
     try {
       const sachs = await sachService.getSachPagingAndSorting(page, size, sortBy, sortOrder);

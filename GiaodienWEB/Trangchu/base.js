@@ -99,7 +99,7 @@ function checkUserLoginStatus() {
         if(btnLogout) btnLogout.style.display = 'none';
     }
 }
-function getLoggedInUserId() {
+window.getLoggedInUserId = function() {
     const token = localStorage.getItem('accessToken');
     if (!token) return null;
     const decoded = parseJwt(token);
