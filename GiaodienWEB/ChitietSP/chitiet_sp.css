@@ -723,18 +723,6 @@ input[type=number] {
     transform: rotate(45deg);
     z-index: -1;
 }
-#message, #addToCart_message{
-    position: absolute;
-    top: -70px;
-    left: calc(50% - 98.915px);
-    background-color: #99d6ffe6;
-    color: #fff;
-    font-weight: bold;
-    padding: 20px;
-    border: 1px solid #fff;
-    border-radius: 10px;
-    transition: all 0.5s ease-in-out;
-}
 .danhgia{
     margin-right: 20px;
 }

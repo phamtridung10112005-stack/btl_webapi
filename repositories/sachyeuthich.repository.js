@@ -62,7 +62,7 @@ getByUser_ID: async (user_id) => {
             JOIN Sach s ON yt.MaSach = s.MaSach
             LEFT JOIN GiamGia g ON s.MaGiamGia = g.MaGiamGia
             WHERE yt.User_ID = ?
-            ORDER BY yt.${sortBy} ${sortOrder}
+            ORDER BY ${sortBy} ${sortOrder}
             LIMIT ? OFFSET ?;
             `;
       const [rows] = await db.query(sqlString, [user_id, size, offset]);

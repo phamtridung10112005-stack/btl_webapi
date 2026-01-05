@@ -1,7 +1,7 @@
 const BASE_API_URL = 'http://localhost:3000/api/';
 const SACHYEUTHICH_BY_USERID_API_URL = `${BASE_API_URL}sachyeuthichs/user/`;
-const CREATE_SACHYEUTHICH_API_URL = `${BASE_API_URL}sachyeuthichs`;
-const DELETE_SACHYEUTHICH_API_URL = `${BASE_API_URL}sachyeuthichs`;
+const SACHYEUTHICH_API_URL = `${BASE_API_URL}sachyeuthichs`;
+const GIOHANG_API_URL = `${BASE_API_URL}giohangs`;
 
 let userBooksWishList = new Set();
 
@@ -36,6 +36,7 @@ function logout() {
 document.addEventListener('DOMContentLoaded', async () => {
     
     await initWishListSystem();
+    await initCartSystem();
     checkUserLoginStatus();
 
     // Xử lý link # (Giữ nguyên code cũ của bạn)
@@ -59,6 +60,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
     });
+    // Xử lý thêm giỏ hàng
+    document.addEventListener('click', (ev) => {
+        if (ev.target.tagName === 'I' && ev.target.closest('.allproduct_item_cart, .wishlist_item_cart')) {
+            const item = ev.target.closest('[data-id]');
+            console.log(item);
+            if (item && item.dataset.id) {
+                addToCart(item);
+            }
+        }
+    })
 });
 function checkUserLoginStatus() {
     // Xử lý Ẩn/Hiện nút Đăng nhập - Đăng ký - Đăng xuất
@@ -85,7 +96,6 @@ function checkUserLoginStatus() {
         }
     }
 
-    // console.log('isValidSession:', isValidSession);
     // Cập nhật giao diện dựa trên kết quả kiểm tra
     if (isValidSession) {
         // --- TRẠNG THÁI: ĐÃ ĐĂNG NHẬP ---
@@ -105,6 +115,151 @@ window.getLoggedInUserId = function() {
     const decoded = parseJwt(token);
     return decoded ? decoded.id : null;
 }
+/////////////////////Cart system//////////////////////////
+function updateCartListBadge(count) {
+    let styleCartlistIcon = document.querySelector('style[data-cart-icon]');
+    if (count === 0) {
+        if (styleCartlistIcon) {
+            styleCartlistIcon.remove();
+        }
+        return;
+    }
+    if (!styleCartlistIcon) {
+        styleCartlistIcon = document.createElement('style');
+        styleCartlistIcon.setAttribute('data-cart-icon', 'true');
+        document.head.appendChild(styleCartlistIcon)
+    }
+    styleCartlistIcon.textContent = `
+        .giohang::before {
+            content: '${count}';
+            font-size: 12px;
+            text-align: center;
+            line-height: 20px;
+            font-weight: bold;
+            font-family: Arial, Helvetica, sans-serif;
+            position: absolute;
+            top: -10px;
+            right: -5px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #ff2732;
+            color: #fff;
+        }
+    `;
+}
+async function initCartSystem() {
+    const token = localStorage.getItem('accessToken');
+    const user_id = getLoggedInUserId();
+    if (!token || !user_id) {
+        updateCartListBadge(0);
+        return;
+    }
+    try {
+        const url = `${GIOHANG_API_URL}/user?user_id=${user_id}`;
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if (response.ok) {
+            const cartList = await response.json();
+            console.log('Cart List: ', cartList);
+            const countCartItems = Array.isArray(cartList) ? cartList.length : 0;
+            updateCartListBadge(countCartItems);
+        } else {
+            console.error('Lỗi tải giỏ hàng', response.statusText);
+            updateCartListBadge(0);
+        }
+    } catch (err) {
+        console.error('Lỗi kết nối tới server (Cart):', error);
+        updateCartListBadge(0);
+    }
+}
+let timeAutoHide = 5;
+let canClick = true;
+const addToCart_message = document.getElementById('addToCart_message');
+
+function AutoHide(item) {
+    if (timeAutoHide <= 0) {
+        canClick = true;
+        timeAutoHide = 5;
+        item.style.opacity = '0'; // Ẩn đi
+        item.style.transform = `translateY(${-100 - window.scrollY}px)`;
+        return;
+    } else {
+        timeAutoHide--;
+        // Hiệu ứng mờ dần
+        item.style.opacity = timeAutoHide * 0.2; 
+        setTimeout(() => AutoHide(item), 1000);
+    }
+}
+
+function showAddToCartSuccess() {
+    if (!addToCart_message) return;
+    
+    // Reset trạng thái hiển thị
+    addToCart_message.style.opacity = '1'; 
+    addToCart_message.style.display = 'block'; // Đảm bảo nó hiển thị
+    
+    // Tính toán vị trí hiển thị (giống logic cũ của bạn)
+    addToCart_message.style.transform = `translateY(${100 + window.scrollY}px)`;
+    
+    // Bắt đầu đếm ngược ẩn
+    timeAutoHide = 5;
+    if (canClick) {
+        canClick = false;
+        AutoHide(addToCart_message);
+    }
+}
+async function addToCart(item) {
+    const token = localStorage.getItem('accessToken');
+    const user_id = getLoggedInUserId();
+    if (!token || !user_id) {
+        if (confirm("Bạn cần đăng nhập để sử dụng chức năng này. Đăng nhập ngay?")) {
+            window.location.href = '../Login/dangnhap.html';
+        }
+        return;
+    }
+    const bookId = parseInt(item.dataset.id);
+    if (!bookId) {
+        console.log('Không tìm thấy mã sách để thêm vào gio hang');
+        return;
+    }
+    try {
+        const amountSP = document.querySelector('.amount_sp');
+        let dataPost;
+        
+        if (amountSP) {
+            dataPost = JSON.stringify({ User_ID: user_id, MaSach: bookId, SoLuong: Number(amountSP.value) })
+        } else {
+            dataPost = JSON.stringify({ User_ID: user_id, MaSach: bookId, SoLuong: 1 })
+        }
+        const response = await fetch(GIOHANG_API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: dataPost
+        });
+        if (response.ok) {
+            const data = await response.json();
+            // console.log("Thêm giỏ hàng thành công: ", data);
+            await initCartSystem();
+            showAddToCartSuccess();
+        } else {
+            const errData = await response.json();
+            console.log("Lỗi thêm giỏ hàng: ", errData);
+            alert(errorData.message || 'Có lỗi xảy ra khi thêm vào giỏ hàng.');
+        }
+    } catch (err) {
+        console.error('Lỗi mạng hoặc server:', err);
+        alert('Không thể kết nối đến máy chủ.');
+    }
+}
 /////////////////////Wish list system//////////////////////////////
 async function initWishListSystem() {
     const token = localStorage.getItem('accessToken');
@@ -115,7 +270,7 @@ async function initWishListSystem() {
         console.log('No valid token or user ID for Wishlist');
         return;
     }
-    // console.log(`${SACHYEUTHICH_BY_USERID_API_URL}${user_id}`);
+
     try {
         const response = await fetch(SACHYEUTHICH_BY_USERID_API_URL + user_id, {
             method: 'GET',
@@ -126,7 +281,7 @@ async function initWishListSystem() {
         });
         if (response.ok) {
             const booksLikedList = await response.json();
-            // console.log('Wishlist tải về:', booksLikedList);
+            // console.log('Wishlist:', booksLikedList);
             userBooksWishList = new Set(booksLikedList);
             updateWishListBadge(userBooksWishList.size);
             highlightHeartIcons();
@@ -155,9 +310,11 @@ function updateWishListBadge(count) {
     styleWishlistIcon.textContent = `
         .sp_uathich::before {
             content: '${count}';
-            font-size: 18px;
+            font-size: 12px;
             text-align: center;
+            line-height: 20px;
             font-weight: bold;
+            font-family: Arial, Helvetica, sans-serif;
             position: absolute;
             top: -10px;
             right: -5px;
@@ -204,7 +361,7 @@ async function addToWishList(item) {
         let response;
         if (isLiked) {
             // Gỡ bỏ khỏi Wishlist
-            const url = new URL(DELETE_SACHYEUTHICH_API_URL);
+            const url = new URL(SACHYEUTHICH_API_URL);
             url.searchParams.append('user_id', user_id);
             url.searchParams.append('masach', bookId);
             response = await fetch(url.toString(), {
@@ -216,7 +373,7 @@ async function addToWishList(item) {
             });
         } else {
             // Thêm vào Wishlist
-            response = await fetch(CREATE_SACHYEUTHICH_API_URL, {
+            response = await fetch(SACHYEUTHICH_API_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -269,43 +426,3 @@ window.addEventListener('scroll', () => {
         scroll_btn.style.display = 'none';
     }
 });
-//////Them vao gio hang message
-let timeAutoHide = 5;
-let canClick = true;
-function AutoHide(item){
-    // console.log('auto hide');
-    // console.log(window.scrollY);
-    if (timeAutoHide === 0){
-        canClick = true;
-        timeAutoHide = 5;
-        item.style.transform = `translateY(${-100 - window.scrollY}px)`;
-        return;
-    }
-    else{
-        timeAutoHide--;
-        item.style.opacity = timeAutoHide * 0.2;
-        setTimeout(() => AutoHide(item), 1000);
-        // console.log(timeAutoHide);
-    }
-}
-const listbtn_addToCart = document.querySelectorAll('.fa-cart-plus');
-// if (listbtn_addToCart) {
-//     console.log('true');
-// }
-const addToCart_message = document.getElementById('addToCart_message');
-// if (addToCart_message) {
-//     console.log('true');
-// }
-listbtn_addToCart.forEach((btn_addToCart) => {
-    btn_addToCart.addEventListener('click', () => {
-        console.log(canClick);
-        if (!canClick){
-            return;
-        }
-        canClick = false;
-        timeAutoHide = 5;
-        addToCart_message.style.transform = `translateY(${+100 + window.scrollY}px)`;
-        AutoHide(addToCart_message);
-    });
-});
-/////////////////////////////////
