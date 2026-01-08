@@ -1,3 +1,5 @@
+const REGISTER_API_URL = 'http://localhost:3000/api/auth/register';
+
 var hide = true;
 function Show_Pass(){
     if (hide){
@@ -11,43 +13,81 @@ function Show_Pass(){
         hide = true
     }
 }
-function CreateAccount(){
-    const user = document.getElementById('registerUser').value;
-    const password = document.getElementById('pass').value;
-    const nameaccount = document.getElementById('registerName').value;
-    const email = document.getElementById('registerEmail').value;
-    if (user === '' || password === '' || nameaccount === '' || email === ''){
-        document.getElementById('note_tt').style.display = 'block';
-        return;
+async function CreateAccount() {
+    // a. Lấy dữ liệu từ HTML
+    // Lưu ý: ID phải khớp chính xác với file HTML bạn gửi
+    const email = document.getElementById('registerEmail').value.trim();
+    const password = document.getElementById('pass').value.trim();
+    const username = document.getElementById('registerUsName').value.trim(); // Tên hiển thị
+    const phone = document.getElementById('registerPhone').value.trim();
+
+    // b. Lấy các thẻ hiển thị lỗi
+    const noteTT = document.getElementById('note_tt');
+    const noteEmail = document.getElementById('note_email');
+    const notePhone = document.getElementById('note_phone');
+
+    // c. Reset trạng thái lỗi (ẩn hết đi trước khi kiểm tra)
+    noteTT.style.display = 'none';
+    noteEmail.style.display = 'none';
+    if(notePhone) notePhone.style.display = 'none';
+
+    // d. Validate phía Client (Kiểm tra rỗng)
+    if (!email || !password || !username || !phone) {
+        noteTT.innerText = "Vui lòng điền đầy đủ thông tin.";
+        noteTT.style.display = 'block';
+        return; // Dừng lại, không gọi API
     }
-    else{
-        document.getElementById('note_tt').style.display = 'none';
+
+    // e. Gọi API Node.js để lưu vào Database
+    try {
+        const response = await fetch(REGISTER_API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: username, // Map với 'username' trong database
+                email: email,
+                password: password,
+                phone: phone,
+                role: 'USER' // Mặc định là user
+            })
+        });
+
+        const data = await response.json();
+
+        // f. Xử lý kết quả trả về
+        if (response.ok) {
+            // --- THÀNH CÔNG (HTTP 201) ---
+            alert("Đăng ký tài khoản thành công! Hãy đăng nhập ngay.");
+            
+            // Chuyển thẳng về trang đăng nhập (bỏ qua trang xác nhận)
+            window.location.href = 'dangnhap.html'; 
+        } else {
+            // --- THẤT BẠI (Lỗi từ Backend trả về) ---
+            const msg = data.message || "Đăng ký thất bại";
+
+            // Logic hiển thị lỗi thông minh dựa trên tin nhắn Server
+            if (msg.includes("Email")) {
+                noteEmail.innerText = "Email này đã được sử dụng.";
+                noteEmail.style.display = 'block';
+            } else if (msg.includes("Phone") || msg.includes("số điện thoại")) {
+                if(notePhone) {
+                    notePhone.innerText = "Số điện thoại đã tồn tại.";
+                    notePhone.style.display = 'block';
+                } else {
+                    alert(msg);
+                }
+            } else {
+                // Lỗi chung chung thì hiện ở note_tt hoặc alert
+                noteTT.innerText = msg;
+                noteTT.style.display = 'block';
+            }
+        }
+
+    } catch (error) {
+        // Lỗi mạng hoặc Server chưa bật
+        console.error("Error:", error);
+        alert("Không thể kết nối đến máy chủ. Vui lòng thử lại sau.");
     }
-    const account = {
-        user: user,
-        password: password,
-        nameaccount: nameaccount,
-        email: email
-    };
-    let accounts = JSON.parse(localStorage.getItem('accounts')) || [];
-    const isExistingUser = accounts.some((acc) => acc.user === user);
-    if (isExistingUser){
-        document.getElementById('note_user').style.display = 'block';
-        return;
-    }
-    else{
-        document.getElementById('note_user').style.display = 'none';
-    }
-    const isExistingEmail = accounts.some((acc) => acc.email === email);
-    if (isExistingEmail){
-        document.getElementById('note_email').style.display = 'block';
-        return;
-    }
-    else {
-        document.getElementById('note_email').style.display = 'none';
-    }
-    accounts.push(account);
-    localStorage.setItem('accounts', JSON.stringify(accounts));
-    alert('Đăng ký thành công!');
-    window.location.href = 'dangnhap.html'
 }

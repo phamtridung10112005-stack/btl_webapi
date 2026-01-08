@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi tiết sản phẩm</title>
+    <title>Tất cả sản phẩm</title>
+    <link rel="stylesheet" href="../Trangchu/base.css">
     <link rel="stylesheet" href="allproducts.css">
     <link rel="stylesheet" href="../ChitietSP/chitiet_sp.css">
     <link rel="icon" href="../Image/Logo_shop_icon.ico" type="image/png">
@@ -152,18 +153,20 @@
             <span><a href="#">Tất cả sản phẩm</a></span>
             <div class="sort_box">
                 <select name="" id="sort_pro">
-                    <option value="defaut" selected>Thứ tự mặc định</option>
-                    <option value="phobien">Thứ tự theo mức độ phổ biến</option>
-                    <option value="new">Mới nhất</option>
-                    <option value="danhgia">Thứ tự theo mức điểm đánh giá</option>
-                    <option value="sort">Thứ tự theo giá từ thấp đến cao</option>
-                    <option value="sort_reservert">Thứ tự theo giá từ cao xuống thấp</option>
+                    <option value="defaut-asc" selected>Mặc định</option>
+                    <option value="NamXuatBan-desc">Mới nhất</option>
+                    <option value="SoLuongDaBan-desc">Theo mức độ phổ biến</option>
+                    <option value="TenSach-asc">Theo tên sách A-Z</option>
+                    <option value="TenSach-desc">Theo tên sách Z-A</option>
+                    <option value="GiaSach-asc">Theo giá từ thấp đến cao</option>
+                    <option value="GiaSach-desc">Theo giá từ cao xuống thấp</option>
                 </select>
             </div>
         </div>
     </section>
     <div class="body_container">
-        <div class="allproducts_container">
+        <div class="allproducts_container" id="product-container">
+            <!--
             <div class="allproduct_item">
                 <div class="allproduct_item_img">
                     <a href="../ChitietSP/chitiet_sp_combo_kusuriya.html">
@@ -740,14 +743,9 @@
                     </div>
                 </div>
             </div>
+        -->
         </div>
-        <div class="control_next_pre_Page">
-            <button><</button>
-            <button>1</button>
-            <button>2</button>
-            <button>3</button>
-            <button>></button>
-        </div>
+        <div class="control_next_pre_Page" id="control-next-pre-Page"></div>
     </div>
     <div class="footer">
         <div class="footer_top">
@@ -827,9 +825,9 @@
     <div id="scroll_btn" class="back_to_head"><a href="#top_web"><i class="fa-solid fa-chevron-up"></i></a></div>
     <div id="addToCart_message">Đã thêm vào giỏ hàng</div>
     <!-- <script src="../PayingProducts/paying.js"></script> -->
-     <script src="allproducts.js"></script>
-    <script src="../Wishlist/wishlist.js"></script>
-    <script src="../Giohang/giohang.js"></script>
-    <script src="../ChitietSP/chitiet_sp.js"></script>
+     <script type="module" src="allproducts.js"></script>
+    <script src="../Trangchu/base.js"></script>
+    <!-- <script src="../Giohang/giohang.js"></script>
+    <script src="../ChitietSP/chitiet_sp.js"></script> -->
 </body>
 </html>

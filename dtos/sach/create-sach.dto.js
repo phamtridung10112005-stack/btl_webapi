@@ -1,5 +1,5 @@
 export class CreateSachDTO {
-  constructor({ TenSach, MaTheLoai, TenNguoiDich, MaNXB, GiaSach, NamXuatBan, SoTrang, MoTaNoiDung, LinkHinhAnh, YeuThich, SoLuongDaBan, MaGiamGia }) {
+  constructor({ TenSach, MaTheLoai, TenNguoiDich, MaNXB, GiaSach, NamXuatBan, SoTrang, MoTaNoiDung, LinkHinhAnh, YeuThich, SoLuongDaBan, MaGiamGia, AuthorIds }) {
     // Không truyền MaSach vì là AUTO_INCREMENT
     this.TenSach = TenSach;
     this.MaTheLoai = MaTheLoai;
@@ -10,8 +10,11 @@ export class CreateSachDTO {
     this.SoTrang = SoTrang;
     this.MoTaNoiDung = MoTaNoiDung;
     this.LinkHinhAnh = LinkHinhAnh;
-    this.YeuThich = YeuThich || 0;         // Default 0
-    this.SoLuongDaBan = SoLuongDaBan || 0; // Default 0
+    this.YeuThich = YeuThich || 0;
+    this.SoLuongDaBan = SoLuongDaBan || 0;
     this.MaGiamGia = MaGiamGia || null;
+
+    // 🔥 THÊM DÒNG NÀY:
+    this.AuthorIds = AuthorIds;
   }
 }

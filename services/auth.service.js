@@ -30,6 +30,6 @@ export async function loginUser(email, password) {
             role: user.role,
         },
         JWT_SECRET,
-        { expiresIn: "1h" }
+        { expiresIn: "48h" }
     );
 }

@@ -14,52 +14,56 @@ export const giohangRepository = {
     }
   },
 
-  getByMaGioHang: async (magiohang) => {
-    logger.info(`Repository: Fetching giohang with magiohang ${magiohang}`);
+  getByMaSach: async (masach) => {
+    logger.info(`Repository: Fetching giohang with MaSach ${masach}`);
     try {
       const db = await pool;
-      const [rows] = await db.query('SELECT * FROM GioHang WHERE MaGioHang = ?', [magiohang]);
+      const [rows] = await db.query('SELECT * FROM GioHang WHERE MaSach = ?', [masach]);
       return rows[0];
     } catch (err) {
-      logger.error(`Repository Error: getByMaGioHang failed for magiohang ${magiohang}`, err);
+      logger.error(`Repository Error: getByMaSach failed for masach ${masach}`, err);
       throw err;
     }
   },
 
-  // Bổ sung hàm này: Lấy giỏ hàng theo User (Rất quan trọng)
   getByUserId: async (user_id) => {
     logger.info(`Repository: Fetching giohang for user ${user_id}`);
     try {
       const db = await pool;
-      const [rows] = await db.query('SELECT * FROM GioHang WHERE user_id = ?', [user_id]);
+      const [rows] = await db.query('SELECT * FROM GioHang WHERE User_ID = ?', [user_id]);
       return rows;
     } catch (err) {
       logger.error(`Repository Error: getByUserId failed for user ${user_id}`, err);
       throw err;
     }
   },
-
-  create: async ({ user_id, MaSach, SoLuong, NgayThem }) => {
-    // Lưu ý: Không truyền MaGioHang vào đây vì nó tự tăng
-    logger.info(`Repository: Creating giohang item for user ${user_id}`);
+getByUserIdAndMaSach: async (user_id, masach) => {
+  logger.info(`Repository: Fetching giohang for user ${user_id} and masach ${masach}`);
     try {
       const db = await pool;
-      
-      // Nếu không có ngày thêm thì lấy ngày hiện tại
-      const finalDate = NgayThem || new Date();
+      const [rows] = await db.query('SELECT * FROM GioHang WHERE User_ID = ? and MaSach = ?', [user_id, masach]);
+      return rows;
+    } catch (err) {
+      logger.error(`Repository Error: getByUserId failed for user ${user_id} and masach ${masach}`, err);
+      throw err;
+    }
+},
+  create: async ({ User_ID, MaSach, SoLuong }) => {
+    logger.info(`Repository: Creating giohang item for user ${User_ID} and masach ${MaSach}`);
+    try {
+      const db = await pool;
 
       const [result] = await db.query(
-        'INSERT INTO GioHang (user_id, MaSach, SoLuong, NgayThem) VALUES (?, ?, ?, ?)',
-        [user_id, MaSach, SoLuong, finalDate]
+        `INSERT INTO GioHang (User_ID, MaSach, SoLuong)
+            VALUES (?, ?, ?)
+            ON DUPLICATE KEY UPDATE SoLuong = SoLuong + ?`,
+        [User_ID, MaSach, SoLuong, SoLuong]
       );
 
-      // Trả về dữ liệu kèm ID vừa tạo
       return { 
-        MaGioHang: result.insertId, 
-        user_id, 
+        User_ID, 
         MaSach, 
-        SoLuong, 
-        NgayThem: finalDate 
+        SoLuong,
       };
     } catch (err) {
       logger.error("Repository Error: create failed", err);
@@ -67,32 +71,31 @@ export const giohangRepository = {
     }
   },
 
-  update: async (MaGioHang, { user_id, MaSach, SoLuong, NgayThem }) => {
-    logger.info(`Repository: Updating giohang ${MaGioHang}`);
+  update: async (user_id, MaSach, { SoLuong, NgayThem }) => {
+    logger.info(`Repository: Updating giohang user_id ${user_id} and masach ${MaSach}`);
     try {
       const db = await pool;
       
-      // SỬA LỖI SQL Ở ĐÂY: Thêm dấu phẩy giữa các cột và xóa dấu phẩy thừa trước WHERE
       await db.query(
-        'UPDATE GioHang SET user_id = ?, MaSach = ?, SoLuong = ?, NgayThem = ? WHERE MaGioHang = ?',
-        [user_id, MaSach, SoLuong, NgayThem, MaGioHang] // Xóa dấu phẩy thừa trong mảng
+        'UPDATE GioHang SET SoLuong = ?, NgayThem = ? WHERE User_ID = ? and MaSach = ?',
+        [SoLuong, NgayThem, user_id, MaSach]
       );
 
-      return { MaGioHang, user_id, MaSach, SoLuong, NgayThem };
+      return { user_id, MaSach, SoLuong, NgayThem };
     } catch (err) {
-      logger.error(`Repository Error: update failed for MaGioHang ${MaGioHang}`, err);
+      logger.error(`Repository Error: update failed for user_id ${user_id} and masach ${MaSach}`, err);
       throw err;
     }
   },
 
-  delete: async (MaGioHang) => {
-    logger.info(`Repository: Deleting giohang ${MaGioHang}`);
+  delete: async (user_id, masach) => {
+    logger.info(`Repository: Deleting giohang user_id ${user_id} and masach ${masach}`);
     try {
       const db = await pool;
-      await db.query('DELETE FROM GioHang WHERE MaGioHang = ?', [MaGioHang]);
+      await db.query('DELETE FROM GioHang WHERE User_ID = ? and MaSach = ?', [user_id, masach]);
       return true;
     } catch (err) {
-      logger.error(`Repository Error: delete failed for MaGioHang ${MaGioHang}`, err);
+      logger.error(`Repository Error: delete failed for user_id ${user_id} and masach ${masach}`, err);
       throw err;
     }
   },

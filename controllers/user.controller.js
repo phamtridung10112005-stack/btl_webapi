@@ -20,7 +20,7 @@ export const userController = {
   },
 
   getById: async (req, res) => {
-    const id = +req.params.id;
+    const id = +req.params.user_id;
     logger.info(`Controller: GET /users/${id}`);
 
     try {
@@ -62,7 +62,7 @@ export const userController = {
   },
 
   update: async (req, res) => {
-    const id = +req.params.id;
+    const id = +req.params.user_id;
     logger.info(`Controller: PUT /users/${id}`);
 
     try {
@@ -81,7 +81,7 @@ export const userController = {
   },
 
   delete: async (req, res) => {
-    const id = +req.params.id;
+    const id = +req.params.user_id;
     logger.info(`Controller: DELETE /users/${id}`);
 
     try {

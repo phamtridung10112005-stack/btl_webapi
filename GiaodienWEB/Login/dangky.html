@@ -24,21 +24,21 @@
             <div class="login_contaiter">
                 <h1>Đăng ký</h1>
                 <div class="input_div">
-                    <input type="text" name="" id="registerUser" placeholder="Tên đăng nhập" required>
+                    <input type="email" name="" id="registerEmail" placeholder="Email" required>
                 </div>
-                <span id="note_user" style="color: red; display: none;">Tên đăng nhập đã tồn tại.</span>
+                <span id="note_email" style="color: red; display: none;"></span>
                 <div class="input_div" id="show_pass">
                     <input type="password" name="" id="pass" placeholder="Mật khẩu" required>
                     <div class="div_eye" onclick="Show_Pass()"><div id="show"></div></div>
                 </div>
                 <div class="input_div">
-                    <input type="text" placeholder="Tên hiển thị" required id="registerName">
+                    <input type="text" placeholder="Tên hiển thị" required id="registerUsName">
                 </div>
                 <div class="input_div">
-                    <input type="email" name="" id="registerEmail" placeholder="Email" required style="background-color: transparent;">
+                    <input type="phone" name="" id="registerPhone" placeholder="Số điện thoại" required style="background-color: transparent;">
                 </div>
-                <span id="note_email" style="color: red; display: none;">Email đã tồn tại.</span>
-                <span id="note_tt" style="color: red; display: none;">Vui lòng điền đầy đủ thông tin.</span>
+                <span id="note_phone" style="color: red; display: none;"></span>
+                <span id="note_tt" style="color: red; display: none;"></span>
                 <a class="button_signin" onclick="CreateAccount()" href="#">Đăng ký</a>
             </div>
         </div>

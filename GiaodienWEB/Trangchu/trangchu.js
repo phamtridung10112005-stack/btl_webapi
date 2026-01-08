@@ -1,14 +1,3 @@
-//////Xu li load trang
-document.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', (ev) => {
-        const href = link.getAttribute('href');
-        if (href === '#' || href === ''){
-            ev.preventDefault(); //////chan hanh vi mac dinh
-            // console.log('Ko load trang');
-        }
-    });
-});
-////////////////////////////////////////////
 ////////main slider/////////////////
 const main_slider = document.querySelector('.main_slider');
 const slides = document.querySelector('.slider_list');
@@ -31,9 +20,6 @@ pre_btn.addEventListener('click', () => {
     showSlider(index);
     ResetAutoSlider();
 });
-// setInterval(() => {
-//     next_btn.click();
-// }, 10000);
 let setTimeoutID;
 let timeAuto = 10;
 function AutoSlider(){
@@ -54,143 +40,8 @@ AutoSlider();
 ////////login/out/////////////////
 const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
 console.log(accounts);
-function logout(){
-    localStorage.removeItem('isLogIn');
-    localStorage.removeItem('loggedInUser');
-    document.getElementById('btn_dangnhap').style.display = 'block';
-    document.getElementById('btn_dangky').style.display = 'block';
-    document.getElementById('btn_dangxuat').style.display = 'none';
-}
-document.addEventListener('DOMContentLoaded', function(){
-    const isLogIn = localStorage.getItem('isLogIn');
-    if (isLogIn === 'true'){
-        document.getElementById('btn_dangnhap').style.display = 'none';
-        document.getElementById('btn_dangky').style.display = 'none';
-        document.getElementById('btn_dangxuat').style.display = 'block';
-    }
-});
-///////////////////////////////////////
-/////////////back to head///////////////
-const posision_scrollTop_btn = 750;
-const scroll_btn = document.getElementById('scroll_btn');
-window.addEventListener('scroll', () =>{
-    if (window.scrollY > posision_scrollTop_btn){
-        scroll_btn.style.display = 'block';
-    }
-    else{
-        scroll_btn.style.display = 'none';
-    }
-})
-///////////////////////////////////////////
-//////Them vao gio hang message
-let timeAutoHide = 5;
-let canClick = true;
-function AutoHide(item){
-    // console.log('auto hide');
-    console.log(window.scrollY);
-    if (timeAutoHide === 0){
-        canClick = true;
-        timeAutoHide = 5;
-        item.style.transform = `translateY(${-100 - window.scrollY}px)`;
-        return;
-    }
-    else{
-        timeAutoHide--;
-        item.style.opacity = timeAutoHide * 0.2;
-        setTimeout(() => AutoHide(item), 1000);
-        // console.log(timeAutoHide);
-    }
-}
-const listbtn_addToCart = document.querySelectorAll('.fa-cart-plus');
-const addToCart_message = document.getElementById('addToCart_message');
-listbtn_addToCart.forEach((btn_addToCart) => {
-    btn_addToCart.addEventListener('click', () => {
-        // console.log(canClick);
-        if (!canClick){
-            return;
-        }
-        canClick = false;
-        timeAutoHide = 5;
-        addToCart_message.style.transform = `translateY(${+100 + window.scrollY}px)`;
-        AutoHide(addToCart_message);
-    });
-});
-/////////////////////////////////
-//////////////////Count Product in Cart////////////////
-document.addEventListener('DOMContentLoaded', () => {
-    const isCart = JSON.parse(localStorage.getItem('cart')) || [];
-    if (isCart === null || isCart.length === 0) {
-        // console.log(0);
-        // cartIcon.classList.remove('active');
-        let styleCartIcon = document.querySelector('style[data-cart-icon]');
-        styleCartIcon.remove();
-    }
-    else {
-        // console.log(isCart.length);
-        // cartIcon.classList.add('active');
-        let styleCartIcon = document.querySelector('style[data-cart-icon]');
-        if (!styleCartIcon) {
-            styleCartIcon = document.createElement('style');
-            styleCartIcon.setAttribute('data-cart-icon', 'true');
-            document.head.appendChild(styleCartIcon)
-        }
-        styleCartIcon.textContent = `
-            .giohang::before {
-                content: '`+ isCart.length + `';
-                font-size: 18px;
-                text-align: center;
-                font-weight: bold;
-                position: absolute;
-                top: -10px;
-                right: -5px;
-                width: 20px;
-                height: 20px;
-                border-radius: 50%;
-                background-color: #ff2732;
-                color: #fff;
-            }
-        `;
-    }
-})
-//////////////////////////////////////////////////////////////////
-//////////////////Count Product in Wishlist////////////////
-document.addEventListener('DOMContentLoaded', () => {
-    const isWishList = JSON.parse(localStorage.getItem('wishlist')) || [];
-    if (isWishList === null || isWishList.length === 0) {
-        // console.log(0);
-        // cartIcon.classList.remove('active');
-        let styleCartIcon = document.querySelector('style[data-wishlist-icon]');
-        styleCartIcon.remove();
-    }
-    else {
-        // console.log(isCart.length);
-        // cartIcon.classList.add('active');
-        let styleWishlistIcon = document.querySelector('style[data-wishlist-icon]');
-        if (!styleWishlistIcon) {
-            styleWishlistIcon = document.createElement('style');
-            styleWishlistIcon.setAttribute('data-wishlist-icon', 'true');
-            document.head.appendChild(styleWishlistIcon)
-        }
-        styleWishlistIcon.textContent = `
-            .sp_uathich::before {
-                content: '`+ isWishList.length + `';
-                font-size: 18px;
-                text-align: center;
-                font-weight: bold;
-                position: absolute;
-                top: -10px;
-                right: -5px;
-                width: 20px;
-                height: 20px;
-                border-radius: 50%;
-                background-color: #ff2732;
-                color: #fff;
-            }
-        `;
-    }
-})
-//////////////////////////////////////////////////////////////////
-/////////////////////////Dem nguoc flash sale/////////////////////////
+//////////////////////////////////
+////////countdown flash sale/////////////////
 function CountDown(C){
     const dayElement = document.querySelector('.days');
     const hourElement = document.querySelector('.hours');
@@ -218,7 +69,7 @@ function CountDown(C){
     const interval = setInterval(UpdateTime, 1000);
     UpdateTime();
 }
-const Count = new Date("2025-01-31T00:00:00").getTime();
+const Count = new Date("2026-01-31T00:00:00").getTime();
 CountDown(Count);
 //////////////////////////////////
 ///////////////////slider flash sale///////////////////
@@ -255,5 +106,4 @@ pre_btn_flash_sale.addEventListener('click', () => {
 });
 window.addEventListener('resize', updateSliderPosition);
 updateSliderPosition();
-
 ///////////////////////////////////

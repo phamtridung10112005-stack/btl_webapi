@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Danh sách sản phẩm yêu thích</title>
+    <link rel="stylesheet" href="../Trangchu/base.css">
     <link rel="stylesheet" href="../Giohang/giohang.css">
     <link rel="stylesheet" href="../ChitietSP/chitiet_sp.css">
     <link rel="stylesheet" href="wishlist.css">
@@ -146,9 +147,24 @@
                 <li class="navbar_item"><a href="#">Giới thiệu</a></li>
             </ul>
         </div>
+        <div class="source">
+            <span><a href="../Trangchu/index.html">Trang chủ</a> / </span>
+            <span><a href="#">Sản phẩm yêu thích</a></span>
+            <div class="sort_box">
+                <select name="" id="sort_pro">
+                    <option value="defaut-defaut" selected>Mặc định</option>
+                    <option value="NamXuatBan-desc">Mới nhất</option>
+                    <option value="SoLuongDaBan-desc">Theo mức độ phổ biến</option>
+                    <option value="TenSach-asc">Theo tên sách A-Z</option>
+                    <option value="TenSach-desc">Theo tên sách Z-A</option>
+                    <option value="GiaSach-asc">Theo giá từ thấp đến cao</option>
+                    <option value="GiaSach-desc">Theo giá từ cao xuống thấp</option>
+                </select>
+            </div>
+        </div>
     </section>
     <div class="body_container">
-        <div class="wishlist_container">
+        <div class="wishlist_container" id ="product-container">
             <!-- <div class="wishlist_item">
                 <div class="wishlist_item_img">
                     <a href="../ChitietSP/chitiet_sp_combo_kusuriya.html">
@@ -171,6 +187,7 @@
                 </div>
             </div> -->
         </div>
+        <div class="control_next_pre_Page" id="control-next-pre-Page"></div>
     </div>
     <div class="footer">
         <div class="footer_top">
@@ -249,8 +266,8 @@
     </div>
     <div id="scroll_btn" class="back_to_head"><a href="#top_web"><i class="fa-solid fa-chevron-up"></i></a></div>
     <div id="addToCart_message">Đã thêm vào giỏ hàng</div>
-    <script src="../Wishlist/wishlist.js"></script>
-    <script src="../Giohang/giohang.js"></script>
     <script src="../Trangchu/base.js"></script>
+    <script type="module" src="../Wishlist/wishlist.js"></script>
+    <!-- <script src="../Giohang/giohang.js"></script> -->
 </body>
 </html>

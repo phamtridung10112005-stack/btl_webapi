@@ -1,10 +1,8 @@
 export class GioHangDTO {
-  constructor({ MaGioHang, user_id, MaSach, SoLuong, NgayThem }) {
-    this.MaGioHang = MaGioHang;
-    this.user_id = user_id;
-    this.MaSach = MaSach;
-    this.SoLuong = SoLuong;
-    this.NgayThem = NgayThem;
-
-  }
+  constructor({ User_ID, MaSach, SoLuong, NgayThem }) {
+    this.User_ID = User_ID;
+    this.MaSach = MaSach;
+    this.SoLuong = SoLuong;
+    this.NgayThem = NgayThem;
+  }
 }
