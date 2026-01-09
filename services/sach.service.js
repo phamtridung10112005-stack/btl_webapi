@@ -12,11 +12,20 @@ export const sachService = {
   getSachByMaSach: async (masach) => {
     logger.info(`Service: Getting sach by masach ${masach}`);
     const sach = await sachRepository.getByMaSach(masach);
+    
     if (!sach) {
       logger.warn(`Service Warning: Sach ${masach} not found`);
       throw new Error('Sach not found');
     }
-    return new SachDTO(sach);
+
+    // --- SỬA LỖI Ở ĐÂY ---
+    // SachDTO có thể lọc bỏ AuthorIds, nên ta phải gán lại thủ công
+    const result = new SachDTO(sach);
+    if (sach.AuthorIds) {
+        result.AuthorIds = sach.AuthorIds; 
+    }
+    return result;
+    // ---------------------
   },
 
   getSachPagingAndSorting: async (page, size, sortBy, sortOrder) => {
@@ -41,7 +50,6 @@ export const sachService = {
       throw new Error('Sach not found');
     }
     
-    // Merge dữ liệu cũ và mới để đảm bảo không bị mất dữ liệu field khác
     const updateData = { ...existing, ...dto };
     const updated = await sachRepository.update(masach, updateData);
     return new SachDTO(updated);

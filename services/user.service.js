@@ -3,11 +3,21 @@ import { UserDTO } from "../dtos/users/user.dto.js";
 import { logger } from "../config/logger.js";
 
 export const userService = {
+  // --- SỬA ĐOẠN NÀY ĐỂ HIỆN ROLE ---
   getAllUsers: async () => {
     logger.info("Service: Getting all users");
     const users = await userRepository.getAll();
-    return users.map((u) => new UserDTO(u));
+    
+    // Trả về dữ liệu gốc (hoặc object tự tạo) để đảm bảo có trường ROLE
+    return users.map((u) => ({
+        id: u.id,
+        username: u.username,
+        email: u.email,
+        phone: u.phone,
+        role: u.role // Quan trọng: Phải có dòng này
+    }));
   },
+  // ----------------------------------
 
   getUserById: async (id) => {
     logger.info(`Service: Getting user by ID ${id}`);

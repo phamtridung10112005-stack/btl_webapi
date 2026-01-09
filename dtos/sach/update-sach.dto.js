@@ -1,5 +1,5 @@
 export class UpdateSachDTO {
-  constructor({ TenSach, MaTheLoai, TenNguoiDich, MaNXB, GiaSach, NamXuatBan, SoTrang, MoTaNoiDung, LinkHinhAnh, YeuThich, SoLuongDaBan, MaGiamGia }) {
+  constructor({ TenSach, MaTheLoai, TenNguoiDich, MaNXB, GiaSach, NamXuatBan, SoTrang, MoTaNoiDung, LinkHinhAnh, YeuThich, SoLuongDaBan, MaGiamGia, AuthorIds }) {
     this.TenSach = TenSach;
     this.MaTheLoai = MaTheLoai;
     this.TenNguoiDich = TenNguoiDich;
@@ -12,5 +12,8 @@ export class UpdateSachDTO {
     this.YeuThich = YeuThich;
     this.SoLuongDaBan = SoLuongDaBan;
     this.MaGiamGia = MaGiamGia;
+    
+    // 🔥 THÊM DÒNG NÀY:
+    this.AuthorIds = AuthorIds;
   }
 }

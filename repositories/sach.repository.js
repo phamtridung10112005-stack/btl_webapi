@@ -18,100 +18,147 @@ export const sachRepository = {
     logger.info(`Repository: Fetching sach with masach ${masach}`);
     try {
       const db = await pool;
+      // 1. Lấy thông tin sách
       const [rows] = await db.query('SELECT * FROM Sach WHERE MaSach = ?', [masach]);
-      return rows[0];
+      if (!rows[0]) return null;
+
+      const sach = rows[0];
+
+      // 2. [QUAN TRỌNG] Lấy danh sách ID tác giả hiện có để hiển thị lên Modal
+      const [authors] = await db.query('SELECT MaTacGia FROM SachTacGia WHERE MaSach = ?', [masach]);
+      sach.AuthorIds = authors.map(a => a.MaTacGia);
+
+      return sach;
     } catch (err) {
       logger.error(`Repository Error: getByMaSach failed for masach ${masach}`, err);
       throw err;
     }
   },
 
-  getSachPagingAndSorting: async(page, size, sortBy, sortOrder) => {
-    logger.info(`Repository: Fetching sachs with paging - Page: ${page}, Size: ${size}, SortBy: ${sortBy}, Order: ${sortOrder}`);
+  getSachPagingAndSorting: async (page = 1, size = 10, sortBy = 'MaSach', sortOrder = 'ASC') => {
     try {
       const db = await pool;
       const offset = (page - 1) * size;
-      // Cập nhật thêm các trường có thể sort được
-      const validFields = ['MaSach', 'TenSach', 'GiaSach', 'SoLuongDaBan', 'NamXuatBan'];
-      if (!validFields.includes(sortBy)) {
-        sortBy = 'MaSach';
-      }
+      const validSortColumns = ['MaSach', 'TenSach', 'GiaSach', 'SoLuongDaBan']; 
+      const sort = validSortColumns.includes(sortBy) ? sortBy : 'MaSach';
       
-      const [slSachs] = await db.query('SELECT COUNT(*) as total FROM Sach');
-      const tongSoSachs = slSachs[0].total;
-      const totalPages = Math.ceil(tongSoSachs / size);
-
-      // Sử dụng tham số an toàn cho LIMIT và OFFSET
-      const sqlString = `SELECT 
-                          s.*,
-                          gg.PhanTramGiam
-                        FROM Sach s
-                        LEFT JOIN GiamGia gg ON s.MaGiamGia = gg.MaGiamGia
-                        ORDER BY s.${sortBy} ${sortOrder}
-                        LIMIT ? OFFSET ?;
-                        `;
-      const [rows] = await db.query(sqlString, [size, offset]);
-      return {rows,
-              pagination: {
-                trangHienTai: page,
-                tongSoTrang: totalPages,
-                kichThuocTrang: size,
-                tongSoSach: tongSoSachs
-              }};
-    } catch (err) {
-      logger.error("Repository Error: getSachPagingAndSorting failed", err);
-      throw err;
-    }
-  },
-
-  create: async ({ TenSach, MaTheLoai, TenNguoiDich, MaNXB, GiaSach, NamXuatBan, SoTrang, MoTaNoiDung, LinkHinhAnh, YeuThich, SoLuongDaBan, MaGiamGia }) => {
-    // Lưu ý: Đã bỏ MaSach trong INSERT vì cột này Auto Increment
-    logger.info(`Repository: Creating new sach`);
-    try {
-      const db = await pool;
-      const [result] = await db.query(
-        'INSERT INTO Sach (TenSach, MaTheLoai, TenNguoiDich, MaNXB, GiaSach, NamXuatBan, SoTrang, MoTaNoiDung, LinkHinhAnh, YeuThich, SoLuongDaBan, MaGiamGia) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [TenSach, MaTheLoai, TenNguoiDich, MaNXB, GiaSach, NamXuatBan, SoTrang, MoTaNoiDung, LinkHinhAnh, YeuThich, SoLuongDaBan, MaGiamGia]
-      );
+      const query = `SELECT * FROM Sach ORDER BY ${sort} ${sortOrder} LIMIT ? OFFSET ?`;
+      const [rows] = await db.query(query, [parseInt(size), parseInt(offset)]);
       
-      // Trả về object đầy đủ kèm ID mới tạo
-      return { 
-        MaSach: result.insertId, 
-        TenSach, MaTheLoai, TenNguoiDich, MaNXB, GiaSach, NamXuatBan, SoTrang, MoTaNoiDung, LinkHinhAnh, YeuThich, SoLuongDaBan, MaGiamGia 
+      const [countResult] = await db.query('SELECT COUNT(*) as total FROM Sach');
+      
+      return {
+        rows,
+        pagination: {
+          page: parseInt(page), size: parseInt(size),
+          total: countResult[0].total,
+          totalPages: Math.ceil(countResult[0].total / size)
+        }
       };
     } catch (err) {
-      logger.error("Repository Error: create failed", err);
       throw err;
     }
   },
 
-  update: async (MaSach, data) => {
-    logger.info(`Repository: Updating sach ${MaSach}`);
+  // --- CREATE (Dành cho menu Kho Sách - Thêm mới) ---
+  create: async (dto) => {
+    const connection = await pool.getConnection();
     try {
-      const db = await pool;
-      const { TenSach, MaTheLoai, TenNguoiDich, MaNXB, GiaSach, NamXuatBan, SoTrang, MoTaNoiDung, LinkHinhAnh, YeuThich, SoLuongDaBan, MaGiamGia } = data;
+      await connection.beginTransaction();
 
-      await db.query(
-        'UPDATE Sach SET TenSach=?, MaTheLoai=?, TenNguoiDich=?, MaNXB=?, GiaSach=?, NamXuatBan=?, SoTrang=?, MoTaNoiDung=?, LinkHinhAnh=?, YeuThich=?, SoLuongDaBan=?, MaGiamGia=? WHERE MaSach=?',
-        [TenSach, MaTheLoai, TenNguoiDich, MaNXB, GiaSach, NamXuatBan, SoTrang, MoTaNoiDung, LinkHinhAnh, YeuThich, SoLuongDaBan, MaGiamGia, MaSach]
-      );
+      const querySach = `
+        INSERT INTO Sach 
+        (TenSach, MaTheLoai, TenNguoiDich, MaNXB, GiaSach, NamXuatBan, SoTrang, MoTaNoiDung, LinkHinhAnh, SoLuongDaBan, MaGiamGia) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `;
+      const valuesSach = [
+        dto.TenSach, dto.MaTheLoai, dto.TenNguoiDich, dto.MaNXB, dto.GiaSach, 
+        dto.NamXuatBan, dto.SoTrang, dto.MoTaNoiDung, dto.LinkHinhAnh, 
+        dto.SoLuongDaBan || 0, dto.MaGiamGia
+      ];
       
-      return { MaSach, ...data };
+      const [resultSach] = await connection.query(querySach, valuesSach);
+      
+      // Nếu sau này muốn thêm tác giả ngay lúc tạo thì code này đã sẵn sàng hỗ trợ
+      const newMaSach = resultSach.insertId;
+      if (dto.AuthorIds && Array.isArray(dto.AuthorIds) && dto.AuthorIds.length > 0) {
+        const authorValues = dto.AuthorIds.map(maTacGia => [newMaSach, maTacGia]);
+        await connection.query('INSERT INTO SachTacGia (MaSach, MaTacGia) VALUES ?', [authorValues]);
+      }
+
+      await connection.commit();
+      return { MaSach: newMaSach, ...dto };
     } catch (err) {
-      logger.error(`Repository Error: update failed for MaSach ${MaSach}`, err);
+      await connection.rollback();
+      logger.error("Create Sach Failed", err);
       throw err;
+    } finally {
+      connection.release();
     }
   },
 
-  delete: async (MaSach) => {
-    logger.info(`Repository: Deleting sach ${MaSach}`);
+  // --- UPDATE (Dành cho cả menu Kho Sách VÀ menu Sách-Tác Giả) ---
+  // Đây là hàm quan trọng nhất để sửa lỗi của bạn
+  update: async (masach, dto) => {
+    const connection = await pool.getConnection(); // Bắt buộc dùng connection để có Transaction
     try {
-      const db = await pool;
-      await db.query('DELETE FROM Sach WHERE MaSach = ?', [MaSach]);
-      return true;
+      await connection.beginTransaction();
+
+      // B1: Cập nhật thông tin cơ bản (Tên, Giá...)
+      const querySach = `
+        UPDATE Sach SET 
+          TenSach=?, MaTheLoai=?, TenNguoiDich=?, MaNXB=?, GiaSach=?, 
+          NamXuatBan=?, SoTrang=?, MoTaNoiDung=?, LinkHinhAnh=?, 
+          SoLuongDaBan=?, MaGiamGia=?
+        WHERE MaSach=?
+      `;
+      const valuesSach = [
+        dto.TenSach, dto.MaTheLoai, dto.TenNguoiDich, dto.MaNXB, dto.GiaSach, 
+        dto.NamXuatBan, dto.SoTrang, dto.MoTaNoiDung, dto.LinkHinhAnh, 
+        dto.SoLuongDaBan, dto.MaGiamGia, masach
+      ];
+      await connection.query(querySach, valuesSach);
+
+      // B2: CẬP NHẬT TÁC GIẢ (Đây là đoạn code giúp lưu vào SachTacGia)
+      // Kiểm tra nếu dữ liệu gửi lên có chứa danh sách AuthorIds (từ menu Sách-Tác Giả gửi lên)
+      if (dto.AuthorIds && Array.isArray(dto.AuthorIds)) {
+        // Bước 1: Xóa sạch các tác giả cũ của sách này
+        await connection.query('DELETE FROM SachTacGia WHERE MaSach = ?', [masach]);
+
+        // Bước 2: Nếu danh sách mới không rỗng, thêm lại vào bảng
+        if (dto.AuthorIds.length > 0) {
+            const authorValues = dto.AuthorIds.map(maTacGia => [masach, maTacGia]);
+            await connection.query('INSERT INTO SachTacGia (MaSach, MaTacGia) VALUES ?', [authorValues]);
+        }
+      }
+
+      await connection.commit(); // Xác nhận lưu vào CSDL
+      return { MaSach: masach, ...dto };
+
     } catch (err) {
-      logger.error(`Repository Error: delete failed for MaSach ${MaSach}`, err);
+      await connection.rollback(); // Nếu lỗi thì hoàn tác
+      logger.error("Update Sach Failed", err);
       throw err;
+    } finally {
+      connection.release(); // Giải phóng kết nối
+    }
+  },
+
+  delete: async (masach) => {
+    const connection = await pool.getConnection();
+    try {
+        await connection.beginTransaction();
+        // Xóa trong bảng phụ trước
+        await connection.query('DELETE FROM SachTacGia WHERE MaSach = ?', [masach]);
+        // Xóa sách
+        await connection.query('DELETE FROM Sach WHERE MaSach = ?', [masach]);
+        await connection.commit();
+        return true;
+    } catch (err) {
+        await connection.rollback();
+        throw err;
+    } finally {
+        connection.release();
     }
   },
 };

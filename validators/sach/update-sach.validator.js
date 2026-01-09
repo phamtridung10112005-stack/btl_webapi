@@ -11,10 +11,13 @@ export const updateSachSchema = z.object({
   MoTaNoiDung: z.string().optional(),
   LinkHinhAnh: z.string().optional(),
   
-  // Các trường mới
+  // Các trường cũ
   YeuThich: z.coerce.number().min(0).max(1).optional(),
   SoLuongDaBan: z.coerce.number().optional(),
   MaGiamGia: z.string().optional().nullable(),
+
+  // 🔥 QUAN TRỌNG: Phải thêm dòng này để cho phép "AuthorIds" đi qua
+  AuthorIds: z.array(z.number()).optional()
 });
 
 export function validateUpdateSach(data) {

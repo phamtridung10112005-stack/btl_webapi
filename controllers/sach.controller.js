@@ -5,6 +5,49 @@ import { validateCreateSach } from '../validators/sach/create-sach.validator.js'
 import { validateUpdateSach } from '../validators/sach/update-sach.validator.js';
 import { logger } from "../config/logger.js";
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Sach:
+ *       type: object
+ *       properties:
+ *         MaSach:
+ *           type: integer
+ *           description: ID tự động của sách
+ *         TenSach:
+ *           type: string
+ *           description: Tên sách
+ *         GiaSach:
+ *           type: number
+ *           description: Giá bán
+ *         LinkHinhAnh:
+ *           type: string
+ *           description: Link ảnh bìa
+ *       example:
+ *         MaSach: 1
+ *         TenSach: "Dế Mèn Phiêu Lưu Ký"
+ *         GiaSach: 50000
+ *         LinkHinhAnh: "http://example.com/anh.jpg"
+ */
+
+/**
+ * @swagger
+ * /api/sachs:
+ *   get:
+ *     summary: Lấy danh sách tất cả sách
+ *     tags: [Quản lý Sách]
+ *     responses:
+ *       200:
+ *         description: Thành công
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Sach'
+ */
+
 export const sachController = {
   getAll: async (req, res) => {
     try {
