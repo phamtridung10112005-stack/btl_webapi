@@ -38,9 +38,17 @@ getByUserIDAndMaSach: async (req, res) => {
       res.status(404).json({ message: err.message });
     }
   },
-  // getDetailsGioHangByUserID: async(req, res) => {
-  //   const giohang = 
-  // },
+  getDetailsGioHangByUserID: async(req, res) => {
+    const user_id = req.query.user_id;
+    logger.info(`Controller: GET /giohangs/details/?user_id=${user_id}`);
+    try {
+      const giohang = await giohangService.getTTGioHangByUserID(user_id);
+      res.json(giohang);
+    } catch (err) {
+      logger.error(`Controller Error: getDetailsGioHangByUserID failed user_id (${user_id})`, err);
+      res.status(404).json({ message: err.message });
+    }
+  },
 create: async (req, res) => {
     try {
       logger.info('Controller: POST /giohangs');
@@ -77,6 +85,17 @@ update: async (req, res) => {
       res.json(result);
     } catch (err) {
       logger.error(`Controller Error: delete failed (user_id ${user_id} & masach ${masach})`, err);
+      res.status(404).json({ message: err.message });
+    }
+  },
+  deleteAllGioHangByUserID: async (req, res) => {
+    const user_id = req.query.user_id;
+    logger.info(`Controller: DELETE /giohangsall?user_id=${user_id}`);
+    try {
+      const result = await giohangService.deleteAllGioHangByUserID(user_id);
+      res.json(result);
+    } catch (err) {
+      logger.error(`Controller Error: delete all failed (user_id ${user_id})`, err);
       res.status(404).json({ message: err.message });
     }
   },

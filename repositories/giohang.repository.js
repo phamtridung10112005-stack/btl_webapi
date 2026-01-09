@@ -38,10 +38,32 @@ export const giohangRepository = {
     }
   },
   getDetailsGioHangByUserID: async(user_id) => {
-    llogger.info(`Repository: Fetching details giohang for user ${user_id}`);ogger
+    logger.info(`Repository: Fetching details giohang for user ${user_id}`);
     try {
       const db = await pool;
-      const sqlString = ``;
+      const sqlString = `SELECT 
+                          gh.User_ID,
+                          gh.MaSach,
+                          gh.SoLuong,         -- Số lượng khách mua
+                          s.TenSach,
+                          s.LinkHinhAnh,
+                          s.GiaSach,          -- Giá gốc
+                          
+                          -- Lấy % giảm giá, nếu sách không có mã giảm (NULL) thì coi là 0
+                          COALESCE(g.PhanTramGiam, 0) AS PhanTramGiam,
+                          
+                          -- Tính sẵn giá bán sau khi giảm (để tiện cho việc tính toán, hiển thị)
+                          (s.GiaSach * (1 - COALESCE(g.PhanTramGiam, 0) / 100)) AS GiaSauGiam,
+                          
+                          -- Tính tổng tiền tạm tính cho dòng này (Giá sau giảm * Số lượng)
+                          ((s.GiaSach * (1 - COALESCE(g.PhanTramGiam, 0) / 100)) * gh.SoLuong) AS ThanhTien
+
+                      FROM GioHang gh
+                      JOIN Sach s ON gh.MaSach = s.MaSach
+                      LEFT JOIN GiamGia g ON s.MaGiamGia = g.MaGiamGia
+                      WHERE gh.User_ID = ?;`;
+      const [rows] = await db.query(sqlString, [user_id]);
+      return rows;
     } catch (err) {
       logger.error(`Repository Error: getDetailsGioHangByUserID failed for masach ${masach}`, err);
       throw err;
@@ -106,6 +128,17 @@ getByUserIdAndMaSach: async (user_id, masach) => {
       return true;
     } catch (err) {
       logger.error(`Repository Error: delete failed for user_id ${user_id} and masach ${masach}`, err);
+      throw err;
+    }
+  },
+  deleteAllByUserID: async(user_id) => {
+    logger.info(`Repository: Deleting all giohang user_id ${user_id}`);
+    try {
+      const db = await pool;
+      await db.query('DELETE FROM GioHang WHERE User_ID = ?', [user_id]);
+      return true;
+    } catch (err) {
+      logger.error(`Repository Error: deleteAll failed for user_id ${user_id}`, err);
       throw err;
     }
   },

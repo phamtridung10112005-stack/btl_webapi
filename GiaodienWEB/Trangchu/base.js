@@ -1,7 +1,7 @@
 const BASE_API_URL = 'http://localhost:3000/api/';
 const SACHYEUTHICH_BY_USERID_API_URL = `${BASE_API_URL}sachyeuthichs/user/`;
 const SACHYEUTHICH_API_URL = `${BASE_API_URL}sachyeuthichs`;
-const GIOHANG_API_URL = `${BASE_API_URL}giohangs/user/`;
+const GIOHANG_API_URL = `${BASE_API_URL}giohangs`;
 
 let userBooksWishList = new Set();
 

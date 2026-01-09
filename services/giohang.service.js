@@ -25,6 +25,15 @@ getGioHangByMaSach: async (masach) => {
     }
     return giohang.map((u) => new GioHangDTO(u));
   },
+  getTTGioHangByUserID: async (user_id) => {
+    logger.info(`Service: Getting TTgiohang by user_id ${user_id}`);
+    const giohang = await giohangRepository.getDetailsGioHangByUserID(user_id);
+    if (!giohang) {
+      logger.warn(`Service Warning: TTGioHang user_id ${user_id} not found`);
+      throw new Error('TTGioHang not found');
+    }
+    return giohang;
+  },
   getGioHangByUserIDAndMaSach: async (user_id, masach) => {
     logger.info(`Service: Getting giohang by user_id ${user_id} and masach ${masach}`);
     const giohang = await giohangRepository.getByUserIdAndMaSach(user_id, masach);
@@ -58,6 +67,16 @@ deleteGioHang: async (user_id, masach) => {
       throw new Error('GioHang not found');
     }
     await giohangRepository.delete(user_id, masach);
+    return { message: 'GioHang deleted successfully' };
+  },
+  deleteAllGioHangByUserID: async (user_id) => {
+    logger.info(`Service: Deleting All giohang user_id ${user_id}`);
+    const existing = await giohangRepository.getByUserId(user_id);
+    if (!existing) {
+      logger.warn(`Service Warning: Cannot deleteAll. GioHang user_id ${user_id}`);
+      throw new Error('GioHang not found');
+    }
+    await giohangRepository.deleteAllByUserID(user_id);
     return { message: 'GioHang deleted successfully' };
   },
 };

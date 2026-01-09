@@ -71,9 +71,11 @@ router.delete("/sachtacgias", sachtacgiaController.delete);
 //----------------------- GIOHANGS ------------------------------------
 router.get("/giohangs", authenticate, authorizePolicy(POLICIES.USER_BOOKS_CART_VIEW_ALL), giohangController.getAll);
 router.get("/giohangs/user/", authenticate, authorizePolicy(POLICIES.USER_BOOKS_CART_VIEW_SELF), giohangController.getByUserID);
+router.get("/giohangs/details", authenticate, authorizePolicy(POLICIES.USER_BOOKS_CART_VIEW_SELF), giohangController.getDetailsGioHangByUserID);
 router.post("/giohangs", authenticate, normalizeUserId, authorizePolicy(POLICIES.USER_BOOKS_CART_ADD), giohangController.create);
 router.put("/giohangs", authenticate, authorizePolicy(POLICIES.USER_BOOKS_CART_EDIT), giohangController.update);
 router.delete("/giohangs", authenticate, authorizePolicy(POLICIES.USER_BOOKS_CART_REMOVE), giohangController.delete);
+router.delete("/giohangsall", authenticate, authorizePolicy(POLICIES.USER_BOOKS_CART_REMOVE), giohangController.deleteAllGioHangByUserID);
 //----------------------- HOADONS ------------------------------------
 router.get("/hoadons", hoadonController.getAll);
 router.get("/hoadons/:mahoadon", hoadonController.getByMaHoaDon);

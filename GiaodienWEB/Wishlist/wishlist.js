@@ -54,33 +54,3 @@ document.addEventListener('DOMContentLoaded', () => {
         renderFunction: loadWishList // Truyền hàm render tùy chỉnh
     });
 });
-/////////////////////////////////////////////////////////////////////
-/*
-var str = '';
-    for (item of listWishList){
-        str += `
-            <div class="wishlist_item">
-                <div class="wishlist_item_img">
-                    <a href="`+ item.url + `">
-                        <img src="`+ item.image + `" alt="">
-                    </a>
-                    <div class="discount">-`+ item.discount + `%</div>
-                </div>
-                <div class="wishlist_item_title"><a href="`+ item.url + `">`+ item.name + `</a></div>
-                <div class="wishlist_item_prices">
-                    <div class="wishlist_item_priceSale">`+ formatCurrency(item.priceSale) + `</div>
-                    <div class="wishlist_item_priceOriginal"><s>`+ formatCurrency(item.priceOriginal) + `</s></div>
-                </div>
-                <div class="wishlist_item_footer">
-                    <div class="wishlist_item_sold">
-                        <img src="../Image/fire.png" alt="">  Đã bán `+ item.sold + `k+
-                    </div>
-                    <div class="wishlist_item_cart">
-                        <i onclick="addToCart({id: '`+ item.id + `', url:'`+ item.url + `', image:'`+ item.image + `', name: '`+ item.name + `', priceOriginal: `+ item.priceOriginal + `, priceSale: `+ item.priceSale + `})" class="fa-solid fa-cart-plus"></i>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-    document.querySelector('.wishlist_container').innerHTML = str;
-*/
