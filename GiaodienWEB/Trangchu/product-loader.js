@@ -45,26 +45,28 @@ export function initProductLoader(config) {
                 return;
             }
             const responseData = await response.json();
+            // console.log("RP Data", responseData);
             const books = responseData.data;
-            console.log(books);
+            console.log("Sach:", books);
 
             // GỌI HÀM RENDER CỦA NGƯỜI DÙNG, truyền dữ liệu vào
             if (typeof settings.renderFunction === 'function') {
                 settings.renderFunction(books, settings.containerId);
             }
 
-            const totalPages = responseData.pagination ? responseData.pagination.tongSoTrang : 0;
+            const totalPages = responseData.pagination ? responseData.pagination.totalPages : 0;
             renderPagination(totalPages);
         } catch (error) {
             console.error("Lỗi khi tải sản phẩm:", error);
         }
     }
 
-    // 2. Hàm phân trang (Giữ nguyên logic của bạn, chỉ sửa selector)
+    // 2. Hàm phân trang (Logic ĐÃ SỬA)
     function renderPagination(totalPages) {
         const container = document.getElementById(settings.paginationId);
         if (!container) return;
 
+        // Nếu chỉ có 1 trang hoặc không có trang nào thì ẩn đi
         if (totalPages <= 1) {
             container.style.display = 'none';
             return;
@@ -72,27 +74,39 @@ export function initProductLoader(config) {
             container.style.display = 'flex';
         }
         container.innerHTML = '';
+
+        // --- LOGIC TÍNH TOÁN (ĐÃ SỬA) ---
+        // Số lượng nút tối đa muốn hiển thị (ví dụ 5 nút: 2 trái + 1 giữa + 2 phải)
+        const maxVisibleButtons = 5; 
         
-        // (Bạn copy đoạn code phân trang cũ vào đây là được)
-        let maxVisibleButtons = 5;
-    
-        // Mặc định: Lấy trang hiện tại làm tâm, trừ 2 và cộng 2
-        let startPage = currentState.currentPage - 2;
-        let endPage = currentState.currentPage + 2;
+        // Bước 1: Tính toán khoảng lý tưởng (Trang hiện tại nằm giữa)
+        // Ví dụ max=5 -> offset=2 (2 bên trái, 2 bên phải)
+        const sideOffset = Math.floor(maxVisibleButtons / 2);
+        
+        let startPage = currentState.currentPage - sideOffset;
+        let endPage = currentState.currentPage + sideOffset;
 
-        // Xử lý đầu mút (Nếu trang hiện tại là 1 hoặc 2)
+        // Bước 2: Xử lý tràn đầu (startPage < 1)
         if (startPage < 1) {
+            // Nếu bị tràn bên trái, ta đẩy dồn sang phải để cố gắng đủ 5 nút
+            // Ví dụ: Đang ở trang 1. start = 1-2 = -1. 
+            // Ta cộng bù (1 - startPage) vào endPage.
+            endPage = endPage + (1 - startPage);
             startPage = 1;
-            endPage = maxVisibleButtons;
         }
 
-        // Xử lý cuối mút (Nếu trang hiện tại gần cuối)
+        // Bước 3: Xử lý tràn đuôi (endPage > totalPages)
         if (endPage > totalPages) {
+            // Nếu bị tràn bên phải, ta đẩy dồn ngược về trái
+            // Ví dụ: Tổng 6 trang, đang ở trang 6. end = 6+2 = 8.
+            // Ta trừ bù (endPage - totalPages) vào startPage.
+            startPage = startPage - (endPage - totalPages);
             endPage = totalPages;
-            startPage = totalPages - (maxVisibleButtons - 1);
         }
 
-        // Đảm bảo startPage không bao giờ < 1 (trường hợp tổng trang < 5)
+        // Bước 4: Chốt chặn cuối cùng (Đảm bảo startPage không bao giờ < 1)
+        // Trường hợp tổng số trang (totalPages) nhỏ hơn maxVisibleButtons (ví dụ chỉ có 2 trang)
+        // Thì bước 3 ở trên sẽ làm startPage bị âm. Ta cần reset lại về 1.
         if (startPage < 1) {
             startPage = 1;
         }
@@ -111,21 +125,22 @@ export function initProductLoader(config) {
             };
         }
         container.appendChild(prevBtn);
-
-        // 2. Tạo các nút SỐ TRANG (Chạy từ startPage đến endPage)
+        // console.log("EDP", endPage);
+        // console.log("TTP", totalPages);
+        // 2. Tạo các nút SỐ TRANG
         for (let i = startPage; i <= endPage; i++) {
             const pageBtn = document.createElement('button');
             pageBtn.innerText = i;
             
             if (i === currentState.currentPage) {
                 pageBtn.classList.add('active'); 
-                // Style cứng nếu chưa có CSS class
+                // Style cứng (nếu chưa có CSS)
                 pageBtn.style.backgroundColor = '#22a7ff'; 
                 pageBtn.style.color = '#fff';
             }
 
             pageBtn.onclick = () => {
-                if (currentState.currentPage !== i) { // Chỉ load nếu bấm trang khác trang hiện tại
+                if (currentState.currentPage !== i) { 
                     currentState.currentPage = i;
                     loadProducts(currentState.sortBy, currentState.orderBy);
                 }

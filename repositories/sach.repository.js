@@ -41,9 +41,16 @@ export const sachRepository = {
       const offset = (page - 1) * size;
       const validSortColumns = ['MaSach', 'TenSach', 'GiaSach', 'SoLuongDaBan']; 
       const sort = validSortColumns.includes(sortBy) ? sortBy : 'MaSach';
-      
-      const query = `SELECT * FROM Sach ORDER BY ${sort} ${sortOrder} LIMIT ? OFFSET ?`;
-      const [rows] = await db.query(query, [parseInt(size), parseInt(offset)]);
+      const sqlString = `SELECT 
+                            s.*, 
+                            -- Nếu không có mã giảm giá (NULL) thì mặc định là 0
+                            COALESCE(g.PhanTramGiam, 0) AS PhanTramGiam 
+                        FROM Sach s
+                        LEFT JOIN GiamGia g ON s.MaGiamGia = g.MaGiamGia
+                        ORDER BY ${sort} ${sortOrder} 
+                        LIMIT ? OFFSET ?`
+      // const query = `SELECT * FROM Sach ORDER BY ${sort} ${sortOrder} LIMIT ? OFFSET ?`;
+      const [rows] = await db.query(sqlString, [parseInt(size), parseInt(offset)]);
       
       const [countResult] = await db.query('SELECT COUNT(*) as total FROM Sach');
       

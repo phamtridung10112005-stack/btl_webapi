@@ -37,6 +37,16 @@ export const giohangRepository = {
       throw err;
     }
   },
+  getDetailsGioHangByUserID: async(user_id) => {
+    llogger.info(`Repository: Fetching details giohang for user ${user_id}`);ogger
+    try {
+      const db = await pool;
+      const sqlString = ``;
+    } catch (err) {
+      logger.error(`Repository Error: getDetailsGioHangByUserID failed for masach ${masach}`, err);
+      throw err;
+    }
+  },
 getByUserIdAndMaSach: async (user_id, masach) => {
   logger.info(`Repository: Fetching giohang for user ${user_id} and masach ${masach}`);
     try {

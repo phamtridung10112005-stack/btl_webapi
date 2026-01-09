@@ -13,7 +13,7 @@ const connectionOptions = {
   connectionLimit: 5,
   queueLimit: 0,
   
-  // 🔥 QUAN TRỌNG: Thêm dòng này để kết nối được với Clever Cloud / Cloud DB
+  // QUAN TRỌNG: Thêm dòng này để kết nối được với Clever Cloud / Cloud DB
   ssl: {
     rejectUnauthorized: false
   }
@@ -31,10 +31,10 @@ export const pool = mysql.createPool(connectionOptions);
 // Kiểm tra kết nối ngay khi khởi động server
 pool.getConnection()
   .then((conn) => {
-    logger.info(`✅ KẾT NỐI THÀNH CÔNG tới Database: ${process.env.MYSQL_HOST}`);
+    logger.info(`KẾT NỐI THÀNH CÔNG tới Database: ${process.env.MYSQL_HOST}`);
     conn.release();
   })
   .catch((err) => {
-    logger.error("❌ LỖI KẾT NỐI DATABASE CLEVER CLOUD:", err);
+    logger.error("LỖI KẾT NỐI DATABASE CLEVER CLOUD:", err);
     console.error("Gợi ý: Hãy kiểm tra xem Database trên Clever Cloud có đang ở trạng thái 'Running' không?");
   });

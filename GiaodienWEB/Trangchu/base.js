@@ -1,7 +1,7 @@
 const BASE_API_URL = 'http://localhost:3000/api/';
 const SACHYEUTHICH_BY_USERID_API_URL = `${BASE_API_URL}sachyeuthichs/user/`;
 const SACHYEUTHICH_API_URL = `${BASE_API_URL}sachyeuthichs`;
-const GIOHANG_API_URL = `${BASE_API_URL}giohangs`;
+const GIOHANG_API_URL = `${BASE_API_URL}giohangs/user/`;
 
 let userBooksWishList = new Set();
 
@@ -76,13 +76,14 @@ function checkUserLoginStatus() {
     const btnLogin = document.getElementById('btn_dangnhap');
     const btnRegister = document.getElementById('btn_dangky');
     const btnLogout = document.getElementById('btn_dangxuat');
+    const btnAdmin = document.getElementById('btn_admin');
 
     const token = localStorage.getItem('accessToken');
     let isValidSession = false;
 
+    const decoded = parseJwt(token);
     // Kiểm tra Token
     if (token) {
-        const decoded = parseJwt(token);
         const currentTime = Date.now() / 1000; // Thời gian hiện tại tính bằng giây
 
         if (decoded && decoded.exp > currentTime) {
@@ -101,12 +102,17 @@ function checkUserLoginStatus() {
         // --- TRẠNG THÁI: ĐÃ ĐĂNG NHẬP ---
         if(btnLogin) btnLogin.style.display = 'none';
         if(btnRegister) btnRegister.style.display = 'none';
-        if(btnLogout) btnLogout.style.display = 'block'; // Hoặc 'inline-block' tùy CSS của bạn
+        if(btnLogout) btnLogout.style.display = 'block';
+        if (decoded && decoded.role == 'ADMIN') {
+            if (btnAdmin) btnAdmin.style.display = 'block';
+            else btnAdmin.style.display = 'none';
+        }
     } else {
         // --- TRẠNG THÁI: KHÁCH (CHƯA ĐĂNG NHẬP) ---
         if(btnLogin) btnLogin.style.display = 'block';
         if(btnRegister) btnRegister.style.display = 'block';
         if(btnLogout) btnLogout.style.display = 'none';
+        if(btnAdmin) btnAdmin.style.display = 'none';
     }
 }
 window.getLoggedInUserId = function() {
@@ -281,7 +287,7 @@ async function initWishListSystem() {
         });
         if (response.ok) {
             const booksLikedList = await response.json();
-            // console.log('Wishlist:', booksLikedList);
+            console.log('Wishlist:', booksLikedList);
             userBooksWishList = new Set(booksLikedList);
             updateWishListBadge(userBooksWishList.size);
             highlightHeartIcons();
