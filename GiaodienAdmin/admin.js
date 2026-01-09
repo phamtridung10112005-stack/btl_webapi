@@ -101,10 +101,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function initData() {
     console.log("Đang tải dữ liệu...");
-    await Promise.all([fetchCategories(), fetchPublishers(), fetchAuthors()]);
+    await Promise.all([fetchCategories(), fetchPublishers(), fetchAuthors(), fetchDiscounts()]); // Load Discounts sớm để dùng
     await fetchBooks();
     await fetchOrders();
-    await fetchDiscounts();
     await fetchCustomers();
     updateDashboardStats();
     renderBookAuthorsTable();
@@ -241,10 +240,27 @@ async function fetchOrders() {
     try {
         const res = await fetch(`${API_BASE_URL}/hoadons`);
         orders = parseRes(await res.json());
-        document.getElementById('ordersTableBody').innerHTML = orders.map(o => `<tr><td>#${o.MaHoaDon}</td><td>${o.user_id}</td><td>${new Date(o.NgayLap).toLocaleDateString()}</td><td>${formatCurrency(o.TongTien)}</td><td><span style="color:${o.TrangThai==='DaGiao'?'green':'orange'}">${o.TrangThai}</span></td></tr>`).join('');
-    } catch (e) {}
-}
+        
+        document.getElementById('ordersTableBody').innerHTML = orders.map(o => {
+            // SỬA Ở ĐÂY: Gọi đúng tên cột "DiaChiGiaoHang" như trong database
+            const diaChi = o.DiaChiGiaoHang ? o.DiaChiGiaoHang : 'Chưa cập nhật';
 
+            return `
+            <tr>
+                <td>#${o.MaHoaDon}</td>
+                <td>${o.user_id}</td>
+                <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${diaChi}">
+                    ${diaChi}
+                </td> 
+                <td>${new Date(o.NgayLap).toLocaleDateString()}</td>
+                <td>${formatCurrency(o.TongTien)}</td>
+                <td><span style="color:${o.TrangThai==='DaGiao'?'green':'orange'}">${o.TrangThai}</span></td>
+            </tr>`;
+        }).join('');
+    } catch (e) {
+        console.error("Lỗi tải đơn hàng:", e);
+    }
+    }
 async function fetchBooks() {
     try {
         const res = await fetch(`${API_BASE_URL}/sachs?page=1&size=1000&sortBy=MaSach&sortOrder=DESC`);
@@ -261,12 +277,16 @@ function renderBooks() {
             const cat = categories.find(c => c.MaTheLoai == b.MaTheLoai)?.TenTheLoai || '---';
             const img = `${IMAGE_PATH_BASE}${b.LinkHinhAnh}`;
             const dichGia = b.TenNguoiDich ? b.TenNguoiDich : '(Gốc)';
+            // UPDATE: Hiển thị Mã giảm giá
+            const discountInfo = b.MaGiamGia ? `<span class="tag-discount">${b.MaGiamGia}</span>` : '-';
+            
             return `
             <tr>
                 <td><img src="${img}" alt="${b.TenSach}" class="book-thumb"></td>
                 <td><strong>${b.TenSach}</strong></td>
                 <td>${dichGia}</td>
                 <td>${cat}</td>
+                <td>${discountInfo}</td>
                 <td style="color:var(--primary);font-weight:bold">${formatCurrency(b.GiaSach)}</td>
                 <td>${b.SoLuongDaBan||0}</td>
                 <td class="text-center">
@@ -278,7 +298,7 @@ function renderBooks() {
     }
 }
 
-// ===== 6. QUẢN LÝ SÁCH - TÁC GIẢ =====
+// ===== 6. QUẢN LÝ SÁCH - TÁC GIẢ (GIỮ NGUYÊN) =====
 
 function renderBookAuthorsTable() {
     const tbody = document.getElementById('bookAuthorsTableBody');
@@ -371,13 +391,35 @@ window.saveBookAuthorsRelation = async function() {
     }
 }
 
-// ===== 7. CRUD FUNCTIONS (ĐÃ FIX LỖI ZOD UNDEFINED) =====
+// ===== 7. CRUD FUNCTIONS =====
 
 function populateDropdowns() {
     const c = document.getElementById('bookCategory');
     const p = document.getElementById('bookPublisher');
+    // UPDATE: Thêm dropdown Giảm giá
+    const d = document.getElementById('bookDiscount');
+
     if (c) c.innerHTML = categories.map(i => `<option value="${i.MaTheLoai}">${i.TenTheLoai}</option>`).join('');
     if (p) p.innerHTML = publishers.map(i => `<option value="${i.MaNXB}">${i.TenNXB}</option>`).join('');
+    if (d) {
+        d.innerHTML = '<option value="">-- Không áp dụng --</option>' +
+            discounts.map(i => `<option value="${i.MaGiamGia}">${i.MaGiamGia} (-${i.PhanTramGiam}%)</option>`).join('');
+    }
+}
+
+// UPDATE: Hàm tính toán hiển thị giá sau giảm
+window.calculateFinalPrice = function() {
+    const price = Number(document.getElementById('bookPrice').value) || 0;
+    const discountCode = document.getElementById('bookDiscount').value;
+    let finalPrice = price;
+
+    if (discountCode) {
+        const discountObj = discounts.find(d => d.MaGiamGia === discountCode);
+        if (discountObj && discountObj.PhanTramGiam) {
+            finalPrice = price * (1 - discountObj.PhanTramGiam / 100);
+        }
+    }
+    document.getElementById('finalPricePreview').innerText = formatCurrency(finalPrice);
 }
 
 // --- BOOK ---
@@ -385,6 +427,7 @@ window.openAddBookModal = function() {
     currentEditId = null;
     document.getElementById('bookForm').reset();
     populateDropdowns();
+    document.getElementById('finalPricePreview').innerText = "0 đ"; // Reset preview
     document.getElementById('bookModal').classList.add('active');
 }
 
@@ -398,11 +441,17 @@ window.editBook = (id) => {
         document.getElementById('bookCategory').value = b.MaTheLoai;
         document.getElementById('bookPublisher').value = b.MaNXB;
         document.getElementById('bookTranslator').value = b.TenNguoiDich || '';
+        
+        // UPDATE: Load mã giảm giá
+        document.getElementById('bookDiscount').value = b.MaGiamGia || '';
+
         if (b.NamXuatBan) document.getElementById('bookYear').value = new Date(b.NamXuatBan).toISOString().split('T')[0];
         document.getElementById('bookPages').value = b.SoTrang || 0;
         document.getElementById('bookSold').value = b.SoLuongDaBan || 0;
         document.getElementById('bookImage').value = b.LinkHinhAnh || '';
         document.getElementById('bookDescription').value = b.MoTaNoiDung || '';
+        
+        calculateFinalPrice(); // Cập nhật preview giá
         document.getElementById('bookModal').classList.add('active');
     }
 }
@@ -414,6 +463,8 @@ window.saveBook = async () => {
     const maNXB = document.getElementById('bookPublisher').value;
     const namXB = document.getElementById('bookYear').value;
     const soTrang = document.getElementById('bookPages').value;
+    // UPDATE: Lấy mã giảm giá
+    const maGiamGia = document.getElementById('bookDiscount').value || null;
 
     if (!tenSach || !giaSach || !maTheLoai || !maNXB) return alert('Nhập đủ thông tin!');
 
@@ -422,6 +473,7 @@ window.saveBook = async () => {
         GiaSach: Number(giaSach),
         MaTheLoai: Number(maTheLoai),
         MaNXB: Number(maNXB),
+        MaGiamGia: maGiamGia, // Gửi lên server
         NamXuatBan: namXB ? new Date(namXB) : new Date(),
         SoTrang: Number(soTrang) || 0,
         LinkHinhAnh: document.getElementById('bookImage').value,
@@ -457,7 +509,7 @@ window.deleteBook = async (id) => {
     }
 }
 
-// --- CATEGORY ---
+// --- CÁC PHẦN CATEGORY, AUTHOR, PUBLISHER, DISCOUNT GIỮ NGUYÊN ---
 function renderCategories() {
     document.getElementById('categoriesTableBody').innerHTML = categories.map(c =>
         `<tr>
@@ -487,7 +539,6 @@ window.editCategory = (id) => {
 }
 
 window.saveCategory = async () => {
-    // FIX: Gửi MaTheLoai = 0 nếu là thêm mới
     const payload = {
         TenTheLoai: document.getElementById('categoryName').value,
         MaTheLoai: currentEditId ? Number(currentEditId) : 0
@@ -512,7 +563,6 @@ window.deleteCategory = async (id) => {
     }
 }
 
-// --- AUTHOR ---
 function renderAuthors() {
     document.getElementById('authorsTableBody').innerHTML = authors.map(a =>
         `<tr>
@@ -544,7 +594,6 @@ window.editAuthor = (id) => {
 }
 
 window.saveAuthor = async () => {
-    // FIX: Gửi MaTacGia = 0 nếu là thêm mới
     const payload = {
         TenTacGia: document.getElementById('authorName').value,
         MoTa: document.getElementById('authorDesc').value,
@@ -570,7 +619,6 @@ window.deleteAuthor = async (id) => {
     }
 }
 
-// --- PUBLISHER ---
 function renderPublishers() {
     document.getElementById('publishersTableBody').innerHTML = publishers.map(p =>
         `<tr>
@@ -604,7 +652,6 @@ window.editPublisher = (id) => {
 }
 
 window.savePublisher = async () => {
-    // FIX: Gửi MaNXB = 0 nếu là thêm mới
     const payload = {
         TenNXB: document.getElementById('publisherName').value,
         DiaChi: document.getElementById('publisherAddress').value,
@@ -631,7 +678,6 @@ window.deletePublisher = async (id) => {
     }
 }
 
-// --- DISCOUNT ---
 window.openAddDiscountModal = () => {
     currentEditId = null;
     document.getElementById('discountForm').reset();
@@ -650,8 +696,7 @@ window.editDiscount = (id) => {
     }
 }
 
-window.saveDiscount = async () => {
-    // FIX: Chuyển đổi PhanTramGiam sang Number
+ window.saveDiscount = async () => {
     const p = {
         MaGiamGia: document.getElementById('discountCode').value,
         PhanTramGiam: Number(document.getElementById('discountValue').value)

@@ -126,7 +126,7 @@
                                 <th>Tên sách</th>
                                 <th>Dịch giả</th>
                                 <th>Thể loại</th>
-                                <th>Giá bán</th>
+                                <th>Giảm giá</th> <th>Giá gốc</th>
                                 <th>Đã bán</th>
                                 <th class="text-center">Thao tác</th>
                             </tr>
@@ -225,7 +225,7 @@
                             <tr>
                                 <th>Mã HĐ</th>
                                 <th>User ID</th>
-                                <th>Ngày lập</th>
+                                <th>Địa Chỉ</th> <th>Ngày lập</th>
                                 <th>Tổng tiền</th>
                                 <th>Trạng thái</th>
                             </tr>
@@ -304,10 +304,23 @@
                             <input type="text" id="bookTranslator" class="form-control">
                         </div>
                         <div class="col">
-                            <label>Giá bán (VNĐ) <span class="required">*</span></label>
-                            <input type="number" id="bookPrice" class="form-control" required>
+                            <label>Giá gốc (VNĐ) <span class="required">*</span></label>
+                            <input type="number" id="bookPrice" class="form-control" required oninput="calculateFinalPrice()">
                         </div>
                     </div>
+                    
+                    <div class="row">
+                        <div class="col">
+                            <label>Mã giảm giá (Nếu có)</label>
+                            <select id="bookDiscount" class="form-control" onchange="calculateFinalPrice()"></select>
+                        </div>
+                        <div class="col" style="display: flex; align-items: flex-end;">
+                            <p style="margin-bottom: 12px; font-weight: 500;">
+                                Giá sau giảm: <span id="finalPricePreview" style="color: var(--danger); font-size: 16px;">0 đ</span>
+                            </p>
+                        </div>
+                    </div>
+
                     <div class="row three-col">
                         <div class="col">
                             <label>Năm XB</label>
