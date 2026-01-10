@@ -22,7 +22,8 @@ const PORT = process.env.PORT || 3000; // Khai báo PORT sớm để dùng trong
 // ---------------------------
 // Basic & Security Middlewares
 // ---------------------------
-
+// Sửa dòng 25 trong file index.js thành:
+app.use('/GiaodienAdmin', express.static('GiaodienAdmin'));
 app.use(helmet());
 app.use(cors({ origin: "*" }));
 app.use(compression());

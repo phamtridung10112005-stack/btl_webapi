@@ -1,5 +1,6 @@
 // ===== CẤU HÌNH API =====
 const API_BASE_URL = 'http://localhost:3000/api';
+//const API_BASE_URL = '/api';
 const IMAGE_PATH_BASE = '../GiaodienWEB/Image/';
 let authToken = localStorage.getItem('authToken') || null;
 
