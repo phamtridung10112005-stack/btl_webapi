@@ -720,3 +720,13 @@ tr:hover {
         grid-template-columns: 1fr;
     }
 }
+/* Thêm vào cuối file admin.css */
+.tag-unlimited {
+    background-color: #e0f2fe; /* Nền xanh dương nhạt */
+    color: #0369a1;            /* Chữ xanh dương đậm */
+    padding: 4px 10px;
+    border-radius: 20px;       /* Bo tròn */
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}

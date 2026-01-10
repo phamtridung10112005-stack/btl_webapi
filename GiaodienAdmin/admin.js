@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function initData() {
     console.log("Đang tải dữ liệu...");
-    await Promise.all([fetchCategories(), fetchPublishers(), fetchAuthors(), fetchDiscounts()]); // Load Discounts sớm để dùng
+    await Promise.all([fetchCategories(), fetchPublishers(), fetchAuthors(), fetchDiscounts()]);
     await fetchBooks();
     await fetchOrders();
     await fetchCustomers();
@@ -230,22 +230,43 @@ async function fetchCustomers() {
         document.getElementById('customersTableBody').innerHTML = customers.map(c => `<tr><td>${c.username}</td><td>${c.email}</td><td>${c.phone||'-'}</td><td>${c.role}</td></tr>`).join('');
     } catch (e) {}
 }
+
+// UPDATE: Fetch và Render Discounts với các trường mới
 async function fetchDiscounts() {
     try {
         const res = await fetch(`${API_BASE_URL}/giamgias`);
         discounts = parseRes(await res.json());
-        document.getElementById('discountsTableBody').innerHTML = discounts.map(d => `<tr><td>${d.MaGiamGia}</td><td>${d.PhanTramGiam}%</td><td class="text-center"><button class="btn-sm btn-edit" onclick="editDiscount('${d.MaGiamGia}')"><i class="fas fa-edit"></i></button><button class="btn-sm btn-delete" onclick="deleteDiscount('${d.MaGiamGia}')"><i class="fas fa-trash"></i></button></td></tr>`).join('');
-    } catch (e) {}
+        
+        document.getElementById('discountsTableBody').innerHTML = discounts.map(d => {
+            // Format ngày tháng (chuyển đổi từ ISO sang định dạng VN)
+            const start = d.NgayBatDau ? new Date(d.NgayBatDau).toLocaleDateString('vi-VN') : '-';
+            const end = d.NgayKetThuc ? new Date(d.NgayKetThuc).toLocaleDateString('vi-VN') : '-';
+           const qty = (d.SoLuong !== null && d.SoLuong !== undefined) 
+            ? `<strong>${d.SoLuong}</strong>` 
+            : '<span class="tag-unlimited">Vô Hạn</span>';
+
+            return `<tr>
+                <td><strong>${d.MaGiamGia}</strong></td>
+                <td style="color:var(--danger); font-weight:bold">-${d.PhanTramGiam}%</td>
+                <td>${start}</td>
+                <td>${end}</td>
+                <td>${qty}</td>
+                <td class="text-center">
+                    <button class="btn-sm btn-edit" onclick="editDiscount('${d.MaGiamGia}')"><i class="fas fa-edit"></i></button>
+                    <button class="btn-sm btn-delete" onclick="deleteDiscount('${d.MaGiamGia}')"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>`;
+        }).join('');
+    } catch (e) { console.error(e); }
 }
+
 async function fetchOrders() {
     try {
         const res = await fetch(`${API_BASE_URL}/hoadons`);
         orders = parseRes(await res.json());
         
         document.getElementById('ordersTableBody').innerHTML = orders.map(o => {
-            // SỬA Ở ĐÂY: Gọi đúng tên cột "DiaChiGiaoHang" như trong database
             const diaChi = o.DiaChiGiaoHang ? o.DiaChiGiaoHang : 'Chưa cập nhật';
-
             return `
             <tr>
                 <td>#${o.MaHoaDon}</td>
@@ -261,7 +282,8 @@ async function fetchOrders() {
     } catch (e) {
         console.error("Lỗi tải đơn hàng:", e);
     }
-    }
+}
+
 async function fetchBooks() {
     try {
         const res = await fetch(`${API_BASE_URL}/sachs?page=1&size=1000&sortBy=MaSach&sortOrder=DESC`);
@@ -278,7 +300,6 @@ function renderBooks() {
             const cat = categories.find(c => c.MaTheLoai == b.MaTheLoai)?.TenTheLoai || '---';
             const img = `${IMAGE_PATH_BASE}${b.LinkHinhAnh}`;
             const dichGia = b.TenNguoiDich ? b.TenNguoiDich : '(Gốc)';
-            // UPDATE: Hiển thị Mã giảm giá
             const discountInfo = b.MaGiamGia ? `<span class="tag-discount">${b.MaGiamGia}</span>` : '-';
             
             return `
@@ -299,7 +320,7 @@ function renderBooks() {
     }
 }
 
-// ===== 6. QUẢN LÝ SÁCH - TÁC GIẢ (GIỮ NGUYÊN) =====
+// ===== 6. QUẢN LÝ SÁCH - TÁC GIẢ =====
 
 function renderBookAuthorsTable() {
     const tbody = document.getElementById('bookAuthorsTableBody');
@@ -397,7 +418,6 @@ window.saveBookAuthorsRelation = async function() {
 function populateDropdowns() {
     const c = document.getElementById('bookCategory');
     const p = document.getElementById('bookPublisher');
-    // UPDATE: Thêm dropdown Giảm giá
     const d = document.getElementById('bookDiscount');
 
     if (c) c.innerHTML = categories.map(i => `<option value="${i.MaTheLoai}">${i.TenTheLoai}</option>`).join('');
@@ -408,7 +428,6 @@ function populateDropdowns() {
     }
 }
 
-// UPDATE: Hàm tính toán hiển thị giá sau giảm
 window.calculateFinalPrice = function() {
     const price = Number(document.getElementById('bookPrice').value) || 0;
     const discountCode = document.getElementById('bookDiscount').value;
@@ -428,7 +447,7 @@ window.openAddBookModal = function() {
     currentEditId = null;
     document.getElementById('bookForm').reset();
     populateDropdowns();
-    document.getElementById('finalPricePreview').innerText = "0 đ"; // Reset preview
+    document.getElementById('finalPricePreview').innerText = "0 đ";
     document.getElementById('bookModal').classList.add('active');
 }
 
@@ -442,8 +461,6 @@ window.editBook = (id) => {
         document.getElementById('bookCategory').value = b.MaTheLoai;
         document.getElementById('bookPublisher').value = b.MaNXB;
         document.getElementById('bookTranslator').value = b.TenNguoiDich || '';
-        
-        // UPDATE: Load mã giảm giá
         document.getElementById('bookDiscount').value = b.MaGiamGia || '';
 
         if (b.NamXuatBan) document.getElementById('bookYear').value = new Date(b.NamXuatBan).toISOString().split('T')[0];
@@ -452,7 +469,7 @@ window.editBook = (id) => {
         document.getElementById('bookImage').value = b.LinkHinhAnh || '';
         document.getElementById('bookDescription').value = b.MoTaNoiDung || '';
         
-        calculateFinalPrice(); // Cập nhật preview giá
+        calculateFinalPrice();
         document.getElementById('bookModal').classList.add('active');
     }
 }
@@ -464,7 +481,6 @@ window.saveBook = async () => {
     const maNXB = document.getElementById('bookPublisher').value;
     const namXB = document.getElementById('bookYear').value;
     const soTrang = document.getElementById('bookPages').value;
-    // UPDATE: Lấy mã giảm giá
     const maGiamGia = document.getElementById('bookDiscount').value || null;
 
     if (!tenSach || !giaSach || !maTheLoai || !maNXB) return alert('Nhập đủ thông tin!');
@@ -474,7 +490,7 @@ window.saveBook = async () => {
         GiaSach: Number(giaSach),
         MaTheLoai: Number(maTheLoai),
         MaNXB: Number(maNXB),
-        MaGiamGia: maGiamGia, // Gửi lên server
+        MaGiamGia: maGiamGia,
         NamXuatBan: namXB ? new Date(namXB) : new Date(),
         SoTrang: Number(soTrang) || 0,
         LinkHinhAnh: document.getElementById('bookImage').value,
@@ -510,7 +526,7 @@ window.deleteBook = async (id) => {
     }
 }
 
-// --- CÁC PHẦN CATEGORY, AUTHOR, PUBLISHER, DISCOUNT GIỮ NGUYÊN ---
+// --- CÁC PHẦN CATEGORY, AUTHOR, PUBLISHER GIỮ NGUYÊN ---
 function renderCategories() {
     document.getElementById('categoriesTableBody').innerHTML = categories.map(c =>
         `<tr>
@@ -679,6 +695,7 @@ window.deletePublisher = async (id) => {
     }
 }
 
+// UPDATE: Phần Discount với logic mới
 window.openAddDiscountModal = () => {
     currentEditId = null;
     document.getElementById('discountForm').reset();
@@ -691,27 +708,56 @@ window.editDiscount = (id) => {
     const d = discounts.find(x => x.MaGiamGia == id);
     if (d) {
         document.getElementById('discountCode').value = d.MaGiamGia;
-        document.getElementById('discountCode').disabled = true;
+        document.getElementById('discountCode').disabled = true; // Khóa input Mã
         document.getElementById('discountValue').value = d.PhanTramGiam;
+        
+        // Helper format date for input datetime-local
+        const toInputString = (dateStr) => {
+            if(!dateStr) return "";
+            const date = new Date(dateStr);
+            date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+            return date.toISOString().slice(0, 16);
+        };
+
+        document.getElementById('discountStart').value = toInputString(d.NgayBatDau);
+        document.getElementById('discountEnd').value = toInputString(d.NgayKetThuc);
+        document.getElementById('discountQuantity').value = d.SoLuong;
+
         document.getElementById('discountModal').classList.add('active');
     }
 }
 
  window.saveDiscount = async () => {
+    // Lấy dữ liệu đầy đủ từ Form
     const p = {
         MaGiamGia: document.getElementById('discountCode').value,
-        PhanTramGiam: Number(document.getElementById('discountValue').value)
+        PhanTramGiam: Number(document.getElementById('discountValue').value),
+        NgayBatDau: document.getElementById('discountStart').value || null,
+        NgayKetThuc: document.getElementById('discountEnd').value || null,
+        SoLuong: document.getElementById('discountQuantity').value ? Number(document.getElementById('discountQuantity').value) : null
     };
+
     const url = currentEditId ? `${API_BASE_URL}/giamgias/${currentEditId}` : `${API_BASE_URL}/giamgias`;
-    await fetch(url, {
-        method: currentEditId ? 'PUT' : 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(p)
-    });
-    closeModal('discountModal');
-    fetchDiscounts();
+    try {
+        const res = await fetch(url, {
+            method: currentEditId ? 'PUT' : 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(p)
+        });
+        
+        if (res.ok) {
+            alert('Lưu mã giảm giá thành công!');
+            closeModal('discountModal');
+            fetchDiscounts();
+        } else {
+            const err = await res.json();
+            alert('Lỗi: ' + (err.message || 'Không thể lưu'));
+        }
+    } catch (e) {
+        alert('Lỗi kết nối');
+    }
 }
 
 window.deleteDiscount = async (id) => {

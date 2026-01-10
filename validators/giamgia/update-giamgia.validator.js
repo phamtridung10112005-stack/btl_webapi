@@ -11,7 +11,7 @@ const nullableDate = z.preprocess(
 
 const nullableInt = z.preprocess(
   v => v === "" || v === null ? null : Number(v),
-  z.number().int().min(1).nullable()
+  z.number().int().min(0).nullable()
 );
 export const updateGiamGiaSchema = z.object({
   PhanTramGiam: z.number().int().min(1, "Phan tram giam phai hon hon 1").optional(),
