@@ -25,29 +25,29 @@ getByMaGiamGia: async (magiamgia) => {
       throw err;
     }
   },
-create: async ({ MaGiamGia, PhanTramGiam }) => {
+create: async ({ MaGiamGia, PhanTramGiam, NgayBatDau, NgayKetThuc, SoLuong }) => {
     logger.info(`Repository: Creating giamgia ${MaGiamGia}`);
     try {
       const db = await pool;
       await db.query(
-        'INSERT INTO GiamGia (MaGiamGia, PhanTramGiam) VALUES (?, ?)',
-        [MaGiamGia, PhanTramGiam]
+        'INSERT INTO GiamGia (MaGiamGia, PhanTramGiam, NgayBatDau, NgayKetThuc, SoLuong) VALUES (?, ?, ?, ?, ?)',
+        [MaGiamGia, PhanTramGiam, NgayBatDau, NgayKetThuc, SoLuong]
       );
-      return { MaGiamGia, PhanTramGiam };
+      return { MaGiamGia, PhanTramGiam, NgayBatDau, NgayKetThuc, SoLuong };
     } catch (err) {
       logger.error("Repository Error: create failed", err);
       throw err;
     }
   },
-  update: async (MaGiamGia, { PhanTramGiam }) => {
+  update: async (MaGiamGia, { PhanTramGiam, NgayBatDau, NgayKetThuc, SoLuong }) => {
     logger.info(`Repository: Updating giamgia ${MaGiamGia}`);
     try {
       const db = await pool;
       await db.query(
-        'UPDATE GiamGia SET PhanTramGiam = ? WHERE MaGiamGia = ?',
-        [PhanTramGiam, MaGiamGia]
+        'UPDATE GiamGia SET PhanTramGiam = ?, NgayBatDau = ?, NgayKetThuc = ?, SoLuong = ? WHERE MaGiamGia = ?',
+        [PhanTramGiam, NgayBatDau, NgayKetThuc, SoLuong, MaGiamGia]
       );
-      return { MaGiamGia, PhanTramGiam };
+      return { MaGiamGia, PhanTramGiam, NgayBatDau, NgayKetThuc, SoLuong };
     } catch (err) {
       logger.error(`Repository Error: update failed for MaGiamGia ${MaGiamGia}`, err);
       throw err;

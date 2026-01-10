@@ -54,7 +54,7 @@ export function initProductLoader(config) {
                 settings.renderFunction(books, settings.containerId);
             }
 
-            const totalPages = responseData.pagination ? responseData.pagination.totalPages : 0;
+            const totalPages = responseData.pagination ? responseData.pagination.totalPages || responseData.pagination.tongSoTrang : 0;
             renderPagination(totalPages);
         } catch (error) {
             console.error("Lỗi khi tải sản phẩm:", error);

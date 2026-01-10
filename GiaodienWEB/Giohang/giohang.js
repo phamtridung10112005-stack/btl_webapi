@@ -1,15 +1,26 @@
-// file: giohang.js
-
-// Import hàm từ base.js nếu bạn dùng module (nhưng ở đây bạn đang nhúng script thẻ thường nên dùng biến toàn cục)
-// Đảm bảo base.js được nhúng TRƯỚC giohang.js trong HTML
-// const GIOHANG_API_URL = 'http://localhost:3000/api/giohangs/user/';
 document.addEventListener('DOMContentLoaded', () => {
-    // Gọi hàm tải giỏ hàng ngay khi vào trang
     loadCartPage();
 });
 
 // Biến lưu danh sách giỏ hàng hiện tại của trang này
 let cartData = [];
+let currentCouponPercent = 0; 
+let currentCouponCode = '';
+
+function nowForMySQL() {
+  const now = new Date();
+
+  const pad = n => n.toString().padStart(2, '0');
+
+  return (
+    now.getFullYear() + '-' +
+    pad(now.getMonth() + 1) + '-' +
+    pad(now.getDate()) + ' ' +
+    pad(now.getHours()) + ':' +
+    pad(now.getMinutes()) + ':' +
+    pad(now.getSeconds())
+  );
+}
 
 // 1. Hàm tải dữ liệu giỏ hàng (Gọi API)
 async function loadCartPage() {
@@ -17,9 +28,8 @@ async function loadCartPage() {
     const priceTempElement = document.querySelector('.price_temp');
     const priceResultElement = document.querySelector('.price_result');
 
-    if (!listCartContainer) return; // Không tìm thấy bảng giỏ hàng
+    if (!listCartContainer) return;
 
-    // Lấy thông tin user từ base.js (giả sử base.js đã có hàm getLoggedInUserId)
     const token = localStorage.getItem('accessToken');
     const user_id = getLoggedInUserId(); 
 
@@ -31,9 +41,7 @@ async function loadCartPage() {
     }
 
     try {
-        // Gọi API lấy chi tiết giỏ hàng
-        // URL API lấy từ biến toàn cục trong base.js (GIOHANG_API_URL)
-        const response = await fetch(`${GIOHANG_API_URL}?user_id=${user_id}`, {
+        const response = await fetch(`${GIOHANG_API_URL}/details?user_id=${user_id}`, {
             method: 'GET',
             headers: { 
                 'Content-Type': 'application/json',
@@ -63,7 +71,7 @@ function renderCartTable(list) {
     if (!listCartContainer) return;
 
     let html = '';
-    let totalPrice = 0;
+    let subTotal = 0;
 
     if (!list || list.length === 0) {
         listCartContainer.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 30px; font-size: 16px;">Giỏ hàng của bạn đang trống</td></tr>';
@@ -78,7 +86,7 @@ function renderCartTable(list) {
         const giaBan = giaGoc * (1 - phanTramGiam / 100);
         const thanhTien = giaBan * item.SoLuong;
         
-        totalPrice += thanhTien;
+        subTotal += thanhTien;
 
         const detailLink = `../ChitietSP/chitiet_sp.html?id=${item.MaSach}`;
         const imagePath = `../Image/${item.LinkHinhAnh}`;
@@ -132,9 +140,26 @@ function renderCartTable(list) {
     listCartContainer.innerHTML = html;
     
     // Cập nhật tổng tiền
-    const formattedTotal = formatCurrency(totalPrice);
+    const formattedTotal = formatCurrency(subTotal);
     if(priceTempElement) priceTempElement.textContent = formattedTotal;
-    if(priceResultElement) priceResultElement.textContent = formattedTotal;
+    const couponDiscountAmount = subTotal * (currentCouponPercent / 100);
+    const finalTotal = subTotal - couponDiscountAmount
+    if(priceResultElement) {
+        priceResultElement.textContent = formatCurrency(finalTotal);
+        
+        // [MỚI] Hiển thị dòng chú thích nếu có mã giảm giá
+        // Xóa các chú thích cũ trước khi thêm mới
+        const existingNote = document.getElementById('coupon-note');
+        if(existingNote) existingNote.remove();
+
+        if (currentCouponPercent > 0) {
+            priceResultElement.innerHTML += `
+                <div id="coupon-note" style="font-size: 13px; color: #28a745; font-weight: normal; margin-top: 5px;">
+                    (Đã giảm ${currentCouponPercent}% từ mã <b>${currentCouponCode}</b>: -${formatCurrency(couponDiscountAmount)})
+                </div>
+            `;
+        }
+    }
 }
 
 // 3. Xử lý nút Tăng/Giảm (+/-)
@@ -170,16 +195,15 @@ async function callUpdateApi(maSach, soLuong) {
     const user_id = getLoggedInUserId();
 
     try {
-        const response = await fetch(GIOHANG_API_URL, {
+        const response = await fetch(`${GIOHANG_API_URL}?user_id=${user_id}&masach=${maSach}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({
-                User_ID: user_id,
-                MaSach: maSach,
-                SoLuong: soLuong
+                SoLuong: soLuong,
+                NgayThem: nowForMySQL()
             })
         });
 
@@ -237,29 +261,64 @@ function formatCurrency(number){
 }
 
 // 8. Xử lý nút "Xóa giỏ hàng" (Xóa tất cả)
+// 8. Xử lý nút "Xóa giỏ hàng" (Xóa tất cả)
 async function clearCart() {
+    // Kiểm tra nếu giỏ hàng trống thì không làm gì
     if (!cartData || cartData.length === 0) {
         alert("Giỏ hàng đang trống!");
         return;
     }
     
-    if (!confirm("Bạn có chắc muốn xóa TOÀN BỘ giỏ hàng?")) return;
+    // Xác nhận người dùng muốn xóa
+    if (!confirm("Bạn có chắc muốn xóa TOÀN BỘ giỏ hàng không? Hành động này không thể hoàn tác.")) {
+        return;
+    }
 
-    // Ở đây ta có thể gọi vòng lặp xóa từng cái hoặc gọi 1 API xóa hết (nếu backend hỗ trợ)
-    // Giả sử backend chưa có API xóa hết, ta sẽ xóa từng cái (hơi chậm nhưng an toàn)
-    // Tốt nhất là backend nên có API: DELETE /api/giohangs/clear?user_id=...
-    
-    // Tạm thời gọi API xóa từng món (Cách đơn giản cho Frontend)
     const token = localStorage.getItem('accessToken');
     const user_id = getLoggedInUserId();
+
+    if (!token || !user_id) {
+        alert("Vui lòng đăng nhập lại.");
+        return;
+    }
     
     try {
-        // Cách tốt nhất: Backend hỗ trợ DELETE /api/giohangs/all
-        // Nếu không, phải loop delete (không khuyến khích)
-        alert("Chức năng đang được cập nhật (Cần Backend hỗ trợ API Xóa Hết)");
+        // Xây dựng URL: http://localhost:3000/api/giohangsall?user_id=...
+        // Lưu ý: BASE_API_URL được lấy từ base.js ('http://localhost:3000/api/')
+        const url = `${BASE_API_URL}giohangsall?user_id=${user_id}`;
+
+        const response = await fetch(url, {
+            method: 'DELETE', // Dùng DELETE theo chuẩn RESTful
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (response.ok) {
+            // Xóa thành công
+            // 1. Làm sạch mảng dữ liệu cục bộ
+            cartData = [];
+            
+            // 2. Vẽ lại bảng (sẽ hiện thông báo "Giỏ hàng trống")
+            renderCartTable(cartData);
+            
+            // 3. Cập nhật số lượng trên Header (về 0)
+            if (typeof initCartSystem === 'function') {
+                await initCartSystem();
+            }
+            
+            // 4. Thông báo nhẹ
+            // alert("Đã xóa sạch giỏ hàng!"); 
+        } else {
+            const err = await response.json();
+            console.error("Lỗi server:", err);
+            alert("Xóa thất bại: " + (err.message || "Lỗi không xác định"));
+        }
         
     } catch (error) {
-        console.error(error);
+        console.error("Lỗi mạng:", error);
+        alert("Không thể kết nối đến máy chủ.");
     }
 }
 
@@ -267,4 +326,158 @@ async function clearCart() {
 function updateCart() {
     loadCartPage();
     alert("Đã cập nhật dữ liệu mới nhất!");
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadCartPage();
+
+    // --- [MỚI] THÊM ĐOẠN NÀY ---
+    // Tìm nút "Áp dụng" bằng class
+    const btnCoupon = document.querySelector('.btn_discountCode');
+    
+    // Nếu nút tồn tại thì gắn sự kiện click
+    if (btnCoupon) {
+        btnCoupon.addEventListener('click', (e) => {
+            e.preventDefault(); // Ngăn chặn hành vi mặc định (nếu nút nằm trong form)
+            applyCoupon();      // Gọi hàm xử lý
+        });
+    }
+});
+
+async function applyCoupon() {
+    // 1. Tìm ô input và vùng thông báo
+    const input = document.querySelector('.input_discountCode') || document.getElementById('coupon_input');
+    
+    // Tìm hoặc tạo vùng thông báo động
+    let msgDiv = document.querySelector('.coupon_message_dynamic');
+    if (!msgDiv) {
+        const container = document.querySelector('.discountCode_container');
+        if (container) {
+            msgDiv = document.createElement('div');
+            msgDiv.className = 'coupon_message_dynamic';
+            msgDiv.style.marginTop = '10px';
+            msgDiv.style.fontSize = '14px';
+            msgDiv.style.fontWeight = 'bold';
+            container.appendChild(msgDiv);
+        }
+    }
+
+    if (!input) return;
+    const code = input.value.trim().toUpperCase();
+
+    // Reset thông báo
+    if (msgDiv) {
+        msgDiv.innerHTML = '';
+        msgDiv.style.color = '#22a7ff';
+    }
+
+    // Nếu ô trống -> Hủy mã
+    if (!code) {
+        currentCouponPercent = 0;
+        currentCouponCode = '';
+        renderCartTable(cartData);
+        if (msgDiv) msgDiv.textContent = "Đã bỏ áp dụng mã giảm giá.";
+        return;
+    }
+
+    try {
+        // Gọi API lấy thông tin mã
+        // URL: .../api/giamgias/check?code=...
+        const apiUrl = `${BASE_API_URL}giamgias/${code}`;
+        
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+
+        // -----------------------------------------------------------
+        // XỬ LÝ KẾT QUẢ VÀ KIỂM TRA LOGIC JS (Validation)
+        // -----------------------------------------------------------
+        
+        if (response.ok) {
+            const coupon = data;
+
+            // ==> GỌI HÀM KIỂM TRA ĐIỀU KIỆN CHI TIẾT <==
+            const validationError = validateCouponData(coupon);
+
+            if (validationError) {
+                // Nếu có lỗi logic (Hết hạn, Null, Hết số lượng...)
+                currentCouponPercent = 0;
+                currentCouponCode = '';
+                renderCartTable(cartData);
+                
+                if (msgDiv) {
+                    msgDiv.style.color = '#dc3545'; // Đỏ
+                    msgDiv.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${validationError}`;
+                }
+            } else {
+                // Hợp lệ hoàn toàn -> Áp dụng
+                currentCouponPercent = coupon.PhanTramGiam;
+                currentCouponCode = coupon.MaGiamGia;
+                
+                renderCartTable(cartData); 
+                
+                if (msgDiv) {
+                    msgDiv.style.color = '#28a745'; // Xanh
+                    msgDiv.innerHTML = `<i class="fa-solid fa-check-circle"></i> Mã <b>${currentCouponCode}</b> hợp lệ! Giảm <b>${currentCouponPercent}%</b>`;
+                }
+            }
+
+        } else {
+            // Lỗi từ Server trả về (404, 400...)
+            currentCouponPercent = 0;
+            currentCouponCode = '';
+            renderCartTable(cartData);
+            
+            if (msgDiv) {
+                msgDiv.style.color = '#dc3545';
+                msgDiv.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${data.message || "Mã không hợp lệ"}`;
+            }
+        }
+
+    } catch (error) {
+        console.error("Lỗi check coupon:", error);
+        if (msgDiv) {
+            msgDiv.style.color = '#dc3545';
+            msgDiv.textContent = "Lỗi kết nối server.";
+        }
+    }
+}
+
+function validateCouponData(coupon) {
+    // 1. Kiểm tra các trường bắt buộc có bị NULL không
+    // (Yêu cầu: Nếu NgayBatDau, NgayKetThuc, SoLuong là null => Không áp dụng)
+    if (coupon.NgayBatDau === null || coupon.NgayKetThuc === null || coupon.SoLuong === null) {
+        return "Mã này chưa được kích hoạt (Thiếu thông tin ngày/số lượng).";
+    }
+
+    // Lưu ý: Nếu API không trả về các trường này (undefined), ta cũng coi như lỗi
+    if (typeof coupon.NgayBatDau === 'undefined' || typeof coupon.SoLuong === 'undefined') {
+        return null; 
+    }
+
+    // 2. Kiểm tra Số lượng
+    if (coupon.SoLuong <= 0) {
+        return "Mã giảm giá này đã hết lượt sử dụng.";
+    }
+
+    // 3. Kiểm tra Thời gian (Ngày bắt đầu & Kết thúc)
+    const now = new Date();
+    const startDate = new Date(coupon.NgayBatDau);
+    const endDate = new Date(coupon.NgayKetThuc);
+    startDate.setHours(0,0,0,0);
+    endDate.setHours(23,59,59,999);
+
+    if (now < startDate) {
+        return `Mã này chỉ bắt đầu áp dụng từ ngày ${formatDateVN(startDate)}.`;
+    }
+
+    if (now > endDate) {
+        return "Mã giảm giá này đã hết hạn.";
+    }
+
+    return null;
+}
+
+// Hàm phụ trợ: Format ngày tháng VN (dd/mm/yyyy)
+function formatDateVN(dateObj) {
+    return dateObj.toLocaleDateString('vi-VN');
 }
