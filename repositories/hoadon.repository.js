@@ -39,29 +39,28 @@ export const hoadonRepository = {
     }
   },
 
-  create: async ({ user_id, MaSach, SoLuong, TongTien, NgayLap, TrangThai, DiaChiGiaoHang, MaGiamGia }) => {
+  create: async ({ user_id, NgayLap, TrangThai, DiaChiGiaoHang, MaGiamGia, SoDienThoai, GhiChu }) => {
     logger.info(`Repository: Creating hoadon for user ${user_id}`);
     try {
       const db = await pool;
-      
+      const TongTien = 0;
       const finalDate = NgayLap || new Date();
       const finalStatus = TrangThai || 'ChoXacNhan';
 
       const [result] = await db.query(
-        'INSERT INTO HoaDon (user_id, MaSach, SoLuong, TongTien, NgayLap, TrangThai, DiaChiGiaoHang, MaGiamGia) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-        [user_id, MaSach, SoLuong, TongTien, finalDate, finalStatus, DiaChiGiaoHang, MaGiamGia]
+        'INSERT INTO HoaDon (user_id, TongTien, NgayLap, TrangThai, DiaChiGiaoHang, MaGiamGia, SoDienThoai, GhiChu) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        [user_id, TongTien, finalDate, finalStatus, DiaChiGiaoHang, MaGiamGia, SoDienThoai, GhiChu]
       );
 
       return { 
-        MaHoaDon: result.insertId, 
-        user_id, 
-        MaSach, 
-        SoLuong, 
+        MaHoaDon: result.insertId,
         TongTien,
         NgayLap: finalDate,
         TrangThai: finalStatus,
         DiaChiGiaoHang,
-        MaGiamGia
+        MaGiamGia,
+        SoDienThoai,
+        GhiChu
       };
     } catch (err) {
       logger.error("Repository Error: create failed", err);
@@ -69,17 +68,17 @@ export const hoadonRepository = {
     }
   },
 
-  update: async (MaHoaDon, { user_id, MaSach, SoLuong, TongTien, NgayLap, TrangThai, DiaChiGiaoHang, MaGiamGia }) => {
+  update: async (MaHoaDon, { user_id, TongTien, NgayLap, TrangThai, DiaChiGiaoHang, MaGiamGia, SoDienThoai, GhiChu }) => {
     logger.info(`Repository: Updating hoadon ${MaHoaDon}`);
     try {
       const db = await pool;
       
       await db.query(
-        'UPDATE HoaDon SET user_id = ?, MaSach = ?, SoLuong = ?, TongTien = ?, NgayLap = ?, TrangThai = ?, DiaChiGiaoHang = ?, MaGiamGia = ? WHERE MaHoaDon = ?',
-        [user_id, MaSach, SoLuong, TongTien, NgayLap, TrangThai, DiaChiGiaoHang, MaGiamGia, MaHoaDon]
+        'UPDATE HoaDon SET user_id = ?, TongTien = ?, NgayLap = ?, TrangThai = ?, DiaChiGiaoHang = ?, MaGiamGia = ?, SoDienThoai = ?, GhiChu = ? WHERE MaHoaDon = ?',
+        [user_id, TongTien, NgayLap, TrangThai, DiaChiGiaoHang, MaGiamGia, SoDienThoai, GhiChu, MaHoaDon]
       );
 
-      return { MaHoaDon, user_id, MaSach, SoLuong, TongTien, NgayLap, TrangThai, DiaChiGiaoHang, MaGiamGia };
+      return { MaHoaDon, user_id, TongTien, NgayLap, TrangThai, DiaChiGiaoHang, MaGiamGia, SoDienThoai, GhiChu };
     } catch (err) {
       logger.error(`Repository Error: update failed for MaHoaDon ${MaHoaDon}`, err);
       throw err;

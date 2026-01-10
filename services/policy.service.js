@@ -13,7 +13,7 @@ export async function checkPolicy({ user, policy, resourceUserId = null }) {
     if (!userPolicies.includes(policy)) {
         return false;
     }
-    if (policy === POLICIES.USER_VIEW_SELF || policy === POLICIES.USER_EDIT || policy === POLICIES.USER_BOOKS_WISHLIST_VIEW_SELF || policy === POLICIES.USER_BOOKS_WISHLIST_ADD || policy === POLICIES.USER_BOOKS_WISHLIST_REMOVE || policy === POLICIES.USER_BOOKS_CART_VIEW_SELF || policy === POLICIES.USER_BOOKS_CART_ADD || policy === POLICIES.USER_BOOKS_CART_EDIT || policy === POLICIES.USER_BOOKS_CART_REMOVE) {
+    if (policy === POLICIES.USER_VIEW_SELF || policy === POLICIES.USER_EDIT || policy === POLICIES.USER_BOOKS_WISHLIST_VIEW_SELF || policy === POLICIES.USER_BOOKS_WISHLIST_ADD || policy === POLICIES.USER_BOOKS_WISHLIST_REMOVE || policy === POLICIES.USER_BOOKS_CART_VIEW_SELF || policy === POLICIES.USER_BOOKS_CART_ADD || policy === POLICIES.USER_BOOKS_CART_EDIT || policy === POLICIES.USER_BOOKS_CART_REMOVE || policy === POLICIES.USER_HOADON_VIEW_SELF || policy === POLICIES.USER_HOADON_ADD || policy === POLICIES.USER_HOADON_EDIT || policy === POLICIES.USER_HOADON_REMOVE) {
         return user.id === Number(resourceUserId);
     }
     return true;

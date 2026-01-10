@@ -28,9 +28,9 @@ export const sachService = {
     // ---------------------
   },
 
-  getSachPagingAndSorting: async (page, size, sortBy, sortOrder) => {
+  getSachPagingAndSorting: async (page, size, sortBy, sortOrder, matheloai) => {
     logger.info(`Service: Paging sachs - Page: ${page}`);
-    const sachs = await sachRepository.getSachPagingAndSorting(page, size, sortBy, sortOrder);
+    const sachs = await sachRepository.getSachPagingAndSorting(page, size, sortBy, sortOrder, matheloai);
     return {
       data: sachs.rows,
       pagination: sachs.pagination

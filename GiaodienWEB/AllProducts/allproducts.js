@@ -18,7 +18,7 @@ function renderProducts(productList) {
         // Tạo đường dẫn chi tiết (Dùng chung 1 trang chitiet và truyền ID)
         // Thay vì dẫn đến 'chitiet_sp_combo_kusuriya.html', hãy dẫn đến trang chung kèm ID
         const detailLink = `../ChitietSP/chitiet_sp.html?id=${product.MaSach}`;
-        const imagePath = `../Image/${product.LinkHinhAnh}`; 
+        const imagePath = `../Image/${product.LinkHinhAnh}`;
 
         // --- TẠO HTML ---
         htmlContent += `
@@ -27,7 +27,7 @@ function renderProducts(productList) {
                     <a href="${detailLink}">
                         <img src="${imagePath}" alt="${product.TenSach}">
                     </a>
-                    <div class="discount">-${GiamGia}%</div>
+                    ${GiamGia > 0 ? `<div class="discount">-${GiamGia}%</div>` : ''}
                 </div>
                 
                 <div class="allproduct_item_title">
@@ -41,7 +41,7 @@ function renderProducts(productList) {
                 
                 <div class="allproduct_item_footer">
                     <div class="allproduct_item_sold">
-                        <img src="../Image/fire.png" alt=""> Đã bán ${product.SoLuongDaBan}+
+                        <img src="../Image/fire.png" alt=""> Đã bán ${formatSold(product.SoLuongDaBan)}
                     </div>
                     
                     <div class="wishlist">

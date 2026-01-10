@@ -21,7 +21,7 @@ function loadWishList(productWishList) {
                     <a href="${detailLink}">
                         <img src="${imagePath}" alt="${product.TenSach}">
                     </a>
-                    <div class="discount">-${GiamGia}%</div>
+                    ${GiamGia > 0 ? `<div class="discount">-${GiamGia}%</div>` : ''}
                 </div>
                 <div class="wishlist_item_title">
                     <a href="${detailLink}">${product.TenSach}</a>
@@ -32,7 +32,7 @@ function loadWishList(productWishList) {
                 </div>
                 <div class="wishlist_item_footer">
                     <div class="wishlist_item_sold">
-                        <img src="../Image/fire.png" alt="">  Đã bán ${product.SoLuongDaBan}+
+                        <img src="../Image/fire.png" alt="">  Đã bán ${formatSold(product.SoLuongDaBan)}
                     </div>
                     <div class="wishlist_item_cart">
                         <i class="fa-solid fa-cart-plus"></i>

@@ -73,6 +73,7 @@ export const sachController = {
   },
 
   getSachPagingAndSorting: async (req, res) => {
+    const matheloai = req.query.matheloai;
     const page = parseInt(req.query.page) || 1;
     const size = parseInt(req.query.size) || 24;
     let sortBy = req.query.sortBy || 'MaSach';
@@ -81,7 +82,7 @@ export const sachController = {
     if (sortOrder === 'defaut' || sortOrder === null) sortOrder = 'asc';
     console.log(`Paging params - Page: ${page}, Size: ${size}, SortBy: ${sortBy}, Order: ${sortOrder}`);
     try {
-      const sachs = await sachService.getSachPagingAndSorting(page, size, sortBy, sortOrder);
+      const sachs = await sachService.getSachPagingAndSorting(page, size, sortBy, sortOrder, matheloai);
       res.json(sachs);
     } catch (err) {
       logger.error("Controller Error: Paging failed", err);

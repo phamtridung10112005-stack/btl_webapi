@@ -7,15 +7,16 @@ import { theloaiController } from "../controllers/theloai.controller.js";
 import { sachtacgiaController } from "../controllers/sachtacgia.controller.js";
 import { giohangController } from "../controllers/giohang.controller.js";
 import { hoadonController } from "../controllers/hoadon.controller.js";
+import { chitiethdController } from "../controllers/chitiethd.controller.js";
 import { giamgiaController } from "../controllers/giamgia.controller.js";
 import { sachyeuthichController } from "../controllers/sachyeuthich.controller.js";
 const router = Router();
-// ----------------------- USERS -------------------------------------
-router.get("/users", userController.getAll);
-router.get("/users/:id", userController.getById);
-router.post("/users", userController.create);
-router.put("/users/:id", userController.update);
-router.delete("/users/:id", userController.delete);
+// // ----------------------- USERS -------------------------------------
+// router.get("/users", userController.getAll);
+// router.get("/users/:id", userController.getById);
+// router.post("/users", userController.create);
+// router.put("/users/:id", userController.update);
+// router.delete("/users/:id", userController.delete);
 
 
 import { validate } from "../middlewares/validate.middleware.js";
@@ -55,6 +56,7 @@ router.delete("/nhaxuatbans/:manxb", nhaxuatbanController.delete);
 // router.get("/sachs", sachController.getAll);
 router.get("/sachs", sachController.getSachPagingAndSorting);
 router.get("/sachs/:masach", sachController.getByMaSach);
+
 router.post("/sachs", sachController.create);
 router.put("/sachs/:masach", sachController.update);
 router.delete("/sachs/:masach", sachController.delete);
@@ -77,11 +79,17 @@ router.put("/giohangs", authenticate, authorizePolicy(POLICIES.USER_BOOKS_CART_E
 router.delete("/giohangs", authenticate, authorizePolicy(POLICIES.USER_BOOKS_CART_REMOVE), giohangController.delete);
 router.delete("/giohangsall", authenticate, authorizePolicy(POLICIES.USER_BOOKS_CART_REMOVE), giohangController.deleteAllGioHangByUserID);
 //----------------------- HOADONS ------------------------------------
-router.get("/hoadons", hoadonController.getAll);
-router.get("/hoadons/:mahoadon", hoadonController.getByMaHoaDon);
-router.post("/hoadons", hoadonController.create);
-router.put("/hoadons/:mahoadon", hoadonController.update);
-router.delete("/hoadons/:mahoadon", hoadonController.delete);
+router.get("/hoadons", authenticate, authorizePolicy(POLICIES.USER_HOADON_VIEW_ALL), hoadonController.getAll);
+router.get("/hoadons/:mahoadon", authenticate, authorizePolicy(POLICIES.USER_HOADON_VIEW_SELF), hoadonController.getByMaHoaDon);
+router.post("/hoadons", authenticate, authorizePolicy(POLICIES.USER_HOADON_ADD), hoadonController.create);
+router.put("/hoadons/:mahoadon", authenticate, authorizePolicy(POLICIES.USER_HOADON_EDIT), hoadonController.update);
+router.delete("/hoadons/:mahoadon", authenticate, authorizePolicy(POLICIES.USER_HOADON_REMOVE), hoadonController.delete);
+//----------------------- CHITIETHD ------------------------------------
+router.get("/chitiethds", chitiethdController.getAll);
+router.get("/chitiethds", chitiethdController.get);
+router.post("/chitiethds", chitiethdController.create);
+router.put("/chitiethds", chitiethdController.update);
+router.delete("/chitiethds", chitiethdController.delete);
 //----------------------- GIAMGIAS ------------------------------------
 router.get("/giamgias", giamgiaController.getAll);
 router.get("/giamgias/:magiamgia", giamgiaController.getByMaGiamGia);

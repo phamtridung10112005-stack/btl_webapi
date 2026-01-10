@@ -27,7 +27,6 @@ async function fetchWithAuth(endpoint, options = {}) {
         ...options.headers
     };
     if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
-
     try {
         const response = await fetch(`${API_BASE_URL}${endpoint}`, {
             ...options,
@@ -108,6 +107,7 @@ async function initData() {
     await fetchCustomers();
     updateDashboardStats();
     renderBookAuthorsTable();
+    console.log("Done");
 }
 
 // ===== 3. GLOBAL FUNCTIONS =====
@@ -241,7 +241,7 @@ async function fetchDiscounts() {
             // Format ngày tháng (chuyển đổi từ ISO sang định dạng VN)
             const start = d.NgayBatDau ? new Date(d.NgayBatDau).toLocaleDateString('vi-VN') : '-';
             const end = d.NgayKetThuc ? new Date(d.NgayKetThuc).toLocaleDateString('vi-VN') : '-';
-           const qty = (d.SoLuong !== null && d.SoLuong !== undefined) 
+            const qty = (d.SoLuong !== null && d.SoLuong !== undefined) 
             ? `<strong>${d.SoLuong}</strong>` 
             : '<span class="tag-unlimited">Vô Hạn</span>';
 
@@ -262,7 +262,8 @@ async function fetchDiscounts() {
 
 async function fetchOrders() {
     try {
-        const res = await fetch(`${API_BASE_URL}/hoadons`);
+        // const res = await fetch(`${API_BASE_URL}/hoadons`);
+        const res = await fetchWithAuth('/hoadons');
         orders = parseRes(await res.json());
         
         document.getElementById('ordersTableBody').innerHTML = orders.map(o => {
@@ -286,7 +287,7 @@ async function fetchOrders() {
 
 async function fetchBooks() {
     try {
-        const res = await fetch(`${API_BASE_URL}/sachs?page=1&size=1000&sortBy=MaSach&sortOrder=DESC`);
+        const res = await fetch(`${API_BASE_URL}/sachs?page=1&size=1000&sortBy=MaSach&order=asc`);
         books = parseRes(await res.json());
         renderBooks();
         renderBookAuthorsTable();

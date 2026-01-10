@@ -19,6 +19,7 @@ getByMaGiamGia: async (magiamgia) => {
     try {
       const db = await pool;
       const [rows] = await db.query('SELECT * FROM GiamGia WHERE MaGiamGia = ?', [magiamgia]);
+      // console.log(rows[0]);
       return rows[0];
     } catch (err) {
       logger.error(`Repository Error: getByMaGiamGia failed for magiamgia ${magiamgia}`, err);

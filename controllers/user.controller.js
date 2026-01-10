@@ -20,7 +20,9 @@ export const userController = {
   },
 
   getById: async (req, res) => {
+    console.log("params: ", req.params)
     const id = +req.params.user_id;
+    console.log(req.params.user_id);
     logger.info(`Controller: GET /users/${id}`);
 
     try {

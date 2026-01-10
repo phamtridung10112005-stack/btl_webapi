@@ -4,7 +4,13 @@ const SACHYEUTHICH_API_URL = `${BASE_API_URL}sachyeuthichs`;
 const GIOHANG_API_URL = `${BASE_API_URL}giohangs`;
 
 let userBooksWishList = new Set();
+function formatSold(n) {
+  const num = Number(n) || 0;
 
+  if (num < 1000) return num.toString();
+
+  return Math.floor(num / 1000) + "k+";
+}
 ////////////////Login/Logout
 // --- 1. Hàm tiện ích: Giải mã Token JWT ---
 // Giúp đọc thông tin bên trong token để biết thời gian hết hạn (exp)
@@ -62,7 +68,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
     // Xử lý thêm giỏ hàng
     document.addEventListener('click', (ev) => {
-        if (ev.target.tagName === 'I' && ev.target.closest('.allproduct_item_cart, .wishlist_item_cart')) {
+        if (ev.target.tagName === 'I' && ev.target.closest('.allproduct_item_cart, .wishlist_item_cart, .cart')) {
             const item = ev.target.closest('[data-id]');
             console.log(item);
             if (item && item.dataset.id) {

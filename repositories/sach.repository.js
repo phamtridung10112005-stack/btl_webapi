@@ -35,7 +35,7 @@ export const sachRepository = {
     }
   },
 
-  getSachPagingAndSorting: async (page = 1, size = 10, sortBy = 'MaSach', sortOrder = 'ASC') => {
+  getSachPagingAndSorting: async (page = 1, size = 10, sortBy = 'MaSach', sortOrder = 'ASC', matheloai) => {
     try {
       const db = await pool;
       const offset = (page - 1) * size;
@@ -47,10 +47,11 @@ export const sachRepository = {
                             COALESCE(g.PhanTramGiam, 0) AS PhanTramGiam 
                         FROM Sach s
                         LEFT JOIN GiamGia g ON s.MaGiamGia = g.MaGiamGia
+                        WHERE (? IS NULL OR s.MaTheLoai = ?)
                         ORDER BY ${sort} ${sortOrder} 
                         LIMIT ? OFFSET ?`
       // const query = `SELECT * FROM Sach ORDER BY ${sort} ${sortOrder} LIMIT ? OFFSET ?`;
-      const [rows] = await db.query(sqlString, [parseInt(size), parseInt(offset)]);
+      const [rows] = await db.query(sqlString, [matheloai??null, matheloai??null, parseInt(size), parseInt(offset)]);
       
       const [countResult] = await db.query('SELECT COUNT(*) as total FROM Sach');
       
@@ -66,6 +67,37 @@ export const sachRepository = {
       throw err;
     }
   },
+  // getSachPagingAndSorting: async (page = 1, size = 10, sortBy = 'MaSach', sortOrder = 'ASC', matheloai) => {
+  //   try {
+  //     const db = await pool;
+  //     const offset = (page - 1) * size;
+  //     const validSortColumns = ['MaSach', 'TenSach', 'GiaSach', 'SoLuongDaBan']; 
+  //     const sort = validSortColumns.includes(sortBy) ? sortBy : 'MaSach';
+  //     const sqlString = `SELECT 
+  //                           s.*, 
+  //                           -- Nếu không có mã giảm giá (NULL) thì mặc định là 0
+  //                           COALESCE(g.PhanTramGiam, 0) AS PhanTramGiam 
+  //                       FROM Sach s
+  //                       LEFT JOIN GiamGia g ON s.MaGiamGia = g.MaGiamGia
+  //                       ORDER BY ${sort} ${sortOrder} 
+  //                       LIMIT ? OFFSET ?`
+  //     // const query = `SELECT * FROM Sach ORDER BY ${sort} ${sortOrder} LIMIT ? OFFSET ?`;
+  //     const [rows] = await db.query(sqlString, [parseInt(size), parseInt(offset)]);
+      
+  //     const [countResult] = await db.query('SELECT COUNT(*) as total FROM Sach');
+      
+  //     return {
+  //       rows,
+  //       pagination: {
+  //         page: parseInt(page), size: parseInt(size),
+  //         total: countResult[0].total,
+  //         totalPages: Math.ceil(countResult[0].total / size)
+  //       }
+  //     };
+  //   } catch (err) {
+  //     throw err;
+  //   }
+  // },
 
   // --- CREATE (Dành cho menu Kho Sách - Thêm mới) ---
   create: async (dto) => {
