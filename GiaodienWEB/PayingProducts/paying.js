@@ -3,6 +3,8 @@
 // Biến lưu trữ dữ liệu giỏ hàng để tính toán khi đặt hàng
 let currentCartData = [];
 let totalOrderAmount = 0; // Tổng tiền đơn hàng
+let finalPaymentAmount = 0; // Tổng tiền phải trả (sau khi giảm)
+let appliedCoupon = { code: '', percent: 0 }; // Biến lưu coupon nhận được
 
 document.addEventListener('DOMContentLoaded', () => {
     loadPaymentPage();
@@ -23,6 +25,12 @@ async function loadPaymentPage() {
         alert("Vui lòng đăng nhập để thanh toán.");
         window.location.href = '../Login/dangnhap.html';
         return;
+    }
+
+    const storedCoupon = localStorage.getItem('checkoutCoupon');
+    if (storedCoupon) {
+        appliedCoupon = JSON.parse(storedCoupon);
+        console.log("Áp dụng mã:", appliedCoupon);
     }
 
     // B. Lấy thông tin User và điền vào Form (Tự động điền)
@@ -119,9 +127,29 @@ function renderOrderSummary(list) {
 
     listContainer.innerHTML = html;
     
-    // Cập nhật tổng tiền
+    let discountAmount = 0;
+    if (appliedCoupon.percent > 0) {
+        discountAmount = totalOrderAmount * (appliedCoupon.percent / 100);
+    }
+    
+    finalPaymentAmount = totalOrderAmount - discountAmount;
+
+    // Hiển thị ra UI
     if (totalMoneyElement) {
-        totalMoneyElement.textContent = formatCurrency(totalOrderAmount);
+        // Nếu có giảm giá, hiển thị chi tiết hơn
+        if (discountAmount > 0) {
+            totalMoneyElement.innerHTML = `
+                <div style="font-size: 16px; color: #22a7ff;">Tạm tính: ${formatCurrency(totalOrderAmount)}</div>
+                <div style="font-size: 16px; color: #28a745;">
+                    Giảm giá (${appliedCoupon.code} - ${appliedCoupon.percent}%): -${formatCurrency(discountAmount)}
+                </div>
+                <div style="font-weight: bold; font-size: 22px; color: #ff2732; margin-top: 5px;">
+                    ${formatCurrency(finalPaymentAmount)}
+                </div>
+            `;
+        } else {
+            totalMoneyElement.textContent = formatCurrency(finalPaymentAmount);
+        }
     }
 }
 
@@ -174,25 +202,28 @@ async function Paying() {
     const user_id = getLoggedInUserId();
 
     const orderData = {
-        User_ID: user_id,
-        HoTenNguoiNhan: name,
-        SDT: sdt,
-        Email: gmail,
+        user_id: user_id,
+        HoTen: name,
+        SoDienThoai: sdt,
         DiaChiGiaoHang: diachi,
         GhiChu: note,
         PhuongThucThanhToan: typePay,
-        TongTien: totalOrderAmount,
-        // Danh sách sản phẩm (Backend cần xử lý mảng này để insert vào chi tiết đơn hàng)
+        
+        // Gửi tổng tiền ĐÃ TRỪ GIẢM GIÁ
+        TongTien: finalPaymentAmount, 
+        
+        // [QUAN TRỌNG] Gửi mã giảm giá về Backend (nếu có)
+        MaGiamGia: (appliedCoupon.code && appliedCoupon.percent > 0) ? appliedCoupon.code : null,
+
         ChiTiet: currentCartData.map(item => ({
             MaSach: item.MaSach,
             SoLuong: item.SoLuong,
-            DonGia: item.GiaSach * (1 - (item.PhanTramGiam || 0) / 100) // Giá đã giảm
+            DonGia: item.GiaSach * (1 - (item.PhanTramGiam || 0) / 100)
         }))
     };
 
     try {
-        // Giả sử API tạo đơn hàng là POST /api/donhangs
-        const response = await fetch(`${BASE_API_URL}donhangs`, {
+        const response = await fetch(`${BASE_API_URL}hoadons`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -205,6 +236,9 @@ async function Paying() {
             const result = await response.json();
             alert("Đặt hàng thành công! Mã đơn: " + (result.MaDonHang || 'Mới'));
             
+            // Xóa coupon đã lưu sau khi đặt hàng thành công
+            localStorage.removeItem('checkoutCoupon');
+
             // Xóa giỏ hàng sau khi đặt thành công (Backend nên tự làm, nhưng Frontend gọi API xóa cho chắc)
             await clearCartAfterOrder(user_id, token);
             

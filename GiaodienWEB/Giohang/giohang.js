@@ -1,5 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
     loadCartPage();
+
+    const btnCheckout = document.querySelector('.btn_thanhtoan');
+    if (btnCheckout) {
+        btnCheckout.addEventListener('click', (e) => {
+            e.preventDefault(); // Ngăn chặn chuyển trang ngay lập tức
+
+            // 1. Lưu thông tin mã giảm giá hiện tại vào LocalStorage
+            const couponData = {
+                code: currentCouponCode,      // Biến toàn cục bạn đã khai báo ở đầu file
+                percent: currentCouponPercent // Biến toàn cục bạn đã khai báo ở đầu file
+            };
+            
+            // Lưu object dưới dạng chuỗi JSON
+            localStorage.setItem('checkoutCoupon', JSON.stringify(couponData));
+
+            // 2. Chuyển hướng sang trang thanh toán
+            window.location.href = '../PayingProducts/paying.html';
+        });
+    }
 });
 
 // Biến lưu danh sách giỏ hàng hiện tại của trang này

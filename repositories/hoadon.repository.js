@@ -1,6 +1,33 @@
 import { pool } from "../config/database.js";
 import { logger } from "../config/logger.js";
 
+async function decreaseGiamGia(MaGiamGia) {
+  if (!MaGiamGia) return;
+
+  await pool.query(
+    `
+    UPDATE GiamGia
+    SET SoLuong = SoLuong - 1
+    WHERE MaGiamGia = ?
+      AND SoLuong > 0
+    `,
+    [MaGiamGia]
+  );
+}
+async function increaseGiamGia(MaGiamGia) {
+  if (!MaGiamGia) return;
+
+  await pool.query(
+    `
+    UPDATE GiamGia
+    SET SoLuong = SoLuong + 1
+    WHERE MaGiamGia = ?
+    `,
+    [MaGiamGia]
+  );
+}
+
+
 export const hoadonRepository = {
   getAll: async () => {
     logger.info('Repository: Fetching all hoadons');
@@ -39,7 +66,7 @@ export const hoadonRepository = {
     }
   },
 
-  create: async ({ user_id, NgayLap, TrangThai, DiaChiGiaoHang, MaGiamGia, SoDienThoai, GhiChu }) => {
+  create: async ({ user_id, NgayLap, TrangThai, DiaChiGiaoHang, MaGiamGia, SoDienThoai, GhiChu, HoTen, PhuongThucThanhToan }) => {
     logger.info(`Repository: Creating hoadon for user ${user_id}`);
     try {
       const db = await pool;
@@ -48,10 +75,13 @@ export const hoadonRepository = {
       const finalStatus = TrangThai || 'ChoXacNhan';
 
       const [result] = await db.query(
-        'INSERT INTO HoaDon (user_id, TongTien, NgayLap, TrangThai, DiaChiGiaoHang, MaGiamGia, SoDienThoai, GhiChu) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-        [user_id, TongTien, finalDate, finalStatus, DiaChiGiaoHang, MaGiamGia, SoDienThoai, GhiChu]
+        'INSERT INTO HoaDon (user_id, TongTien, NgayLap, TrangThai, DiaChiGiaoHang, MaGiamGia, SoDienThoai, GhiChu, HoTen, PhuongThucThanhToan) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [user_id, TongTien, finalDate, finalStatus, DiaChiGiaoHang, MaGiamGia, SoDienThoai, GhiChu, HoTen, PhuongThucThanhToan]
       );
 
+      if (MaGiamGia) {
+        await decreaseGiamGia(MaGiamGia);
+      }
       return { 
         MaHoaDon: result.insertId,
         TongTien,
@@ -60,7 +90,9 @@ export const hoadonRepository = {
         DiaChiGiaoHang,
         MaGiamGia,
         SoDienThoai,
-        GhiChu
+        GhiChu,
+        HoTen,
+        PhuongThucThanhToan
       };
     } catch (err) {
       logger.error("Repository Error: create failed", err);
@@ -68,17 +100,22 @@ export const hoadonRepository = {
     }
   },
 
-  update: async (MaHoaDon, { user_id, TongTien, NgayLap, TrangThai, DiaChiGiaoHang, MaGiamGia, SoDienThoai, GhiChu }) => {
+  update: async (MaHoaDon, { user_id, TongTien, NgayLap, TrangThai, DiaChiGiaoHang, MaGiamGia, SoDienThoai, GhiChu, HoTen, PhuongThucThanhToan }) => {
     logger.info(`Repository: Updating hoadon ${MaHoaDon}`);
     try {
       const db = await pool;
       
       await db.query(
-        'UPDATE HoaDon SET user_id = ?, TongTien = ?, NgayLap = ?, TrangThai = ?, DiaChiGiaoHang = ?, MaGiamGia = ?, SoDienThoai = ?, GhiChu = ? WHERE MaHoaDon = ?',
-        [user_id, TongTien, NgayLap, TrangThai, DiaChiGiaoHang, MaGiamGia, SoDienThoai, GhiChu, MaHoaDon]
+        'UPDATE HoaDon SET user_id = ?, TongTien = ?, NgayLap = ?, TrangThai = ?, DiaChiGiaoHang = ?, MaGiamGia = ?, SoDienThoai = ?, GhiChu = ?, HoTen = ?, PhuongThucThanhToan = ? WHERE MaHoaDon = ?',
+        [user_id, TongTien, NgayLap, TrangThai, DiaChiGiaoHang, MaGiamGia, SoDienThoai, GhiChu, HoTen, PhuongThucThanhToan, MaHoaDon]
       );
-
-      return { MaHoaDon, user_id, TongTien, NgayLap, TrangThai, DiaChiGiaoHang, MaGiamGia, SoDienThoai, GhiChu };
+      const [[old]] = await pool.query(
+        'SELECT MaGiamGia FROM HoaDon WHERE MaHoaDon = ?',
+        [MaHoaDon]
+      );
+      if (old.MaGiamGia) await increaseGiamGia(old.MaGiamGia);
+      if (MaGiamGia) await decreaseGiamGia(MaGiamGia);
+      return { MaHoaDon, user_id, TongTien, NgayLap, TrangThai, DiaChiGiaoHang, MaGiamGia, SoDienThoai, GhiChu, HoTen, PhuongThucThanhToan };
     } catch (err) {
       logger.error(`Repository Error: update failed for MaHoaDon ${MaHoaDon}`, err);
       throw err;
@@ -90,6 +127,13 @@ export const hoadonRepository = {
     try {
       const db = await pool;
       await db.query('DELETE FROM HoaDon WHERE MaHoaDon = ?', [MaHoaDon]);
+      const [[hoadon]] = await pool.query(
+        'SELECT MaGiamGia FROM HoaDon WHERE MaHoaDon = ?',
+        [MaHoaDon]
+      );
+      if (hoadon.MaGiamGia) {
+        await increaseGiamGia(hoadon.MaGiamGia);
+      }
       return true;
     } catch (err) {
       logger.error(`Repository Error: delete failed for MaHoaDon ${MaHoaDon}`, err);

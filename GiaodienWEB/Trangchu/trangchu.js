@@ -9,27 +9,15 @@ function formatSold(n) {
   return Math.floor(num / 1000) + "k+";
 }
 // ==============================================================
-//                  LOGIC FLASH SALE SYSTEM
+//                  LOGIC FLASH SALE SYSTEM (DYNAMIC)
 // ==============================================================
 
-// 1. CẤU HÌNH THỜI GIAN KẾT THÚC SALE
-// Định dạng: Năm-Tháng-Ngày Giờ:Phút:Giây (ISO format)
-const CodeSale = "SALE10";
-let SALE_END_TIMESTAMP = '';
-(async () => {
-    SALE_END_TIMESTAMP = await getNgayKetThucGiamGia(CodeSale);
-})();
-console.log('Time', SALE_END_TIMESTAMP)
-async function getNgayKetThucGiamGia(code) {
-    const response = await fetch(`http://localhost:3000/api/giamgias/${code}`);
-    if (!response.ok) return;
-    const rawData = await response.json();
-    const isoDate = rawData.NgayKetThuc;
+// 1. CẤU HÌNH MÃ GIẢM GIÁ MUỐN CHẠY
+const TARGET_SALE_CODE = "SALE10"; // Nhập mã bạn muốn áp dụng tại đây
+const MAX_SHOW_FSLIDER = 20;
 
-    // Chuyển sang timestamp (ms) – chuẩn toàn cầu
-    const endTimestamp = new Date(isoDate).getTime();
-    return endTimestamp;
-}
+// Biến lưu trữ ngày kết thúc (sẽ được cập nhật từ API)
+let GLOBAL_SALE_END_DATE = null;
 
 function CountDown(C){
     const dayElement = document.querySelector('.days');
@@ -53,26 +41,62 @@ function CountDown(C){
         minuteElement.textContent = minutes < 10 ? `0${minutes}` : minutes;
         secondElement.textContent = seconds < 10 ? `0${seconds}` : seconds;
 
-        console.log(`${days}\t${hours}\t${minutes}\t${seconds}`)
+        // console.log(`${days}\t${hours}\t${minutes}\t${seconds}`)
     }
     const interval = setInterval(UpdateTime, 1000);
     UpdateTime();
 }
+// 2. HÀM KHỞI TẠO HỆ THỐNG FLASH SALE
+async function initFlashSaleSystem() {
+    try {
+        // A. Gọi API lấy thông tin mã giảm giá
+        // Lưu ý: Đảm bảo đường dẫn API đúng (dùng BASE_API_URL nếu có)
+        const response = await fetch(`${BASE_API_URL}giamgias/${TARGET_SALE_CODE}`);
+        
+        if (!response.ok) {
+            console.warn("Không tìm thấy mã giảm giá hoặc lỗi server.");
+            document.querySelector('.flash_sale_container').style.display = 'none';
+            return;
+        }
 
-// 2. KHỞI CHẠY ĐỒNG HỒ ĐẾM NGƯỢC (Sử dụng hàm CountDown cũ của bạn)
-if (typeof CountDown === 'function') {
-    CountDown(SALE_END_TIMESTAMP);
+        const data = await response.json();
+        console.log('DT:', data);
+        
+        // Kiểm tra xem mã có ngày kết thúc không
+        if (!data || !data.NgayKetThuc) {
+            console.warn("Mã giảm giá không có ngày kết thúc.");
+            return;
+        }
+
+        // B. Lưu ngày kết thúc vào biến toàn cục
+        GLOBAL_SALE_END_DATE = new Date(data.NgayKetThuc);
+        const endTimeStamp = GLOBAL_SALE_END_DATE.getTime();
+
+        console.log(`Flash Sale kết thúc vào: ${GLOBAL_SALE_END_DATE}`);
+
+        // C. Bắt đầu đếm ngược
+        if (typeof CountDown === 'function') {
+            CountDown(endTimeStamp);
+        }
+
+        // D. Tải và lọc sản phẩm theo ngày này
+        loadFlashSaleItems();
+
+    } catch (error) {
+        console.error("Lỗi khởi tạo Flash Sale:", error);
+        document.querySelector('.flash_sale_container').style.display = 'none';
+    }
 }
 
-// 3. HÀM TẢI DỮ LIỆU FLASH SALE
+// 3. HÀM TẢI DỮ LIỆU VÀ LỌC SẢN PHẨM
 async function loadFlashSaleItems() {
     const container = document.querySelector('.flash_sale_list_track');
     const marqueeContainer = document.querySelector('.flash_sale_header_mid marquee');
-    if (!container) return;
+    
+    // Nếu chưa lấy được ngày kết thúc từ mã giảm giá thì dừng
+    if (!container || !GLOBAL_SALE_END_DATE) return;
 
     try {
-        // Gọi API lấy tất cả sách (hoặc API chuyên biệt cho Flash Sale nếu có)
-        // Lấy nhiều một chút để lọc ra
         const apiUrl = `${BOOKS_API_URL}?limit=50`; 
         
         const response = await fetch(apiUrl);
@@ -80,41 +104,23 @@ async function loadFlashSaleItems() {
 
         const rawData = await response.json();
         const allBooks = Array.isArray(rawData) ? rawData : (rawData.data || []);
-
-        // --- LỌC SẢN PHẨM SALE (LOGIC MỚI) ---
+        // console.log('DAT books: ', allBooks);
+        // --- LỌC SẢN PHẨM ---
         const saleBooks = allBooks.filter(item => {
-            const discount = item.PhanTramGiam || 0;
-            
-            // Điều kiện 1: Phải có giảm giá
-            if (discount <= 0) return false;
+            if (item.MaGiamGia === TARGET_SALE_CODE) return true;
 
-            // Điều kiện 2: Kiểm tra ngày kết thúc có TRÙNG với ngày cài đặt không
-            if (item.NgayKetThuc) {
-                const itemDate = new Date(item.NgayKetThuc);
-                const targetDate = new Date(SALE_END_DATE_STRING); // Ngày cố định: 2026-01-31
-
-                // So sánh Năm, Tháng, Ngày (Bỏ qua giờ phút giây để chính xác hơn)
-                const isSameYear = itemDate.getFullYear() === targetDate.getFullYear();
-                const isSameMonth = itemDate.getMonth() === targetDate.getMonth();
-                const isSameDay = itemDate.getDate() === targetDate.getDate();
-
-                // Chỉ lấy những sản phẩm có cùng ngày/tháng/năm với ngày Sale
-                return isSameYear && isSameMonth && isSameDay;
-            }
-
-            // Nếu sản phẩm không có ngày kết thúc thì loại bỏ (vì không thuộc đợt sale này)
             return false; 
         });
 
-        // Nếu không có sản phẩm nào sale
+        // Nếu không có sản phẩm nào -> Ẩn khối Flash Sale
+        console.log(saleBooks);
         if (saleBooks.length === 0) {
             document.querySelector('.flash_sale_container').style.display = 'none';
             return;
         }
 
-        // --- RENDER HTML ---
-        // Chỉ lấy tối đa 10-15 sản phẩm cho Flash Sale
-        const displayBooks = saleBooks.slice(0, 15);
+        // --- RENDER SLIDER HTML ---
+        const displayBooks = saleBooks.slice(0, MAX_SHOW_FSLIDER);
         
         const html = displayBooks.map(item => {
             const giaGoc = Number(item.GiaSach);
@@ -138,7 +144,7 @@ async function loadFlashSaleItems() {
                     <div class="flash_sale_item_footer">
                         <div class="flash_sale_item_sold">
                             <img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> 
-                            Đã bán ${item.SoLuongDaBan || 0}
+                            Đã bán ${formatSold(item.SoLuongDaBan)}
                         </div>
                         <div class="wishlist" onclick="addToWishList(this)" data-id="${item.MaSach}">
                             <i class="fa-solid fa-heart"></i>
@@ -154,99 +160,73 @@ async function loadFlashSaleItems() {
 
         container.innerHTML = html;
 
+        // --- RENDER MARQUEE ---
         if (marqueeContainer) {
-            // Tạo chuỗi HTML các thẻ <a>
             const marqueeHtml = saleBooks.map(item => {
                 const detailLink = `../ChitietSP/chitiet_sp.html?id=${item.MaSach}`;
-                // Thêm style margin-right để các chữ không dính vào nhau
                 return `<a href="${detailLink}">+ ${item.TenSach} - Giảm ${item.PhanTramGiam}%</a>`;
             }).join('');
-
             marqueeContainer.innerHTML = marqueeHtml;
         }
 
-        // --- 4. KHỞI TẠO SLIDER SAU KHI RENDER XONG ---
+        // --- KHỞI TẠO SLIDER ---
         initFlashSaleSlider();
 
     } catch (error) {
-        console.error("Lỗi tải Flash Sale:", error);
+        console.error("Lỗi tải danh sách sản phẩm Flash Sale:", error);
     }
 }
 
-// 4. LOGIC SLIDER (Được gọi sau khi có dữ liệu)
+// 4. LOGIC SLIDER (Đã tối ưu không bị cắt item)
 function initFlashSaleSlider() {
     const track = document.querySelector('.flash_sale_list_track');
     const items = document.querySelectorAll('.flash_sale_item');
     const nextBtn = document.querySelector('.flash_sale_body .next-btn');
     const preBtn = document.querySelector('.flash_sale_body .pre-btn');
 
-    // Kiểm tra nếu không đủ phần tử thì dừng
     if (!track || items.length === 0 || !nextBtn || !preBtn) return;
 
     let currentIndex = 0;
 
-    // --- HÀM TÍNH TOÁN KÍCH THƯỚC CHUẨN ---
     function getSlideMetrics() {
         const containerWidth = document.querySelector('.flash_sale_list').offsetWidth;
-        
-        // Lấy style thực tế của trình duyệt đang render
         const itemStyle = window.getComputedStyle(items[0]);
         
-        // 1. Chiều rộng nội tại của thẻ div (bao gồm padding, border)
         const itemWidth = items[0].offsetWidth;
-        
-        // 2. Lấy margin trái và phải (CSS của bạn là 15px mỗi bên)
         const marginLeft = parseFloat(itemStyle.marginLeft) || 0;
         const marginRight = parseFloat(itemStyle.marginRight) || 0;
         
-        // 3. TỔNG CHIỀU RỘNG 1 ITEM CHIẾM DỤNG
-        // (Đây là con số quan trọng để dịch chuyển chính xác)
+        // Tính tổng chiều rộng (Width + Margins)
         const itemFullWidth = itemWidth + marginLeft + marginRight;
 
-        // 4. Tính xem 1 khung hình hiện được bao nhiêu item trọn vẹn
         let itemsPerView = Math.floor(containerWidth / itemFullWidth);
-        
-        // Đảm bảo ít nhất là 1
         if (itemsPerView < 1) itemsPerView = 1;
 
-        return {
-            itemFullWidth,
-            itemsPerView,
-            totalItems: items.length
-        };
+        return { itemFullWidth, itemsPerView, totalItems: items.length };
     }
 
-    // --- HÀM CẬP NHẬT VỊ TRÍ ---
     function updatePosition() {
         const { itemFullWidth, itemsPerView, totalItems } = getSlideMetrics();
-        
-        // Giới hạn index không chạy quá đà ra vùng trắng
-        // Max Index = Tổng số - Số lượng đang hiện
         const maxIndex = Math.max(0, totalItems - itemsPerView);
         
         if (currentIndex > maxIndex) currentIndex = maxIndex;
         if (currentIndex < 0) currentIndex = 0;
 
-        // Dịch chuyển = Index * Tổng chiều rộng (bao gồm margin)
         const translateValue = currentIndex * itemFullWidth;
         
         track.style.transform = `translateX(-${translateValue}px)`;
-        // CSS bạn đã có transition, nhưng set thêm ở đây để đảm bảo logic JS
         track.style.transition = 'transform 0.5s ease-in-out';
     }
 
-    // --- SỰ KIỆN CLICK NEXT ---
     nextBtn.onclick = () => {
         const { itemsPerView, totalItems } = getSlideMetrics();
         const maxIndex = Math.max(0, totalItems - itemsPerView);
-        
         if (currentIndex < maxIndex) {
             currentIndex++;
             updatePosition();
         }
     };
 
-    // --- SỰ KIỆN CLICK PREV ---
     preBtn.onclick = () => {
         if (currentIndex > 0) {
             currentIndex--;
@@ -254,14 +234,11 @@ function initFlashSaleSlider() {
         }
     };
 
-    // --- RESPONSIVE: TÍNH LẠI KHI KÉO MÀN HÌNH ---
     let resizeTimer;
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(updatePosition, 100);
     });
-    
-    // Gọi lần đầu để set vị trí đúng
     updatePosition();
 }
 ///////////////////////////////////
@@ -423,7 +400,7 @@ async function loadHomeSections() {
 
 // Gọi khi tải trang và khi resize màn hình
 document.addEventListener('DOMContentLoaded', () => {
-    loadFlashSaleItems();
+    initFlashSaleSystem();
     loadHomeSections();
 });
 let resizeTimer;

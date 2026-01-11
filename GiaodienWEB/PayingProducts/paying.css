@@ -209,6 +209,12 @@ select option:hover{
     justify-content: space-between;
     color: #22a7ff;
 }
+.totalPricePay_text{
+    display: flex;
+    text-align: center;
+    align-items: flex-end;
+    font-size: 22px;
+}
 .totalPricePay_money{
     font-size: 18px;
     font-weight: bold;
