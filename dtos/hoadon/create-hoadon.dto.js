@@ -1,5 +1,5 @@
 export class CreateHoaDonDTO {
-  constructor({ user_id, TongTien, NgayLap, TrangThai, DiaChiGiaoHang, MaGiamGia, SoDienThoai, GhiChu, HoTen, PhuongThucThanhToan }) {
+  constructor({ user_id, TongTien, NgayLap, TrangThai, DiaChiGiaoHang, MaGiamGia, SoDienThoai, GhiChu, HoTen, PhuongThucThanhToan, ChiTiet }) {
     this.user_id = user_id;
     this.TongTien = TongTien;
     this.NgayLap = NgayLap;
@@ -10,5 +10,8 @@ export class CreateHoaDonDTO {
     this.GhiChu = GhiChu;
     this.HoTen = HoTen;
     this.PhuongThucThanhToan = PhuongThucThanhToan;
+    
+    // [BỔ SUNG]
+    this.ChiTiet = ChiTiet;
   }
 }

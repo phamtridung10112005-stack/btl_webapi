@@ -1,5 +1,6 @@
 export class UpdateHoaDonDTO {
-  constructor({ user_id, TongTien, NgayLap, TrangThai, DiaChiGiaoHang, MaGiamGia, SoDienThoai, GhiChu, HoTen, PhuongThucThanhToan }) {
+  // Thêm ChiTiet vào constructor
+  constructor({ user_id, TongTien, NgayLap, TrangThai, DiaChiGiaoHang, MaGiamGia, SoDienThoai, GhiChu, HoTen, PhuongThucThanhToan, ChiTiet }) {
     this.user_id = user_id;
     this.TongTien = TongTien;
     this.NgayLap = NgayLap;
@@ -10,5 +11,6 @@ export class UpdateHoaDonDTO {
     this.GhiChu = GhiChu;
     this.HoTen = HoTen;
     this.PhuongThucThanhToan = PhuongThucThanhToan;
+    this.ChiTiet = ChiTiet; // [MỚI]
   }
 }

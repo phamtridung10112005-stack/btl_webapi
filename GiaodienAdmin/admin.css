@@ -2,15 +2,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-    --primary: #4f46e5;       /* Tím xanh hiện đại */
+    --primary: #4f46e5;
     --primary-dark: #4338ca;
-    --secondary: #64748b;     /* Xám xanh */
-    --bg-body: #f1f5f9;       /* Nền xám nhạt */
+    --secondary: #64748b;
+    --bg-body: #f1f5f9;
     --white: #ffffff;
-    --text-dark: #1e293b;     /* Chữ đen dịu */
-    --danger: #ef4444;        /* Đỏ */
-    --success: #10b981;       /* Xanh lá */
-    --border: #e2e8f0;        /* Viền nhạt */
+    --text-dark: #1e293b;
+    --danger: #ef4444;
+    --success: #10b981;
+    --info: #0ea5e9;
+    --warning: #f59e0b;
+    --border: #e2e8f0;
     --sidebar-width: 260px;
     --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
@@ -131,7 +133,7 @@ body {
     width: 100%;
 }
 
-/* --- Sidebar (Menu trái) --- */
+/* ----- 3.1 SIDEBAR ----- */
 .sidebar {
     width: var(--sidebar-width);
     background: #0f172a;
@@ -229,7 +231,7 @@ body {
     color: var(--white);
 }
 
-/* --- Main Content (Nội dung phải) --- */
+/* ----- 3.2 MAIN CONTENT ----- */
 .main-content {
     flex: 1;
     background: var(--bg-body);
@@ -237,7 +239,6 @@ body {
     overflow-y: auto;
 }
 
-/* Các trang con */
 .content-section {
     display: none;
     animation: fadeIn 0.3s ease-in-out;
@@ -323,7 +324,7 @@ body {
     color: var(--text-dark);
 }
 
-/* --- CSS MỚI CHO LIST BÁN CHẠY --- */
+/* ----- 4.1 RANKING ITEMS ----- */
 .ranking-item {
     display: flex;
     align-items: center;
@@ -393,7 +394,7 @@ body {
     color: #777;
 }
 
-/* --- STYLE CHO TAG TÁC GIẢ --- */
+/* ----- 4.2 TAGS CONTAINER ----- */
 .tags-container {
     display: flex;
     flex-wrap: wrap;
@@ -477,7 +478,7 @@ tr:hover {
     text-align: center;
 }
 
-/* Buttons */
+/* ----- 5.1 BUTTONS ----- */
 .btn-primary {
     background: var(--primary);
     color: var(--white);
@@ -506,6 +507,7 @@ tr:hover {
     color: var(--white);
     margin: 0 2px;
     font-size: 13px;
+    transition: 0.2s;
 }
 
 .btn-edit {
@@ -514,6 +516,7 @@ tr:hover {
 
 .btn-edit:hover {
     background: #2563eb;
+    transform: scale(1.05);
 }
 
 .btn-delete {
@@ -522,12 +525,50 @@ tr:hover {
 
 .btn-delete:hover {
     background: #dc2626;
+    transform: scale(1.05);
+}
+
+.btn-info {
+    background: var(--info);
+}
+
+.btn-info:hover {
+    background: #0284c7;
+    transform: scale(1.05);
+}
+
+.btn-warning {
+    background: var(--warning);
+}
+
+.btn-warning:hover {
+    background: #d97706;
+    transform: scale(1.05);
+}
+
+.btn-success {
+    background: var(--success);
+}
+
+.btn-success:hover {
+    background: #059669;
+    transform: scale(1.05);
+}
+
+/* Nút bị vô hiệu hóa */
+.btn-sm:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.btn-sm:disabled:hover {
+    transform: none !important;
 }
 
 /* ================= 6. MODALS (POPUP) ================= */
 .modal-backdrop {
     display: none;
-    /* Ẩn mặc định */
     position: fixed;
     top: 0;
     left: 0;
@@ -616,6 +657,7 @@ tr:hover {
     gap: 10px;
 }
 
+/* ----- 6.1 FORM CONTROLS ----- */
 .form-group {
     margin-bottom: 20px;
 }
@@ -640,6 +682,12 @@ tr:hover {
 .form-control:focus {
     border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.form-control[readonly] {
+    background-color: #f8fafc;
+    color: #64748b;
+    cursor: default;
 }
 
 .required {
@@ -670,6 +718,7 @@ tr:hover {
     border-radius: 8px;
     cursor: pointer;
     font-weight: 500;
+    transition: 0.2s;
 }
 
 .btn-secondary:hover {
@@ -684,49 +733,106 @@ tr:hover {
     border-radius: 8px;
     cursor: pointer;
     font-weight: 500;
+    transition: 0.2s;
 }
 
 .btn-save:hover {
     background: #059669;
 }
 
+.tag-unlimited {
+    background-color: #e0f2fe;
+    color: #0369a1;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+/* ================= 7. RESPONSIVE ================= */
 @media (max-width: 768px) {
     .sidebar {
         width: 70px;
     }
+    
     .sidebar-brand span,
     .nav-item span,
     .nav-label,
     .btn-logout {
         display: none;
     }
+    
     .nav-item {
         justify-content: center;
         padding: 15px;
     }
+    
     .nav-item i {
         margin: 0;
         font-size: 20px;
     }
+    
     .main-content {
         padding: 15px;
     }
+    
     .row,
     .three-col {
         flex-direction: column;
         display: flex;
     }
+    
     .cards-grid {
         grid-template-columns: 1fr;
     }
 }
-/* Thêm vào cuối file admin.css */
-.tag-unlimited {
-    background-color: #e0f2fe; /* Nền xanh dương nhạt */
-    color: #0369a1;            /* Chữ xanh dương đậm */
-    padding: 4px 10px;
-    border-radius: 20px;       /* Bo tròn */
-    font-size: 12px;
+
+/* ================= 8. STYLE CHO MODAL NHẬP LIỆU ================= */
+/* Style cho khung nhập liệu sản phẩm trong Modal */
+.product-input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: flex-end;
+}
+
+.product-input-group .col-grow {
+    flex-grow: 1;
+}
+
+.btn-add-product {
+    height: 42px;
+    padding: 0 20px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
     font-weight: 600;
-    display: inline-block;
+    white-space: nowrap;
+}
+
+.btn-add-product:hover {
+    background: var(--primary-dark);
+}
+
+/* Table nhỏ trong Modal */
+.mini-table {
+    width: 100%;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.mini-table th, 
+.mini-table td {
+    padding: 8px 12px;
+    font-size: 13px;
+    border-bottom: 1px solid #eee;
+}
+
+.mini-table th {
+    background: #f8fafc;
+    color: #64748b;
 }

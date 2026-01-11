@@ -37,32 +37,58 @@ export const userRepository = {
     }
   },
 
-  create: async (user) => {
+ create: async (user) => {
     logger.info(`Repository: Creating user ${user.email}`);
     try {
       const db = await pool;
+      // Đảm bảo role không bao giờ bị NULL
+      const finalRole = user.role || 'USER'; 
+      
       await db.query(
         "INSERT INTO Users (username, email, password, phone, role) VALUES (?, ?, ?, ?, ?)",
-        [user.username, user.email, user.password, user.phone, user.role]
+        [user.username, user.email, user.password, user.phone, finalRole] // Dùng finalRole
       );
-      return { ...user };
+      return { ...user, role: finalRole };
     } catch (err) {
       logger.error("Repository Error: create failed", err);
       throw err;
     }
   },
-
-  update: async (id, { username, email, phone }) => {
+  update: async (id, data) => {
     logger.info(`Repository: Updating user ${id}`);
     try {
       const db = await pool;
-      await db.query(
-        "UPDATE Users SET username = ?, email = ?, phone = ? WHERE id = ?",
-        [username, email, phone, id]
-      );
-      return { id, username, email, phone };
+      
+      // Nếu có mật khẩu mới -> Cập nhật cả mật khẩu
+      if (data.password) {
+          await db.query(
+            "UPDATE Users SET username = ?, email = ?, phone = ?, password = ? WHERE id = ?",
+            [data.username, data.email, data.phone, data.password, id]
+          );
+      } else {
+          // Nếu không có mật khẩu -> Chỉ cập nhật thông tin thường
+          await db.query(
+            "UPDATE Users SET username = ?, email = ?, phone = ? WHERE id = ?",
+            [data.username, data.email, data.phone, id]
+          );
+      }
+      
+      return { id, ...data };
     } catch (err) {
       logger.error(`Repository Error: update failed for ID ${id}`, err);
+      throw err;
+    }
+  },
+
+  // [MỚI] Hàm cập nhật Role (Dùng để Khóa/Mở khóa)
+  updateRole: async (id, newRole) => {
+    logger.info(`Repository: Updating role for user ${id} to ${newRole}`);
+    try {
+      const db = await pool;
+      await db.query("UPDATE Users SET role = ? WHERE id = ?", [newRole, id]);
+      return true;
+    } catch (err) {
+      logger.error(`Repository Error: updateRole failed for ID ${id}`, err);
       throw err;
     }
   },
@@ -78,4 +104,4 @@ export const userRepository = {
       throw err;
     }
   },
-};
+ };

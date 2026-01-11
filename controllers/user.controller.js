@@ -20,9 +20,7 @@ export const userController = {
   },
 
   getById: async (req, res) => {
-    console.log("params: ", req.params)
     const id = +req.params.user_id;
-    console.log(req.params.user_id);
     logger.info(`Controller: GET /users/${id}`);
 
     try {
@@ -78,6 +76,21 @@ export const userController = {
       res.json(user);
     } catch (err) {
       logger.error(`Controller Error: update failed (${id})`, err);
+      res.status(400).json({ message: err.message });
+    }
+  },
+
+  // [MỚI] API xử lý khóa tài khoản
+  blockUser: async (req, res) => {
+    const id = +req.params.user_id;
+    logger.info(`Controller: PUT /users/${id}/block`);
+
+    try {
+      const result = await userService.toggleBlockUser(id);
+      res.json(result);
+    } catch (err) {
+      logger.error(`Controller Error: blockUser failed (${id})`, err);
+      // Trả về lỗi 400 để Frontend hiển thị thông báo
       res.status(400).json({ message: err.message });
     }
   },

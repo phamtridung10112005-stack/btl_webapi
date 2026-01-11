@@ -34,10 +34,13 @@ router.post("/auth/login", validate(loginSchema), loginController);
 
 // ----------------------- USERS -------------------------------------
 router.get("/users", authenticate, authorizePolicy(POLICIES.USER_VIEW_ALL), userController.getAll);
-// router.get("/users/:email", authenticate, authorizePolicy(POLICIES.USER_VIEW_SELF), userController.getByEmail);
 router.get("/users/:user_id", authenticate, authorizePolicy(POLICIES.USER_VIEW_SELF), userController.getById);
-// router.post("/users", userController.create);
+router.post("/users", authenticate, authorizePolicy(POLICIES.USER_VIEW_ALL), userController.create);
 router.put("/users/:user_id", authenticate, authorizePolicy(POLICIES.USER_EDIT), userController.update);
+
+// [BẮT BUỘC THÊM DÒNG NÀY ĐỂ FIX LỖI]:
+router.put("/users/:user_id/block", authenticate, authorizePolicy(POLICIES.USER_EDIT), userController.blockUser);
+
 router.delete("/users/:user_id", authenticate, authorizePolicy(POLICIES.USER_DELETE), userController.delete);
 
 //------------------tác giả--------------------------------
