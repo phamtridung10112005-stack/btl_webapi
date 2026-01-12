@@ -58,6 +58,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Xử lý sự kiện thêm/xóa sách yêu thích (Wishlist)
     document.addEventListener('click', (ev) => {
         // console.log(ev.target);
+        // console.log('addwl');
         if (ev.target.tagName === 'I' && ev.target.closest('.wishlist')) {
             const item = ev.target.closest('[data-id]');
             // console.log(item);
@@ -68,7 +69,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
     // Xử lý thêm giỏ hàng
     document.addEventListener('click', (ev) => {
-        if (ev.target.tagName === 'I' && ev.target.closest('.allproduct_item_cart, .wishlist_item_cart, .cart')) {
+        if ((ev.target.tagName === 'I' || ev.target.tagName === 'BUTTON') && ev.target.closest('.allproduct_item_cart, .wishlist_item_cart, .cart, .action_btn_product')) {
             const item = ev.target.closest('[data-id]');
             console.log(item);
             if (item && item.dataset.id) {
@@ -259,7 +260,7 @@ async function addToCart(item) {
         });
         if (response.ok) {
             const data = await response.json();
-            // console.log("Thêm giỏ hàng thành công: ", data);
+            console.log("Thêm giỏ hàng thành công: ", data);
             await initCartSystem();
             showAddToCartSuccess();
         } else {

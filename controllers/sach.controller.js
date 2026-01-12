@@ -60,6 +60,17 @@ export const sachController = {
     }
   },
 
+  getChiTietAllSachs: async (req, res) => {
+    try {
+      logger.info('Controller: GET /sachs/details');
+      const sachs = await sachService.getChiTietAllSachs();
+      res.json(sachs);
+    } catch (err) {
+      logger.error("Controller Error: getChiTietAllSachs failed", err);
+      res.status(500).json({ message: err.message });
+    }
+  },
+
   getByMaSach: async (req, res) => {
     const masach = req.params.masach;
     logger.info(`Controller: GET /sachs/${masach}`);
@@ -68,6 +79,18 @@ export const sachController = {
       res.json(sach);
     } catch (err) {
       logger.error(`Controller Error: getByMaSach failed`, err);
+      res.status(404).json({ message: err.message });
+    }
+  },
+
+  getTTSachByMaSach: async (req, res) => {
+    const masach = req.params.masach;
+    logger.info(`Controller: GET /sachs/details/${masach}`);
+    try {
+      const sach = await sachService.getTTSachByMaSach(masach);
+      res.json(sach);
+    } catch (err) {
+      logger.error(`Controller Error: getTTSachByMaSach failed`, err);
       res.status(404).json({ message: err.message });
     }
   },

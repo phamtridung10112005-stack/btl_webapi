@@ -967,7 +967,20 @@ function renderBooks() {
     
     t.innerHTML = books.map(b => {
         const cat = categories.find(c => c.MaTheLoai == b.MaTheLoai)?.TenTheLoai || '---';
-        const img = `${IMAGE_PATH_BASE}${b.LinkHinhAnh}`;
+
+        // Xử lý ảnh
+        let images = '';
+        let image_path_rutgon = b.LinkHinhAnh;
+        if (b.LinkHinhAnh) {
+            // Tách chuỗi bằng dấu phẩy, sau đó xóa khoảng trắng thừa ở 2 đầu (trim)
+            // Ví dụ: "a.jpg, b.png" -> ["a.jpg", "b.png"]
+            images = b.LinkHinhAnh.split(',').map(img => img.trim()).filter(img => img !== "");
+        }
+
+        if (images.length > 1)
+            image_path_rutgon = images[0];
+
+        const img = `${IMAGE_PATH_BASE}${image_path_rutgon}`;
         const discountInfo = b.MaGiamGia ? `<span class="tag-discount">${b.MaGiamGia}</span>` : '-';
         
         return `

@@ -17,6 +17,22 @@ function renderProducts(productList) {
 
         // Tạo đường dẫn chi tiết (Dùng chung 1 trang chitiet và truyền ID)
         // Thay vì dẫn đến 'chitiet_sp_combo_kusuriya.html', hãy dẫn đến trang chung kèm ID
+
+        // Xử lý ảnh
+        let images = '';
+        if (product.LinkHinhAnh) {
+            // Tách chuỗi bằng dấu phẩy, sau đó xóa khoảng trắng thừa ở 2 đầu (trim)
+            // Ví dụ: "a.jpg, b.png" -> ["a.jpg", "b.png"]
+            images = product.LinkHinhAnh.split(',').map(img => img.trim()).filter(img => img !== "");
+        }
+
+        // Nếu không có ảnh nào, dùng ảnh mặc định
+        if (images.length === 0) {
+            images = ['no-image.png'];
+        }
+        if (images.length > 1)
+            product.LinkHinhAnh = images[0];
+
         const detailLink = `../ChitietSP/chitiet_sp.html?id=${product.MaSach}`;
         const imagePath = `../Image/${product.LinkHinhAnh}`;
 

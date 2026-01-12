@@ -6,7 +6,13 @@ export const sachService = {
   getAllSachs: async () => {
     logger.info('Service: Getting all sachs');
     const sachs = await sachRepository.getAll();
-    return sachs.map((u) => new SachDTO(u));
+    return sachs;
+  },
+
+  getChiTietAllSachs: async () => {
+    logger.info('Service: Getting all sachs with details');
+    const sachs = await sachRepository.getChiTietThongTinAll();
+    return sachs;
   },
 
   getSachByMaSach: async (masach) => {
@@ -26,6 +32,15 @@ export const sachService = {
     }
     return result;
     // ---------------------
+  },
+  getTTSachByMaSach: async (masach) => {
+    logger.info(`Service: Getting thong tin chi tiet sach by masach ${masach}`);
+    const sach = await sachRepository.getTTSachByMaSach(masach);
+    if (!sach) {
+      logger.warn(`Service Warning: Thong tin chi tiet sach ${masach} not found`);
+      throw new Error('Sach not found');
+    }
+    return sach;
   },
 
   getSachPagingAndSorting: async (page, size, sortBy, sortOrder, matheloai) => {

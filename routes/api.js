@@ -56,10 +56,11 @@ router.post("/nhaxuatbans", nhaxuatbanController.create);
 router.put("/nhaxuatbans/:manxb", nhaxuatbanController.update);
 router.delete("/nhaxuatbans/:manxb", nhaxuatbanController.delete);
 // ----------------------- SACHS -------------------------------------
-// router.get("/sachs", sachController.getAll);
+router.get("/sachs/all", sachController.getAll);
 router.get("/sachs", sachController.getSachPagingAndSorting);
+router.get("/sachs/details", sachController.getChiTietAllSachs);
 router.get("/sachs/:masach", sachController.getByMaSach);
-
+router.get("/sachs/details/:masach", sachController.getTTSachByMaSach);
 router.post("/sachs", sachController.create);
 router.put("/sachs/:masach", sachController.update);
 router.delete("/sachs/:masach", sachController.delete);

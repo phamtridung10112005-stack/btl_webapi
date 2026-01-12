@@ -109,6 +109,22 @@ function renderOrderSummary(list) {
         totalOrderAmount += thanhTien;
 
         // Xử lý ảnh (nếu null thì dùng ảnh mặc định)
+
+        // Xử lý ảnh
+        let images = '';
+        if (item.LinkHinhAnh) {
+            // Tách chuỗi bằng dấu phẩy, sau đó xóa khoảng trắng thừa ở 2 đầu (trim)
+            // Ví dụ: "a.jpg, b.png" -> ["a.jpg", "b.png"]
+            images = item.LinkHinhAnh.split(',').map(img => img.trim()).filter(img => img !== "");
+        }
+
+        // Nếu không có ảnh nào, dùng ảnh mặc định
+        if (images.length === 0) {
+            images = ['no-image.png'];
+        }
+        if (images.length > 1)
+            item.LinkHinhAnh = images[0];
+
         const imgUrl = item.LinkHinhAnh ? `../Image/${item.LinkHinhAnh}` : '../Image/no-image.png';
 
         html += `
@@ -161,7 +177,6 @@ async function Paying() {
     // A. Lấy dữ liệu từ Form
     const name = document.getElementById('text_name').value.trim();
     const sdt = document.getElementById('sdt').value.trim();
-    const gmail = document.getElementById('gmail').value.trim();
     const diachi = document.getElementById('diachi').value.trim();
     const note = document.getElementById('note').value.trim();
     const typePay = document.getElementById('typePay').value;
@@ -180,9 +195,6 @@ async function Paying() {
 
     if (sdt === '') { toggleError('.erro_inputPay_sdt', true); isValid = false; } 
     else toggleError('.erro_inputPay_sdt', false);
-
-    if (gmail === '') { toggleError('.erro_inputPay_gmail', true); isValid = false; } 
-    else toggleError('.erro_inputPay_gmail', false);
 
     if (diachi === '') { toggleError('.erro_inputPay_diachi', true); isValid = false; } 
     else toggleError('.erro_inputPay_diachi', false);

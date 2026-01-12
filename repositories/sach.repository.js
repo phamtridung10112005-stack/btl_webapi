@@ -6,10 +6,46 @@ export const sachRepository = {
     logger.info('Repository: Fetching all sachs');
     try {
       const db = await pool;
-      const [rows] = await db.query('SELECT * FROM Sach');
+      const sqlString = `SELECT 
+                            s.*, 
+                            -- Nếu không có mã giảm giá (NULL) thì mặc định là 0
+                            COALESCE(g.PhanTramGiam, 0) AS PhanTramGiam 
+                        FROM Sach s
+                        LEFT JOIN GiamGia g ON s.MaGiamGia = g.MaGiamGia`;
+      // const [rows] = await db.query('SELECT * FROM Sach');
+      const [rows] = await db.query(sqlString);
       return rows;
     } catch (err) {
       logger.error("Repository Error: getAll failed", err);
+      throw err;
+    }
+  },
+
+  getChiTietThongTinAll: async () => {
+    logger.info('Repository: Fetching all sachs with detail');
+    try {
+      const db = await pool;
+      const sqlString = `SELECT 
+                              s.*, 
+                              COALESCE(g.PhanTramGiam, 0) AS PhanTramGiam,
+                              tl.TenTheLoai,
+                              GROUP_CONCAT(stg.MaTacGia) as MaTacGiaString
+                          FROM Sach s
+                          LEFT JOIN GiamGia g ON s.MaGiamGia = g.MaGiamGia
+                          LEFT JOIN TheLoai tl ON s.MaTheLoai = tl.MaTheLoai
+                          LEFT JOIN SachTacGia stg ON s.MaSach = stg.MaSach
+                          GROUP BY s.MaSach`;
+      const [rows] = await db.query(sqlString);
+      const processedRows = rows.map(book => {
+        return {
+            ...book,
+            // Nếu có tác giả thì tách chuỗi, nếu không thì trả về mảng rỗng
+            MaTacGia: book.MaTacGiaString ? book.MaTacGiaString.split(',').map(Number) : []
+        };
+      });
+      return processedRows;
+    } catch (err) {
+      logger.error("Repository Error: getChiTietThongTinAll failed", err);
       throw err;
     }
   },
@@ -31,6 +67,48 @@ export const sachRepository = {
       return sach;
     } catch (err) {
       logger.error(`Repository Error: getByMaSach failed for masach ${masach}`, err);
+      throw err;
+    }
+  },
+
+    getTTSachByMaSach: async (masach) => {
+    logger.info(`Repository: Fetching thong tin chi tiet sach with masach ${masach}`);
+    try {
+      const db = await pool;
+
+      const queryBook = `
+        SELECT 
+            s.*, 
+            COALESCE(g.PhanTramGiam, 0) AS PhanTramGiam,
+            tl.TenTheLoai
+        FROM Sach s
+        LEFT JOIN GiamGia g ON s.MaGiamGia = g.MaGiamGia
+        LEFT JOIN TheLoai tl ON s.MaTheLoai = tl.MaTheLoai
+        WHERE s.MaSach = ?
+      `;
+
+      const [rows] = await db.query(queryBook, [masach]);
+      if (!rows[0]) return null;
+
+      const sach = rows[0];
+
+      const queryAuthors = `
+        SELECT tg.MaTacGia, tg.TenTacGia 
+        FROM SachTacGia stg
+        JOIN TacGia tg ON stg.MaTacGia = tg.MaTacGia
+        WHERE stg.MaSach = ?
+      `;
+      
+      const [authors] = await db.query(queryAuthors, [masach]);
+
+      // Xử lý dữ liệu tác giả để trả về format tiện dụng
+      sach.MaTacGia = authors.map(a => a.MaTacGia); // Mảng ID (dùng cho logic code cũ/checkbox)
+      sach.TenTacGia = authors.map(a => a.TenTacGia).join(', '); // Chuỗi tên hiển thị (Ví dụ: "Tô Hoài, Nam Cao")
+      sach.DanhSachTacGia = authors; // Trả về cả danh sách object đầy đủ nếu cần
+      // console.log("ttsach: ", sach);
+      return sach;
+    } catch (err) {
+      logger.error(`Repository Error: getTTSachByMaSach failed for masach ${masach}`, err);
       throw err;
     }
   },

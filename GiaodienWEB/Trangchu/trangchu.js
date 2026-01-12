@@ -60,7 +60,7 @@ async function initFlashSaleSystem() {
         }
 
         const data = await response.json();
-        console.log('DT:', data);
+        // console.log('DT:', data);
         
         // Kiểm tra xem mã có ngày kết thúc không
         if (!data || !data.NgayKetThuc) {
@@ -97,23 +97,26 @@ async function loadFlashSaleItems() {
     if (!container || !GLOBAL_SALE_END_DATE) return;
 
     try {
-        const apiUrl = `${BOOKS_API_URL}?limit=50`; 
+        const apiUrl = `${BOOKS_API_URL}/all?limit=50`; 
         
         const response = await fetch(apiUrl);
         if (!response.ok) return;
 
         const rawData = await response.json();
+        console.log(rawData);
         const allBooks = Array.isArray(rawData) ? rawData : (rawData.data || []);
         // console.log('DAT books: ', allBooks);
         // --- LỌC SẢN PHẨM ---
+        console.log(allBooks.length);
         const saleBooks = allBooks.filter(item => {
+            console.log(item);
             if (item.MaGiamGia === TARGET_SALE_CODE) return true;
 
             return false; 
         });
 
         // Nếu không có sản phẩm nào -> Ẩn khối Flash Sale
-        console.log(saleBooks);
+        console.log('FS Books: ', saleBooks);
         if (saleBooks.length === 0) {
             document.querySelector('.flash_sale_container').style.display = 'none';
             return;
@@ -126,11 +129,25 @@ async function loadFlashSaleItems() {
             const giaGoc = Number(item.GiaSach);
             const phanTram = item.PhanTramGiam;
             const giaBan = giaGoc * (1 - phanTram / 100);
+            // Xử lý ảnh
+            let images = '';
+            if (item.LinkHinhAnh) {
+                // Tách chuỗi bằng dấu phẩy, sau đó xóa khoảng trắng thừa ở 2 đầu (trim)
+                // Ví dụ: "a.jpg, b.png" -> ["a.jpg", "b.png"]
+                images = item.LinkHinhAnh.split(',').map(img => img.trim()).filter(img => img !== "");
+            }
+
+            // Nếu không có ảnh nào, dùng ảnh mặc định
+            if (images.length === 0) {
+                images = ['no-image.png'];
+            }
+            if (images.length > 1)
+                item.LinkHinhAnh = images[0];
             const imgUrl = item.LinkHinhAnh ? `../Image/${item.LinkHinhAnh}` : '../Image/no-image.png';
             const detailLink = `../ChitietSP/chitiet_sp.html?id=${item.MaSach}`;
 
             return `
-                <div class="flash_sale_item">
+                <div class="flash_sale_item" data-id="${item.MaSach}">
                     <div class="flash_sale_item_img">
                         <a href="${detailLink}"><img src="${imgUrl}" alt="${item.TenSach}" onerror="this.src='../Image/no-image.png'"></a>
                     </div>
@@ -146,10 +163,10 @@ async function loadFlashSaleItems() {
                             <img style="width: 16px;object-fit: contain;" src="../Image/fire.png" alt=""> 
                             Đã bán ${formatSold(item.SoLuongDaBan)}
                         </div>
-                        <div class="wishlist" onclick="addToWishList(this)" data-id="${item.MaSach}">
+                        <div class="wishlist">
                             <i class="fa-solid fa-heart"></i>
                         </div>
-                        <div class="cart" onclick="addToCart(this)" data-id="${item.MaSach}">
+                        <div class="cart" data-id="${item.MaSach}">
                             <i class="fa-solid fa-cart-plus"></i>
                         </div>
                     </div>
@@ -159,6 +176,9 @@ async function loadFlashSaleItems() {
         }).join('');
 
         container.innerHTML = html;
+        if (window.highlightHeartIcons) {
+            highlightHeartIcons();
+        }
 
         // --- RENDER MARQUEE ---
         if (marqueeContainer) {
@@ -263,7 +283,7 @@ function calculateLimitForRows(containerSelector = '.container', minItemWidth = 
     const itemsPerRow = Math.floor((containerWidth + gap) / (minItemWidth + gap));
     const columns = itemsPerRow > 0 ? itemsPerRow : 1;
 
-    console.log(`Màn hình hiển thị: ${columns} cột.`);
+    // console.log(`Màn hình hiển thị: ${columns} cột.`);
     
     // 2. Tính tổng số sản phẩm dựa trên số dòng mong muốn
     let limit = columns * rows;
@@ -303,6 +323,20 @@ function createProductHTML(item) {
     const giaBan = giaGoc * (1 - phanTramGiam / 100);
     
     // Xử lý ảnh
+    let images = '';
+    if (item.LinkHinhAnh) {
+        // Tách chuỗi bằng dấu phẩy, sau đó xóa khoảng trắng thừa ở 2 đầu (trim)
+        // Ví dụ: "a.jpg, b.png" -> ["a.jpg", "b.png"]
+        images = item.LinkHinhAnh.split(',').map(img => img.trim()).filter(img => img !== "");
+    }
+
+    // Nếu không có ảnh nào, dùng ảnh mặc định
+    if (images.length === 0) {
+        images = ['no-image.png'];
+    }
+    if (images.length > 1)
+        item.LinkHinhAnh = images[0];
+    
     const imgUrl = `../Image/${item.LinkHinhAnh}`;
     const detailLink = `../ChitietSP/chitiet_sp.html?id=${item.MaSach}`;
 
@@ -342,7 +376,7 @@ async function loadHomeSections() {
     // Lấy container đầu tiên để làm mẫu đo kích thước
     const apiLimit = 12;
     const displayLimit = calculateLimitForRows('.list_sp', 250, 20, 2, 4);
-    console.log(`Loading ${displayLimit} items per section...`);
+    // console.log(`Loading ${displayLimit} items per section...`);
 
     // 2. Lấy danh sách các container cần load data
     const containers = document.querySelectorAll('.list_sp[data-type]');
@@ -396,6 +430,9 @@ async function loadHomeSections() {
 
     // Đợi tất cả hoàn tất
     await Promise.all(promises);
+    if (window.highlightHeartIcons) {
+        highlightHeartIcons();
+    }
 }
 
 // Gọi khi tải trang và khi resize màn hình

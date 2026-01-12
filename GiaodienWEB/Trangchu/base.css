@@ -45,3 +45,27 @@
     border-radius: 10px;
     transition: all 0.5s ease-in-out;
 }
+.back_to_head{
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 30px;
+    height: 30px;
+    background-color: #65c2ff;
+    border-radius: 5px;
+    cursor: pointer;
+    display: none;
+}
+.back_to_head a:hover{
+    background-color: #22a7ff;
+    color: #fff;
+}
+.back_to_head a{
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    line-height: 30px;
+    color: #f3f3f3bb;
+    border-radius: 5px;
+}

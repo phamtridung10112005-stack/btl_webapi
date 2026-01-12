@@ -13,6 +13,22 @@ function loadWishList(productWishList) {
         const GiamGia = product.PhanTramGiam || 0;
         const GiaSale = product.GiaSach * (1 - GiamGia / 100);
         const detailLink = `../ChitietSP/chitiet_sp.html?id=${product.MaSach}`;
+
+        // Xử lý ảnh
+        let images = '';
+        if (product.LinkHinhAnh) {
+            // Tách chuỗi bằng dấu phẩy, sau đó xóa khoảng trắng thừa ở 2 đầu (trim)
+            // Ví dụ: "a.jpg, b.png" -> ["a.jpg", "b.png"]
+            images = product.LinkHinhAnh.split(',').map(img => img.trim()).filter(img => img !== "");
+        }
+
+        // Nếu không có ảnh nào, dùng ảnh mặc định
+        if (images.length === 0) {
+            images = ['no-image.png'];
+        }
+        if (images.length > 1)
+            product.LinkHinhAnh = images[0];
+
         const imagePath = `../Image/${product.LinkHinhAnh}`;
 
         htmlContent += `

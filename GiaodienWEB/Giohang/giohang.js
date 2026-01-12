@@ -108,6 +108,21 @@ function renderCartTable(list) {
         subTotal += thanhTien;
 
         const detailLink = `../ChitietSP/chitiet_sp.html?id=${item.MaSach}`;
+
+        let images = '';
+        if (item.LinkHinhAnh) {
+            // Tách chuỗi bằng dấu phẩy, sau đó xóa khoảng trắng thừa ở 2 đầu (trim)
+            // Ví dụ: "a.jpg, b.png" -> ["a.jpg", "b.png"]
+            images = item.LinkHinhAnh.split(',').map(img => img.trim()).filter(img => img !== "");
+        }
+
+        // Nếu không có ảnh nào, dùng ảnh mặc định
+        if (images.length === 0) {
+            images = ['no-image.png'];
+        }
+        if (images.length > 1)
+            item.LinkHinhAnh = images[0];
+
         const imagePath = `../Image/${item.LinkHinhAnh}`;
 
         html += `
