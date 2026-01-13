@@ -224,7 +224,20 @@ function renderRelatedBooks(books) {
         const giaGoc = Number(book.GiaSach);
         const phanTramGiam = book.PhanTramGiam || 0;
         const giaBan = giaGoc * (1 - phanTramGiam / 100);
-        
+        // Xử lý ảnh
+        let images = '';
+        if (book.LinkHinhAnh) {
+            // Tách chuỗi bằng dấu phẩy, sau đó xóa khoảng trắng thừa ở 2 đầu (trim)
+            // Ví dụ: "a.jpg, b.png" -> ["a.jpg", "b.png"]
+            images = book.LinkHinhAnh.split(',').map(img => img.trim()).filter(img => img !== "");
+        }
+
+        // Nếu không có ảnh nào, dùng ảnh mặc định
+        if (images.length === 0) {
+            images = ['no-image.png'];
+        }
+        if (images.length > 1)
+            book.LinkHinhAnh = images[0];
         const imgUrl = book.LinkHinhAnh ? `../Image/${book.LinkHinhAnh}` : '../Image/no-image.png';
         const detailLink = `../ChitietSP/chitiet_sp.html?id=${book.MaSach}`;
 
