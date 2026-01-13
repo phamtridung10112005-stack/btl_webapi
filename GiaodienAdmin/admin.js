@@ -1355,15 +1355,29 @@ function renderTopBooks() {
         .sort((a, b) => (b.SoLuongDaBan || 0) - (a.SoLuongDaBan || 0))
         .slice(0, 5);
     
-    list.innerHTML = topBooks.map((b, i) => `
-        <div class="ranking-item">
-            <div class="rank-index">${i + 1}</div>
-            <img src="${IMAGE_PATH_BASE}${b.LinkHinhAnh}" class="rank-thumb">
-            <div class="rank-info">
-                <h4>${b.TenSach}</h4>
-                <p>Đã bán: <strong>${b.SoLuongDaBan || 0}</strong></p>
-            </div>
-        </div>`).join('');
+    list.innerHTML = topBooks.map((b, i) => {
+        // Xử lý ảnh
+        let images = '';
+        let image_path_rutgon = b.LinkHinhAnh;
+        if (b.LinkHinhAnh) {
+            // Tách chuỗi bằng dấu phẩy, sau đó xóa khoảng trắng thừa ở 2 đầu (trim)
+            // Ví dụ: "a.jpg, b.png" -> ["a.jpg", "b.png"]
+            images = b.LinkHinhAnh.split(',').map(img => img.trim()).filter(img => img !== "");
+        }
+
+        if (images.length > 1)
+            image_path_rutgon = images[0];
+
+        const img = `${IMAGE_PATH_BASE}${image_path_rutgon}`;
+        return `
+            <div class="ranking-item">
+                <div class="rank-index">${i + 1}</div>
+                <img src="${img}" class="rank-thumb">
+                <div class="rank-info">
+                    <h4>${b.TenSach}</h4>
+                    <p>Đã bán: <strong>${b.SoLuongDaBan || 0}</strong></p>
+                </div>
+            </div>`}).join('');
 }
 
 

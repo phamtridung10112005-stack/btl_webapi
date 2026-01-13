@@ -103,13 +103,13 @@ async function loadFlashSaleItems() {
         if (!response.ok) return;
 
         const rawData = await response.json();
-        console.log(rawData);
+        // console.log(rawData);
         const allBooks = Array.isArray(rawData) ? rawData : (rawData.data || []);
         // console.log('DAT books: ', allBooks);
         // --- LỌC SẢN PHẨM ---
         console.log(allBooks.length);
         const saleBooks = allBooks.filter(item => {
-            console.log(item);
+            // console.log(item);
             if (item.MaGiamGia === TARGET_SALE_CODE) return true;
 
             return false; 
