@@ -434,11 +434,52 @@ async function loadHomeSections() {
         highlightHeartIcons();
     }
 }
-
+////////main slider/////////////////
+const main_slider = document.querySelector('.main_slider');
+const slides = document.querySelector('.slider_list');
+const img = document.querySelectorAll('.slider_list .slider_item');
+const next_btn = document.querySelector('.next_btn');
+const pre_btn = document.querySelector('.pre_btn');
+let index = 0;
+function showSlider(index){
+    const width = img[0].clientWidth;
+    let x = index * width;
+    slides.style.transform = `translateX(${-x}px)`;
+}
+next_btn.addEventListener('click', () => {
+    index = (index + 1) % img.length;
+    showSlider(index);
+    ResetAutoSlider();
+});
+pre_btn.addEventListener('click', () => {
+    index = (index - 1 + img.length) % img.length;
+    showSlider(index);
+    ResetAutoSlider();
+});
+// setInterval(() => {
+//     next_btn.click();
+// }, 10000);
+let setTimeoutID;
+let timeAuto = 10;
+function AutoSlider(){
+    if (timeAuto == 0){
+        next_btn.click();
+        timeAuto = 10;
+    }
+    timeAuto--;
+    // console.log(timeAuto);
+    setTimeoutID = setTimeout(AutoSlider, 1000);
+}
+function ResetAutoSlider(){
+    clearTimeout(setTimeoutID);
+    timeAuto = 10;
+    AutoSlider();
+}
 // Gọi khi tải trang và khi resize màn hình
 document.addEventListener('DOMContentLoaded', () => {
     initFlashSaleSystem();
     loadHomeSections();
+    AutoSlider();
 });
 let resizeTimer;
 window.addEventListener('resize', () => {
